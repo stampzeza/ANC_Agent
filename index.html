@@ -6893,18 +6893,37 @@ function renderCreatePolicyForm() {
 
 }
 
+  
 function renderCreatePolicyStep1() {
 
-  const customer =
-    agentCustomerData?.customer || {};
-
-  const family =
-    Array.isArray(agentCustomerData?.family)
-      ? agentCustomerData.family
-      : [];
+  // =========================================================
+  // ข้อมูลที่มีอยู่ใน state ของหน้า
+  // =========================================================
 
   const data =
     createPolicyData || {};
+
+  // ---------------------------------------------------------
+  // Customer / Family
+  //
+  // ไม่อ้าง agentCustomerData โดยตรง
+  // ---------------------------------------------------------
+
+  const customer =
+    data.customer ||
+    data.Customer ||
+    {};
+
+  const family =
+    Array.isArray(data.family)
+      ? data.family
+      : Array.isArray(data.Family)
+        ? data.Family
+        : [];
+
+  // =========================================================
+  // Policy Type
+  // =========================================================
 
   const policyType =
     String(
@@ -6913,38 +6932,64 @@ function renderCreatePolicyStep1() {
       .trim()
       .toUpperCase();
 
+  // =========================================================
+  // Selected Family Member
+  // =========================================================
+
   const selectedFamilyMemberId =
     String(
       data.FamilyMemberID || ''
     ).trim();
 
-  const familyOptions = family
-    .map(member => {
+  // =========================================================
+  // Family Options
+  // =========================================================
 
-      const memberId =
-        String(
-          member.FamilyMemberID || ''
-        ).trim();
+  const familyOptions =
+    family
+      .map(member => {
 
-      const memberName =
-        member.DisplayName ||
-        (
-          String(member.FirstName || '') +
-          ' ' +
-          String(member.LastName || '')
-        ).trim() ||
-        memberId;
+        const memberId =
+          String(
+            member.FamilyMemberID || ''
+          ).trim();
 
-      return `
-        <option
-          value="${escapeHtml(memberId)}"
-          ${selectedFamilyMemberId === memberId ? 'selected' : ''}
-        >
-          ${escapeHtml(memberName)}
-        </option>
-      `;
-    })
-    .join('');
+        const memberName =
+          member.DisplayName ||
+          (
+            String(member.FirstName || '') +
+            ' ' +
+            String(member.LastName || '')
+          ).trim() ||
+          memberId;
+
+        return `
+          <option
+            value="${escapeHtml(memberId)}"
+            ${selectedFamilyMemberId === memberId ? 'selected' : ''}
+          >
+            ${escapeHtml(memberName)}
+          </option>
+        `;
+      })
+      .join('');
+
+  // =========================================================
+  // Customer Name
+  // =========================================================
+
+  const customerName =
+    customer.DisplayName ||
+    (
+      String(customer.FirstName || '') +
+      ' ' +
+      String(customer.LastName || '')
+    ).trim() ||
+    'ตัวเอง';
+
+  // =========================================================
+  // HTML
+  // =========================================================
 
   return `
 
@@ -6972,22 +7017,17 @@ function renderCreatePolicyStep1() {
           >
 
             <option value="">
-              ${escapeHtml(
-                customer.DisplayName ||
-                (
-                  String(customer.FirstName || '') +
-                  ' ' +
-                  String(customer.LastName || '')
-                ).trim() ||
-                'ตัวเอง'
-              )}
+              ${escapeHtml(customerName)}
             </option>
 
             ${familyOptions}
 
           </select>
 
-          <div class="muted" style="margin-top:6px">
+          <div
+            class="muted"
+            style="margin-top:6px"
+          >
             เว้นว่าง = เจ้าของ Account
           </div>
 
@@ -7116,7 +7156,10 @@ function renderCreatePolicyStep1() {
             placeholder="เช่น 500000"
           >
 
-          <div class="muted" style="margin-top:6px">
+          <div
+            class="muted"
+            style="margin-top:6px"
+          >
             บันทึกเป็น Coverage Type = LIFE
           </div>
 
@@ -7363,8 +7406,7 @@ function renderCreatePolicyStep1() {
                 value="HALF_YEAR"
                 ${
                   String(
-                    data.SavingsProgress?.PaymentFrequency ||
-                    ''
+                    data.SavingsProgress?.PaymentFrequency || ''
                   ) === 'HALF_YEAR'
                     ? 'selected'
                     : ''
@@ -7377,8 +7419,7 @@ function renderCreatePolicyStep1() {
                 value="QUARTER"
                 ${
                   String(
-                    data.SavingsProgress?.PaymentFrequency ||
-                    ''
+                    data.SavingsProgress?.PaymentFrequency || ''
                   ) === 'QUARTER'
                     ? 'selected'
                     : ''
@@ -7391,8 +7432,7 @@ function renderCreatePolicyStep1() {
                 value="MONTHLY"
                 ${
                   String(
-                    data.SavingsProgress?.PaymentFrequency ||
-                    ''
+                    data.SavingsProgress?.PaymentFrequency || ''
                   ) === 'MONTHLY'
                     ? 'selected'
                     : ''
