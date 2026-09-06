@@ -749,6 +749,675 @@
     
     }
 
+    /* =====================================
+       AGENT POLICY DETAIL
+    ===================================== */
+    
+    .agent-policy-detail-header {
+    
+      display: flex;
+    
+      align-items: center;
+    
+      gap: 12px;
+    
+      background: #ffffff;
+    
+      border: 1px solid #e5e7eb;
+    
+      border-radius: 18px;
+    
+      padding: 16px;
+    
+      margin-bottom: 10px;
+    
+    }
+    
+    
+    .agent-policy-detail-icon {
+    
+      width: 48px;
+      height: 48px;
+    
+      border-radius: 14px;
+    
+      background: #f3f4f6;
+    
+      display: flex;
+    
+      align-items: center;
+    
+      justify-content: center;
+    
+      font-size: 23px;
+    
+      flex-shrink: 0;
+    
+    }
+    
+    
+    .agent-policy-detail-name {
+    
+      font-size: 16px;
+    
+      font-weight: 800;
+    
+      line-height: 1.35;
+    
+    }
+    
+    
+    .agent-policy-detail-number {
+    
+      margin-top: 4px;
+    
+      font-size: 11px;
+    
+      color: #9ca3af;
+    
+    }
+    
+    
+    .agent-family-owner-badge {
+    
+      display: inline-block;
+    
+      margin-bottom: 8px;
+    
+      padding: 7px 10px;
+    
+      background: #f9fafb;
+    
+      border: 1px solid #e5e7eb;
+    
+      border-radius: 10px;
+    
+      font-size: 11px;
+    
+      color: #6b7280;
+    
+    }
+    
+    
+    .agent-detail-section {
+    
+      margin-top: 18px;
+    
+    }
+    
+    
+    .agent-detail-section-title {
+    
+      font-size: 14px;
+    
+      font-weight: 800;
+    
+      margin-bottom: 9px;
+    
+    }
+    
+    
+    .agent-policy-status {
+    
+      display: inline-block;
+    
+      padding: 6px 10px;
+    
+      background: #ecfdf5;
+    
+      color: #166534;
+    
+      border-radius: 9px;
+    
+      font-size: 11px;
+    
+      font-weight: 700;
+    
+      margin-bottom: 5px;
+    
+    }
+    
+    
+    .agent-detail-row {
+    
+      min-height: 43px;
+    
+      display: flex;
+    
+      justify-content: space-between;
+    
+      align-items: center;
+    
+      gap: 12px;
+    
+      font-size: 11px;
+    
+      color: #6b7280;
+    
+    }
+    
+    
+    .agent-detail-row + .agent-detail-row {
+    
+      border-top: 1px solid #f1f1f1;
+    
+    }
+    
+    
+    .agent-detail-row strong {
+    
+      color: #111827;
+    
+      font-size: 12px;
+    
+      text-align: right;
+    
+    }
+    
+    
+    .agent-coverage-wrap {
+    
+      margin-bottom: 9px;
+    
+    }
+    
+    
+    .agent-coverage-item {
+    
+      display: flex;
+    
+      align-items: center;
+    
+      gap: 10px;
+    
+      background: #ffffff;
+    
+      border: 1px solid #e5e7eb;
+    
+      border-radius: 15px;
+    
+      padding: 13px;
+    
+    }
+    
+    
+    .agent-coverage-icon {
+    
+      width: 38px;
+      height: 38px;
+    
+      border-radius: 11px;
+    
+      background: #f3f4f6;
+    
+      display: flex;
+    
+      align-items: center;
+    
+      justify-content: center;
+    
+      font-size: 19px;
+    
+    }
+    
+    
+    .agent-coverage-info {
+    
+      flex: 1;
+    
+      min-width: 0;
+    
+    }
+    
+    
+    .agent-coverage-name {
+    
+      font-size: 13px;
+    
+      font-weight: 800;
+    
+    }
+    
+    
+    .agent-coverage-value {
+    
+      margin-top: 3px;
+    
+      font-size: 11px;
+    
+      color: #6b7280;
+    
+    }
+    
+    
+    /* USAGE ACCORDION */
+    
+    .agent-usage-accordion {
+    
+      margin-top: 5px;
+    
+      background: #f9fafb;
+    
+      border: 1px solid #e5e7eb;
+    
+      border-radius: 13px;
+    
+      overflow: hidden;
+    
+    }
+    
+    
+    .agent-usage-header {
+    
+      width: 100%;
+    
+      padding: 9px 12px;
+    
+      border: 0;
+    
+      background: transparent;
+    
+      display: flex;
+    
+      justify-content: space-between;
+    
+      align-items: center;
+    
+      color: #6b7280;
+    
+      font-size: 11px;
+    
+      font-weight: 700;
+    
+      cursor: pointer;
+    
+    }
+    
+    
+    .agent-usage-chevron {
+    
+      font-size: 18px;
+    
+      transition: transform .2s ease;
+    
+    }
+    
+    
+    .agent-usage-accordion.expanded
+    .agent-usage-chevron {
+    
+      transform: rotate(90deg);
+    
+    }
+    
+    
+    .agent-usage-body {
+    
+      display: none;
+    
+      padding: 0 12px 12px;
+    
+    }
+    
+    
+    .agent-usage-accordion.expanded
+    .agent-usage-body {
+    
+      display: block;
+    
+    }
+    
+    
+    .agent-usage-row {
+    
+      min-height: 31px;
+    
+      display: flex;
+    
+      justify-content: space-between;
+    
+      align-items: center;
+    
+      font-size: 11px;
+    
+      color: #6b7280;
+    
+    }
+    
+    
+    .agent-usage-row strong {
+    
+      color: #374151;
+    
+      font-size: 11px;
+    
+    }
+    
+    
+    .agent-usage-remaining {
+    
+      margin-top: 3px;
+    
+      padding-top: 7px;
+    
+      border-top: 1px solid #e5e7eb;
+    
+    }
+    
+    
+    .agent-usage-remaining strong {
+    
+      font-size: 15px;
+    
+      font-weight: 800;
+    
+    }
+    
+    
+    .agent-usage-progress {
+    
+      height: 6px;
+    
+      margin-top: 7px;
+    
+      background: #e5e7eb;
+    
+      border-radius: 999px;
+    
+      overflow: hidden;
+    
+    }
+    
+    
+    .agent-usage-progress-bar {
+    
+      height: 100%;
+    
+      background: #111827;
+    
+      border-radius: 999px;
+    
+    }
+    
+    
+    .agent-usage-reset {
+    
+      display: flex;
+    
+      justify-content: space-between;
+    
+      margin-top: 9px;
+    
+      padding-top: 8px;
+    
+      border-top: 1px solid #e5e7eb;
+    
+      font-size: 10px;
+    
+      color: #9ca3af;
+    
+    }
+    
+    
+    .agent-usage-reset strong {
+    
+      color: #374151;
+    
+    }
+    
+    
+    /* RIDER */
+    
+    .agent-rider-card {
+    
+      display: flex;
+    
+      justify-content: space-between;
+    
+      align-items: center;
+    
+      gap: 10px;
+    
+      padding: 13px;
+    
+      background: #ffffff;
+    
+      border: 1px solid #e5e7eb;
+    
+      border-radius: 15px;
+    
+      margin-bottom: 9px;
+    
+    }
+    
+    
+    .agent-rider-name {
+    
+      font-size: 13px;
+    
+      font-weight: 800;
+    
+    }
+    
+    
+    .agent-rider-type {
+    
+      margin-top: 3px;
+    
+      font-size: 10px;
+    
+      color: #9ca3af;
+    
+    }
+    
+    
+    .agent-rider-coverage {
+    
+      font-size: 13px;
+    
+      font-weight: 800;
+    
+      color: #111827;
+    
+    }
+    
+    
+    /* WAITING */
+    
+    .agent-waiting-item {
+    
+      display: flex;
+    
+      justify-content: space-between;
+    
+      align-items: center;
+    
+      gap: 12px;
+    
+      padding: 11px 13px;
+    
+      background: #ffffff;
+    
+      border: 1px solid #e5e7eb;
+    
+    }
+    
+    
+    .agent-waiting-item:first-child {
+    
+      border-radius: 15px 15px 0 0;
+    
+    }
+    
+    
+    .agent-waiting-item:last-child {
+    
+      border-radius: 0 0 15px 15px;
+    
+    }
+    
+    
+    .agent-waiting-item + .agent-waiting-item {
+    
+      border-top: 0;
+    
+    }
+    
+    
+    .agent-waiting-name {
+    
+      font-size: 12px;
+    
+      font-weight: 700;
+    
+      color: #374151;
+    
+      line-height: 1.4;
+    
+    }
+    
+    
+    .agent-waiting-status {
+    
+      font-size: 11px;
+    
+      font-weight: 700;
+    
+      color: #b45309;
+    
+      white-space: nowrap;
+    
+    }
+    
+    
+    .agent-waiting-status.completed {
+    
+      color: #15803d;
+    
+    }
+    
+    
+    /* DEDUCTIBLE / COPAY */
+    
+    .agent-deductible-card,
+    .agent-copayment-card {
+    
+      background: #ffffff;
+    
+      border: 1px solid #e5e7eb;
+    
+      border-radius: 15px;
+    
+      padding: 5px 13px;
+    
+    }
+    
+    
+    .agent-remaining-row strong {
+    
+      font-size: 14px;
+    
+      font-weight: 800;
+    
+    }
+    
+    
+    .agent-copayment-conditions {
+    
+      margin-top: 8px;
+    
+      padding-top: 9px;
+    
+      border-top: 1px solid #f0f0f0;
+    
+      font-size: 10px;
+    
+      color: #6b7280;
+    
+      line-height: 1.7;
+    
+    }
+    
+    
+    /* SAVINGS */
+    
+    .agent-savings-card {
+    
+      background: #ffffff;
+    
+      border: 1px solid #e5e7eb;
+    
+      border-radius: 15px;
+    
+      padding: 14px;
+    
+    }
+    
+    
+    .agent-savings-year {
+    
+      font-size: 18px;
+    
+      font-weight: 800;
+    
+      margin-bottom: 8px;
+    
+    }
+    
+    
+    .agent-savings-progress {
+    
+      height: 7px;
+    
+      background: #e5e7eb;
+    
+      border-radius: 999px;
+    
+      overflow: hidden;
+    
+    }
+    
+    
+    .agent-savings-progress-bar {
+    
+      height: 100%;
+    
+      background: #111827;
+    
+      border-radius: 999px;
+    
+    }
+    
+    
+    .agent-savings-badges {
+    
+      display: flex;
+    
+      flex-wrap: wrap;
+    
+      gap: 6px;
+    
+      margin: 11px 0;
+    
+    }
+    
+    
+    .agent-savings-badges span {
+    
+      padding: 5px 8px;
+    
+      background: #f3f4f6;
+    
+      border-radius: 8px;
+    
+      font-size: 10px;
+    
+      color: #6b7280;
+    
+      font-weight: 700;
+    
+    }
+
   </style>
 
 </head>
@@ -777,6 +1446,8 @@ let currentPage = 'dashboard';
 
 let selectedCustomerId = null;
 let selectedCustomer = null;
+
+let selectedPolicyId = null;
 
 
 async function initAgent() {
@@ -941,6 +1612,13 @@ function renderPage(page) {
   else if (page === 'customer-detail') {
 
     renderCustomerDetail();
+
+  }
+
+
+  else if (page === 'policy-detail') {
+
+    renderAgentPolicyDetail();
 
   }
 
@@ -1962,9 +2640,9 @@ function renderAgentPolicyCard(
     <div
       class="agent-policy-card"
       onclick="
-        alert(
-          'Policy ID: ${escapeHtml(
-            policy.PolicyID
+        openAgentPolicy(
+          '${escapeHtml(
+            policy.PolicyID || ''
           )}'
         )
       "
@@ -1989,11 +2667,22 @@ function renderAgentPolicyCard(
 
         </div>
 
+
+        <div class="agent-policy-type">
+
+          ${escapeHtml(
+            policy.PolicyType || ''
+          )}
+
+        </div>
+
       </div>
 
 
       <div class="agent-policy-arrow">
+
         ›
+
       </div>
 
     </div>
@@ -2001,6 +2690,1694 @@ function renderAgentPolicyCard(
   `;
 
 }
+
+function openAgentPolicy(
+  policyId
+) {
+
+  const id =
+    String(
+      policyId || ''
+    ).trim();
+
+
+  if (!id) {
+    return;
+  }
+
+
+  selectedPolicyId =
+    id;
+
+
+  renderPage(
+    'policy-detail'
+  );
+
+}
+
+function renderAgentPolicyDetail() {
+
+  const data =
+    selectedCustomer || {};
+
+
+  const policies =
+    data.policies || [];
+
+
+  const policy =
+    policies.find(item =>
+      String(
+        item.PolicyID || ''
+      ).trim() ===
+      String(
+        selectedPolicyId || ''
+      ).trim()
+    );
+
+
+  if (!policy) {
+
+    document
+      .getElementById('app')
+      .innerHTML = `
+
+        <div class="app">
+
+          <div class="page">
+
+            <div class="agent-empty">
+
+              ไม่พบข้อมูลกรมธรรม์
+
+            </div>
+
+          </div>
+
+        </div>
+
+      `;
+
+    return;
+
+  }
+
+
+  /*
+   * Family Member
+   */
+
+  const family =
+    data.family || [];
+
+
+  const familyMemberId =
+    String(
+      policy.FamilyMemberID || ''
+    ).trim();
+
+
+  const familyMember =
+    familyMemberId
+
+      ? family.find(member =>
+          String(
+            member.FamilyMemberID || ''
+          ).trim() ===
+          familyMemberId
+        )
+
+      : null;
+
+
+  const displayName =
+    familyMember
+      ? (
+          familyMember.DisplayName ||
+          (
+            (familyMember.FirstName || '') +
+            (
+              familyMember.FirstName &&
+              familyMember.LastName
+                ? ' '
+                : ''
+            ) +
+            (familyMember.LastName || '')
+          )
+        )
+      : 'เจ้าของบัญชี';
+
+
+  let html = `
+
+    <div class="app">
+
+
+      <!-- TOPBAR -->
+
+      <div class="topbar">
+
+        <div
+          class="agent-back"
+          onclick="
+            renderPage(
+              'customer-detail'
+            )
+          "
+        >
+
+          ← กลับลูกค้า
+
+        </div>
+
+
+        <div class="brand">
+          ANC Life Planning
+        </div>
+
+      </div>
+
+
+      <div class="page">
+
+
+        <!-- HEADER -->
+
+        <div class="agent-policy-detail-header">
+
+          <div
+            class="
+              agent-policy-detail-icon
+            "
+          >
+
+            🛡️
+
+          </div>
+
+
+          <div>
+
+            <div
+              class="
+                agent-policy-detail-name
+              "
+            >
+
+              ${escapeHtml(
+                policy.PlanName || '-'
+              )}
+
+            </div>
+
+
+            <div
+              class="
+                agent-policy-detail-number
+              "
+            >
+
+              กรมธรรม์
+              ${escapeHtml(
+                policy.PolicyNo || '-'
+              )}
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        ${
+          familyMember
+            ? `
+
+              <div
+                class="
+                  agent-family-owner-badge
+                "
+              >
+
+                👤
+                ${escapeHtml(
+                  displayName
+                )}
+
+                ${
+                  familyMember.Relationship
+                    ? `
+                      ·
+                      ${escapeHtml(
+                        familyMember.Relationship
+                      )}
+                    `
+                    : ''
+                }
+
+              </div>
+
+            `
+            : ''
+        }
+
+
+        <!-- STATUS -->
+
+        <div
+          class="
+            agent-detail-section
+          "
+        >
+
+          <div
+            class="
+              agent-detail-section-title
+            "
+          >
+
+            สถานะกรมธรรม์
+
+          </div>
+
+
+          <div
+            class="
+              agent-policy-status
+            "
+          >
+
+            ${escapeHtml(
+              translateAgentPolicyStatus(
+                policy.PolicyStatus
+              )
+            )}
+
+          </div>
+
+
+          ${renderAgentPolicyRow(
+            'เริ่มคุ้มครอง',
+            policy.EffectiveDate
+              ? formatDateDisplay(
+                  policy.EffectiveDate
+                )
+              : '-'
+          )}
+
+
+          ${renderAgentPolicyRow(
+            'จ่ายเบี้ยครั้งต่อไป',
+            policy.NextPaymentDate
+              ? formatDateDisplay(
+                  policy.NextPaymentDate
+                )
+              : '-'
+          )}
+
+
+          ${renderAgentPolicyRow(
+            'เบี้ยต่อปี',
+            `${formatAgentNumber(
+              policy.AnnualPremium
+            )} บาท`
+          )}
+
+        </div>
+
+
+        <!-- COVERAGE -->
+
+        <div
+          class="
+            agent-detail-section
+          "
+        >
+
+          <div
+            class="
+              agent-detail-section-title
+            "
+          >
+
+            🛡️ ความคุ้มครอง
+
+          </div>
+
+
+          ${
+            (policy.coverage || []).length
+
+              ? policy.coverage
+                  .map(
+                    (coverage, index) =>
+                      renderAgentCoverage(
+                        coverage,
+                        index
+                      )
+                  )
+                  .join('')
+
+              : `
+
+                <div class="agent-empty">
+
+                  ยังไม่มีข้อมูลความคุ้มครอง
+
+                </div>
+
+              `
+          }
+
+        </div>
+
+
+        <!-- RIDERS -->
+
+        <div
+          class="
+            agent-detail-section
+          "
+        >
+
+          <div
+            class="
+              agent-detail-section-title
+            "
+          >
+
+            Rider
+
+          </div>
+
+
+          ${
+            (policy.riders || []).length
+
+              ? policy.riders
+                  .map(
+                    rider =>
+                      renderAgentRider(
+                        rider
+                      )
+                  )
+                  .join('')
+
+              : `
+
+                <div class="agent-empty">
+
+                  กรมธรรม์นี้ไม่มี Rider
+
+                </div>
+
+              `
+          }
+
+        </div>
+
+
+        <!-- WAITING -->
+
+        ${
+          renderAgentWaitingPeriods(
+            policy
+          )
+        }
+
+
+        <!-- DEDUCTIBLE -->
+
+        ${
+          renderAgentDeductible(
+            policy
+          )
+        }
+
+
+        <!-- COPAYMENT -->
+
+        ${
+          renderAgentCopayment(
+            policy
+          )
+        }
+
+
+        <!-- SAVINGS -->
+
+        ${
+          renderAgentSavings(
+            policy
+          )
+        }
+
+
+      </div>
+
+
+      ${renderBottomNav()}
+
+    </div>
+
+  `;
+
+
+  document
+    .getElementById('app')
+    .innerHTML = html;
+
+
+  window.scrollTo(
+    0,
+    0
+  );
+
+}
+
+function renderAgentPolicyRow(
+  label,
+  value
+) {
+
+  return `
+
+    <div class="agent-detail-row">
+
+      <span>
+        ${escapeHtml(label)}
+      </span>
+
+      <strong>
+        ${escapeHtml(value)}
+      </strong>
+
+    </div>
+
+  `;
+
+}
+
+function renderAgentCoverage(
+  coverage,
+  index
+) {
+
+  const name =
+    coverage.CoverageName ||
+    'ความคุ้มครอง';
+
+
+  const icon =
+    coverage.Icon ||
+    '🛡️';
+
+
+  const limitType =
+    String(
+      coverage.LimitType || ''
+    ).toUpperCase();
+
+
+  const hasUsage =
+    Number(
+      coverage.LimitAmount || 0
+    ) > 0 ||
+    Number(
+      coverage.LimitCount || 0
+    ) > 0;
+
+
+  let mainValue = '';
+
+
+  if (
+    limitType === 'COUNT'
+  ) {
+
+    mainValue =
+      `${formatAgentNumber(
+        coverage.LimitAmount
+      )} บาท / ครั้ง`;
+
+  }
+
+  else {
+
+    mainValue =
+      `${formatAgentNumber(
+        coverage.CoverageAmount
+      )} ${
+        coverage.CoverageUnit === 'BAHT'
+          ? 'บาท'
+          : coverage.CoverageUnit || ''
+      }`;
+
+  }
+
+
+  return `
+
+    <div class="agent-coverage-wrap">
+
+      <div class="agent-coverage-item">
+
+        <div class="agent-coverage-icon">
+
+          ${icon}
+
+        </div>
+
+
+        <div class="agent-coverage-info">
+
+          <div class="agent-coverage-name">
+
+            ${escapeHtml(name)}
+
+          </div>
+
+
+          <div class="agent-coverage-value">
+
+            ${escapeHtml(mainValue)}
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      ${
+        hasUsage
+          ? renderAgentCoverageUsage(
+              coverage,
+              index
+            )
+          : ''
+      }
+
+    </div>
+
+  `;
+
+}
+
+function renderAgentCoverageUsage(
+  coverage,
+  index
+) {
+
+  const accordionId =
+    `agentUsage_${index}`;
+
+
+  const limitType =
+    String(
+      coverage.LimitType || ''
+    ).toUpperCase();
+
+
+  const limitAmount =
+    Number(
+      coverage.LimitAmount || 0
+    );
+
+
+  const limitCount =
+    Number(
+      coverage.LimitCount || 0
+    );
+
+
+  const usedAmount =
+    Number(
+      coverage.UsedAmount || 0
+    );
+
+
+  const usedCount =
+    Number(
+      coverage.UsedCount || 0
+    );
+
+
+  const remainingAmount =
+    Number(
+      coverage.RemainingAmount || 0
+    );
+
+
+  const remainingCount =
+    Number(
+      coverage.RemainingCount || 0
+    );
+
+
+  let body = '';
+
+
+  if (
+    limitType === 'AMOUNT' ||
+    limitType === 'AMOUNT_AND_COUNT'
+  ) {
+
+    const percent =
+      limitAmount > 0
+        ? Math.max(
+            0,
+            Math.min(
+              100,
+              (
+                remainingAmount /
+                limitAmount
+              ) * 100
+            )
+          )
+        : 0;
+
+
+    body += `
+
+      <div class="agent-usage-row">
+
+        <span>วงเงินทั้งหมด</span>
+
+        <strong>
+          ${formatAgentNumber(
+            limitAmount
+          )}
+          บาท
+        </strong>
+
+      </div>
+
+
+      <div class="agent-usage-row">
+
+        <span>ใช้ไปแล้ว</span>
+
+        <strong>
+          ${formatAgentNumber(
+            usedAmount
+          )}
+          บาท
+        </strong>
+
+      </div>
+
+
+      <div
+        class="
+          agent-usage-row
+          agent-usage-remaining
+        "
+      >
+
+        <span>คงเหลือ</span>
+
+        <strong>
+          ${formatAgentNumber(
+            remainingAmount
+          )}
+          บาท
+        </strong>
+
+      </div>
+
+
+      <div class="agent-usage-progress">
+
+        <div
+          class="agent-usage-progress-bar"
+          style="
+            width:${percent.toFixed(2)}%;
+          "
+        ></div>
+
+      </div>
+
+    `;
+
+  }
+
+
+  if (
+    limitType === 'COUNT' ||
+    limitType === 'AMOUNT_AND_COUNT'
+  ) {
+
+    const percent =
+      limitCount > 0
+        ? Math.max(
+            0,
+            Math.min(
+              100,
+              (
+                remainingCount /
+                limitCount
+              ) * 100
+            )
+          )
+        : 0;
+
+
+    body += `
+
+      <div class="agent-usage-row">
+
+        <span>สิทธิ์ทั้งหมด</span>
+
+        <strong>
+          ${formatAgentNumber(
+            limitCount
+          )}
+          ครั้ง
+        </strong>
+
+      </div>
+
+
+      <div class="agent-usage-row">
+
+        <span>ใช้ไปแล้ว</span>
+
+        <strong>
+          ${formatAgentNumber(
+            usedCount
+          )}
+          ครั้ง
+        </strong>
+
+      </div>
+
+
+      <div
+        class="
+          agent-usage-row
+          agent-usage-remaining
+        "
+      >
+
+        <span>คงเหลือ</span>
+
+        <strong>
+          ${formatAgentNumber(
+            remainingCount
+          )}
+          ครั้ง
+        </strong>
+
+      </div>
+
+
+      <div class="agent-usage-progress">
+
+        <div
+          class="agent-usage-progress-bar"
+          style="
+            width:${percent.toFixed(2)}%;
+          "
+        ></div>
+
+      </div>
+
+    `;
+
+  }
+
+
+  if (coverage.ResetDate) {
+
+    body += `
+
+      <div class="agent-usage-reset">
+
+        🔄 Reset
+
+        <strong>
+          ${formatDateDisplay(
+            coverage.ResetDate
+          )}
+        </strong>
+
+      </div>
+
+    `;
+
+  }
+
+
+  return `
+
+    <div
+      id="${accordionId}"
+      class="
+        agent-usage-accordion
+      "
+    >
+
+      <button
+        type="button"
+        class="agent-usage-header"
+        onclick="
+          toggleAgentUsage(
+            '${accordionId}'
+          )
+        "
+      >
+
+        <span>
+          ดูการใช้สิทธิ์
+        </span>
+
+        <span
+          class="
+            agent-usage-chevron
+          "
+        >
+          ›
+        </span>
+
+      </button>
+
+
+      <div class="agent-usage-body">
+
+        ${body}
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+function toggleAgentUsage(
+  id
+) {
+
+  const element =
+    document.getElementById(id);
+
+
+  if (!element) {
+    return;
+  }
+
+
+  element.classList.toggle(
+    'expanded'
+  );
+
+}
+
+function renderAgentRider(
+  rider
+) {
+
+  return `
+
+    <div class="agent-rider-card">
+
+      <div>
+
+        <div class="agent-rider-name">
+
+          ${escapeHtml(
+            rider.RiderName ||
+            rider.RiderID ||
+            '-'
+          )}
+
+        </div>
+
+
+        ${
+          rider.RiderType
+            ? `
+              <div
+                class="
+                  agent-rider-type
+                "
+              >
+
+                ${escapeHtml(
+                  rider.RiderType
+                )}
+
+              </div>
+            `
+            : ''
+        }
+
+      </div>
+
+
+      <div class="agent-rider-coverage">
+
+        ${formatAgentNumber(
+          rider.Coverage
+        )}
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+function renderAgentWaitingPeriods(
+  policy
+) {
+
+  const raw =
+    (policy.riders || [])
+      .flatMap(
+        rider =>
+          rider.waitingPeriods || []
+      );
+
+
+  const seen = new Set();
+
+  const waitingPeriods = [];
+
+
+  raw.forEach(item => {
+
+    const id =
+      String(
+        item.WaitingPeriodID || ''
+      ).trim();
+
+
+    const key =
+      id ||
+      [
+        item.WaitingType || '',
+        item.WaitingDays || '',
+        item.StartDate || '',
+        item.EndDate || ''
+      ].join('|');
+
+
+    if (seen.has(key)) {
+      return;
+    }
+
+
+    seen.add(key);
+
+    waitingPeriods.push(item);
+
+  });
+
+
+  if (!waitingPeriods.length) {
+    return '';
+  }
+
+
+  return `
+
+    <div
+      class="
+        agent-detail-section
+      "
+    >
+
+      <div
+        class="
+          agent-detail-section-title
+        "
+      >
+
+        ⏳ ระยะรอคอย
+
+      </div>
+
+
+      <div
+        class="
+          agent-waiting-list
+        "
+      >
+
+        ${
+          waitingPeriods
+            .map(
+              waiting =>
+                renderAgentWaitingItem(
+                  waiting
+                )
+            )
+            .join('')
+        }
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+function renderAgentWaitingItem(
+  item
+) {
+
+  const completed =
+    item.Completed === true ||
+    String(
+      item.Completed || ''
+    ).toUpperCase() === 'TRUE';
+
+
+  let remainingText =
+    '';
+
+
+  if (completed) {
+
+    remainingText =
+      '✅ ครบแล้ว';
+
+  }
+
+  else {
+
+    const days =
+      Number(
+        item.RemainingDays
+      );
+
+
+    if (
+      !isNaN(days) &&
+      days >= 0
+    ) {
+
+      remainingText =
+        `เหลือ ${formatAgentNumber(days)} วัน`;
+
+    }
+
+    else {
+
+      remainingText =
+        'อยู่ระหว่างรอคอย';
+
+    }
+
+  }
+
+
+  return `
+
+    <div class="agent-waiting-item">
+
+      <div class="agent-waiting-name">
+
+        ${escapeHtml(
+          getAgentWaitingTypeName(
+            item.WaitingType
+          )
+        )}
+
+      </div>
+
+
+      <div
+        class="
+          agent-waiting-status
+          ${
+            completed
+              ? 'completed'
+              : ''
+          }
+        "
+      >
+
+        ${escapeHtml(
+          remainingText
+        )}
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+function getAgentWaitingTypeName(
+  type
+) {
+
+  const names = {
+
+    GENERAL_HEALTH:
+      'สุขภาพทั่วไป',
+
+    CANCER:
+      'มะเร็ง',
+
+    CI:
+      'โรคร้ายแรง',
+
+    FLEX_CLAIM:
+      'Fax Claim (ไม่ต้องสำรองจ่าย สำหรับโรคทั่วไป)',
+
+    OTHER:
+      'อื่น ๆ'
+
+  };
+
+
+  return (
+    names[type] ||
+    type ||
+    'ระยะรอคอย'
+  );
+
+}
+
+function renderAgentDeductible(
+  policy
+) {
+
+  const items =
+    policy.deductibles || [];
+
+
+  if (!items.length) {
+    return '';
+  }
+
+
+  return `
+
+    <div
+      class="
+        agent-detail-section
+      "
+    >
+
+      <div
+        class="
+          agent-detail-section-title
+        "
+      >
+
+        💳 Deductible
+
+      </div>
+
+
+      ${
+        items
+          .map(item => {
+
+            const annual =
+              Number(
+                item.AnnualDeductible ||
+                0
+              );
+
+
+            const used =
+              Number(
+                item.UsedAmount ||
+                0
+              );
+
+
+            const remaining =
+              Number(
+                item.RemainingAmount ||
+                Math.max(
+                  annual - used,
+                  0
+                )
+              );
+
+
+            return `
+
+              <div
+                class="
+                  agent-deductible-card
+                "
+              >
+
+                <div class="agent-detail-row">
+
+                  <span>
+                    วงเงินต่อปี
+                  </span>
+
+                  <strong>
+                    ${formatAgentNumber(
+                      annual
+                    )}
+                    บาท
+                  </strong>
+
+                </div>
+
+
+                <div class="agent-detail-row">
+
+                  <span>
+                    ใช้ไปแล้ว
+                  </span>
+
+                  <strong>
+                    ${formatAgentNumber(
+                      used
+                    )}
+                    บาท
+                  </strong>
+
+                </div>
+
+
+                <div
+                  class="
+                    agent-detail-row
+                    agent-remaining-row
+                  "
+                >
+
+                  <span>
+                    คงเหลือ
+                  </span>
+
+                  <strong>
+                    ${formatAgentNumber(
+                      remaining
+                    )}
+                    บาท
+                  </strong>
+
+                </div>
+
+              </div>
+
+            `;
+
+          })
+          .join('')
+      }
+
+    </div>
+
+  `;
+
+}
+
+function renderAgentCopayment(
+  policy
+) {
+
+  const copayment =
+    policy.copayment;
+
+
+  if (!copayment) {
+    return '';
+  }
+
+
+  return `
+
+    <div
+      class="
+        agent-detail-section
+      "
+    >
+
+      <div
+        class="
+          agent-detail-section-title
+        "
+      >
+
+        ⚠️ Copayment
+
+      </div>
+
+
+      <div
+        class="
+          agent-copayment-card
+        "
+      >
+
+        <div class="agent-detail-row">
+
+          <span>
+            สถานะ
+          </span>
+
+          <strong>
+            ${escapeHtml(
+              copayment.Status || '-'
+            )}
+          </strong>
+
+        </div>
+
+
+        <div class="agent-detail-row">
+
+          <span>
+            ปีกรมธรรม์
+          </span>
+
+          <strong>
+            ${formatAgentNumber(
+              copayment.PolicyYear
+            )}
+          </strong>
+
+        </div>
+
+
+        <div class="agent-detail-row">
+
+          <span>
+            Copayment ปัจจุบัน
+          </span>
+
+          <strong>
+            ${formatAgentNumber(
+              copayment.CurrentCopaymentPercent
+            )}%
+          </strong>
+
+        </div>
+
+
+        <div
+          class="
+            agent-detail-row
+            agent-remaining-row
+          "
+        >
+
+          <span>
+            ปีถัดไป
+          </span>
+
+          <strong>
+            ${formatAgentNumber(
+              copayment.NextYearCopaymentPercent
+            )}%
+          </strong>
+
+        </div>
+
+
+        ${
+          copayment.Condition1Passed ||
+          copayment.Condition2Passed
+
+            ? `
+
+              <div class="agent-copayment-conditions">
+
+                ${
+                  copayment.Condition1Passed
+                    ? `
+                      <div>
+                        ✅ เงื่อนไขโรคทั่วไปผ่านเกณฑ์
+                      </div>
+                    `
+                    : ''
+                }
+
+
+                ${
+                  copayment.Condition2Passed
+                    ? `
+                      <div>
+                        ✅ เงื่อนไขการเคลมผ่านเกณฑ์
+                      </div>
+                    `
+                    : ''
+                }
+
+              </div>
+
+            `
+
+            : ''
+        }
+
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+function renderAgentSavings(
+  policy
+) {
+
+  const savings =
+    policy.savings;
+
+
+  if (!savings) {
+    return '';
+  }
+
+
+  const paymentTerm =
+    Number(
+      savings.PaymentTermYears ||
+      0
+    );
+
+
+  const maturityTerm =
+    Number(
+      savings.MaturityTermYears ||
+      0
+    );
+
+
+  const currentYear =
+    Number(
+      savings.CurrentPaymentYear ||
+      0
+    );
+
+
+  const progress =
+    Number(
+      savings.ProgressPercent ||
+      (
+        paymentTerm > 0
+          ? (
+              currentYear /
+              paymentTerm
+            ) * 100
+          : 0
+      )
+    );
+
+
+  return `
+
+    <div
+      class="
+        agent-detail-section
+      "
+    >
+
+      <div
+        class="
+          agent-detail-section-title
+        "
+      >
+
+        💰 สะสมทรัพย์
+
+      </div>
+
+
+      <div
+        class="
+          agent-savings-card
+        "
+      >
+
+        <div
+          class="
+            agent-savings-year
+          "
+        >
+
+          ปีที่
+          ${formatAgentNumber(
+            currentYear
+          )}
+          /
+          ${formatAgentNumber(
+            paymentTerm
+          )}
+
+        </div>
+
+
+        <div
+          class="
+            agent-savings-progress
+          "
+        >
+
+          <div
+            class="
+              agent-savings-progress-bar
+            "
+            style="
+              width:${Math.min(
+                100,
+                Math.max(
+                  0,
+                  progress
+                )
+              )}%;
+            "
+          ></div>
+
+        </div>
+
+
+        <div
+          class="
+            agent-savings-badges
+          "
+        >
+
+          ${
+            paymentTerm > 0
+              ? `
+                <span>
+                  จ่ายเบี้ย
+                  ${formatAgentNumber(
+                    paymentTerm
+                  )}
+                  ปี
+                </span>
+              `
+              : ''
+          }
+
+
+          ${
+            maturityTerm > 0
+              ? `
+                <span>
+                  สัญญา
+                  ${formatAgentNumber(
+                    maturityTerm
+                  )}
+                  ปี
+                </span>
+              `
+              : ''
+          }
+
+        </div>
+
+
+        ${
+          savings.PremiumEndDate
+            ? `
+              ${renderAgentPolicyRow(
+                'จ่ายเบี้ยหมด',
+                formatDateDisplay(
+                  savings.PremiumEndDate
+                )
+              )}
+            `
+            : ''
+        }
+
+
+        ${
+          savings.MaturityDate
+            ? `
+              ${renderAgentPolicyRow(
+                'ครบสัญญา',
+                formatDateDisplay(
+                  savings.MaturityDate
+                )
+              )}
+            `
+            : ''
+        }
+
+
+        ${
+          savings.MaturityAmount
+            ? `
+              ${renderAgentPolicyRow(
+                'เงินครบกำหนด',
+                `${formatAgentNumber(
+                  savings.MaturityAmount
+                )} บาท`
+              )}
+            `
+            : ''
+        }
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+function formatAgentNumber(
+  value
+) {
+
+  return Number(
+    value || 0
+  ).toLocaleString(
+    'th-TH'
+  );
+
+}
+
+function translateAgentPolicyStatus(
+  status
+) {
+
+  const value =
+    String(
+      status || ''
+    ).toUpperCase();
+
+
+  const map = {
+
+    ACTIVE:
+      '✅ มีผลคุ้มครอง',
+
+    INACTIVE:
+      'ปิดใช้งาน',
+
+    EXPIRED:
+      'หมดอายุ',
+
+    CANCELLED:
+      'ยกเลิก'
+
+  };
+
+
+  return (
+    map[value] ||
+    status ||
+    '-'
+  );
+
+}
+  
 
 function renderAgentFamilyCard(
   member,
