@@ -422,12 +422,18 @@ async function initAgent() {
       !result.success ||
       !result.authorized
     ) {
-
+    
+      console.error(
+        'Agent authorization failed:',
+        result
+      );
+    
+    
       throw new Error(
         result.message ||
         'บัญชีนี้ไม่มีสิทธิ์ใช้งาน'
       );
-
+    
     }
 
 
