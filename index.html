@@ -1486,6 +1486,342 @@
     
     }
 
+    /* =====================================
+       MANAGE
+    ===================================== */
+    
+    .manage-subtitle {
+    
+      font-size: 12px;
+    
+      color: #6b7280;
+    
+      margin-top: -10px;
+    
+      margin-bottom: 18px;
+    
+    }
+    
+    
+    .manage-card {
+    
+      width: 100%;
+    
+      display: flex;
+    
+      align-items: center;
+    
+      gap: 12px;
+    
+      border: 1px solid #e5e7eb;
+    
+      border-radius: 17px;
+    
+      background: #ffffff;
+    
+      padding: 15px;
+    
+      margin-bottom: 10px;
+    
+      text-align: left;
+    
+      cursor: pointer;
+    
+    }
+    
+    
+    .manage-card-icon {
+    
+      width: 42px;
+      height: 42px;
+    
+      border-radius: 12px;
+    
+      background: #f3f4f6;
+    
+      display: flex;
+    
+      align-items: center;
+      justify-content: center;
+    
+      font-size: 21px;
+    
+      flex-shrink: 0;
+    
+    }
+    
+    
+    .manage-card-content {
+    
+      flex: 1;
+    
+      min-width: 0;
+    
+    }
+    
+    
+    .manage-card-title {
+    
+      font-size: 14px;
+    
+      font-weight: 800;
+    
+      color: #111827;
+    
+    }
+    
+    
+    .manage-card-text {
+    
+      margin-top: 3px;
+    
+      font-size: 11px;
+    
+      color: #6b7280;
+    
+    }
+    
+    
+    .manage-card-arrow {
+    
+      font-size: 23px;
+    
+      color: #9ca3af;
+    
+    }
+    
+    
+    .manage-card-disabled {
+    
+      cursor: default;
+    
+      opacity: 0.55;
+    
+    }
+    
+    
+    .manage-card-badge {
+    
+      font-size: 9px;
+    
+      color: #9ca3af;
+    
+      white-space: nowrap;
+    
+    }
+    
+    
+    /* =====================================
+       CHOICE
+    ===================================== */
+    
+    .manage-choice-subtitle {
+    
+      font-size: 13px;
+    
+      color: #6b7280;
+    
+      margin-top: -10px;
+    
+      margin-bottom: 20px;
+    
+    }
+    
+    
+    .manage-choice-card {
+    
+      width: 100%;
+    
+      display: flex;
+    
+      align-items: center;
+    
+      gap: 12px;
+    
+      border: 1px solid #e5e7eb;
+    
+      border-radius: 18px;
+    
+      background: #ffffff;
+    
+      padding: 17px;
+    
+      margin-bottom: 12px;
+    
+      text-align: left;
+    
+      cursor: pointer;
+    
+    }
+    
+    
+    .manage-choice-icon {
+    
+      width: 46px;
+      height: 46px;
+    
+      border-radius: 14px;
+    
+      background: #f3f4f6;
+    
+      display: flex;
+    
+      align-items: center;
+      justify-content: center;
+    
+      font-size: 23px;
+    
+      flex-shrink: 0;
+    
+    }
+    
+    
+    .manage-choice-content {
+    
+      flex: 1;
+    
+    }
+    
+    
+    .manage-choice-title {
+    
+      font-size: 15px;
+    
+      font-weight: 800;
+    
+    }
+    
+    
+    .manage-choice-text {
+    
+      margin-top: 4px;
+    
+      font-size: 11px;
+    
+      color: #6b7280;
+    
+    }
+    
+    
+    /* =====================================
+       FORM
+    ===================================== */
+    
+    .form-card {
+    
+      background: #ffffff;
+    
+      border: 1px solid #e5e7eb;
+    
+      border-radius: 18px;
+    
+      padding: 16px;
+    
+    }
+    
+    
+    .form-label {
+    
+      display: block;
+    
+      margin-top: 13px;
+    
+      margin-bottom: 5px;
+    
+      font-size: 12px;
+    
+      font-weight: 700;
+    
+      color: #374151;
+    
+    }
+    
+    
+    .form-label:first-child {
+    
+      margin-top: 0;
+    
+    }
+    
+    
+    .form-input {
+    
+      width: 100%;
+    
+      min-height: 44px;
+    
+      padding: 10px 12px;
+    
+      border: 1px solid #d1d5db;
+    
+      border-radius: 12px;
+    
+      background: #ffffff;
+    
+      color: #111827;
+    
+      font-size: 13px;
+    
+      outline: none;
+    
+    }
+    
+    
+    .form-input:focus {
+    
+      border-color: #9ca3af;
+    
+    }
+    
+    
+    .form-message {
+    
+      min-height: 22px;
+    
+      margin-top: 12px;
+    
+      font-size: 12px;
+    
+      color: #b45309;
+    
+      line-height: 1.5;
+    
+    }
+    
+    
+    .form-submit-button {
+    
+      width: 100%;
+    
+      border: 0;
+    
+      border-radius: 13px;
+    
+      min-height: 46px;
+    
+      background: #111827;
+    
+      color: #ffffff;
+    
+      font-size: 13px;
+    
+      font-weight: 800;
+    
+      cursor: pointer;
+    
+      margin-top: 6px;
+    
+    }
+    
+    
+    .form-success {
+    
+      color: #166534;
+    
+      line-height: 1.7;
+    
+    }
+
   </style>
 
 </head>
@@ -1661,36 +1997,55 @@ async function postAPI(
 
 function renderPage(page) {
 
-  currentPage = page;
+  currentPage =
+    page;
 
 
-  if (page === 'dashboard') {
+  if (
+    page === 'dashboard'
+  ) {
 
     renderDashboard();
 
   }
 
-  else if (page === 'customers') {
+  else if (
+    page === 'customers'
+  ) {
 
     renderCustomers();
 
   }
 
-  else if (page === 'customer-detail') {
+  else if (
+    page === 'customer-detail'
+  ) {
 
     renderCustomerDetail();
 
   }
 
-  else if (page === 'policy-detail') {
+  else if (
+    page === 'policy-detail'
+  ) {
 
     renderAgentPolicyDetail();
 
   }
 
-  else if (page === 'family-detail') {
+  else if (
+    page === 'family-detail'
+  ) {
 
     renderAgentFamilyDetail();
+
+  }
+
+  else if (
+    page === 'manage'
+  ) {
+
+    renderManage();
 
   }
 
@@ -3902,8 +4257,11 @@ function getAgentWaitingTypeName(
     CI:
       'โรคร้ายแรง',
 
-    FLEX_CLAIM:
+    FAX_CLAIM:
       'Fax Claim (ไม่ต้องสำรองจ่าย สำหรับโรคทั่วไป)',
+
+    OPD_EMERGENCY:
+      'OPD อุบัติเหตุฉุกเฉินภายใน 24 ชม.',
 
     OTHER:
       'อื่น ๆ'
@@ -4933,6 +5291,840 @@ function renderAgentEventCard(
     </div>
 
   `;
+
+}
+
+function renderBottomNav() {
+
+  return `
+
+    <div class="bottom-nav">
+
+
+      <button
+        class="
+          nav-item
+          ${
+            currentPage === 'dashboard'
+              ? 'active'
+              : ''
+          }
+        "
+        onclick="
+          renderPage(
+            'dashboard'
+          )
+        "
+      >
+
+        🏠
+        <br>
+        Dashboard
+
+      </button>
+
+
+      <button
+        class="
+          nav-item
+          ${
+            currentPage === 'customers'
+              ? 'active'
+              : ''
+          }
+        "
+        onclick="
+          renderPage(
+            'customers'
+          )
+        "
+      >
+
+        👥
+        <br>
+        ลูกค้า
+
+      </button>
+
+
+      <button
+        class="
+          nav-item
+          ${
+            currentPage === 'manage'
+              ? 'active'
+              : ''
+          }
+        "
+        onclick="
+          renderPage(
+            'manage'
+          )
+        "
+      >
+
+        ⚙️
+        <br>
+        จัดการ
+
+      </button>
+
+    </div>
+
+  `;
+
+}
+
+function renderManage() {
+
+  document
+    .getElementById('app')
+    .innerHTML = `
+
+      <div class="app">
+
+
+        <div class="topbar">
+
+          <div class="brand">
+            ANC Life Planning
+          </div>
+
+
+          <div class="agent-name">
+
+            ${
+              escapeHtml(
+                agent?.AgentName ||
+                ''
+              )
+            }
+
+          </div>
+
+        </div>
+
+
+        <div class="page">
+
+
+          <div class="page-title">
+            จัดการข้อมูล
+          </div>
+
+
+          <div class="manage-subtitle">
+
+            เลือกประเภทข้อมูลที่ต้องการจัดการ
+
+          </div>
+
+
+          <!-- CUSTOMER -->
+
+          <button
+            class="manage-card"
+            onclick="
+              renderCustomerEntryChoice()
+            "
+          >
+
+            <div class="manage-card-icon">
+              👤
+            </div>
+
+
+            <div
+              class="
+                manage-card-content
+              "
+            >
+
+              <div
+                class="
+                  manage-card-title
+                "
+              >
+                ลูกค้า
+              </div>
+
+
+              <div
+                class="
+                  manage-card-text
+                "
+              >
+                เพิ่มลูกค้าใหม่
+                หรือเลือกลูกค้าเดิม
+              </div>
+
+            </div>
+
+
+            <div class="manage-card-arrow">
+              ›
+            </div>
+
+          </button>
+
+
+          <!-- POLICY -->
+
+          <div
+            class="
+              manage-card
+              manage-card-disabled
+            "
+          >
+
+            <div class="manage-card-icon">
+              🛡️
+            </div>
+
+
+            <div
+              class="
+                manage-card-content
+              "
+            >
+
+              <div
+                class="
+                  manage-card-title
+                "
+              >
+                กรมธรรม์
+              </div>
+
+
+              <div
+                class="
+                  manage-card-text
+                "
+              >
+                เพิ่มและจัดการกรมธรรม์
+              </div>
+
+            </div>
+
+
+            <div class="manage-card-badge">
+              เร็ว ๆ นี้
+            </div>
+
+          </div>
+
+
+        </div>
+
+
+        ${renderBottomNav()}
+
+      </div>
+
+  `;
+
+}
+
+function renderCustomerEntryChoice() {
+
+  document
+    .getElementById('app')
+    .innerHTML = `
+
+      <div class="app">
+
+
+        <div class="topbar">
+
+          <div
+            class="agent-back"
+            onclick="
+              renderPage('manage')
+            "
+          >
+            ← จัดการข้อมูล
+          </div>
+
+
+          <div class="brand">
+            ANC Life Planning
+          </div>
+
+        </div>
+
+
+        <div class="page">
+
+
+          <div class="page-title">
+            เพิ่มข้อมูลลูกค้า
+          </div>
+
+
+          <div
+            class="
+              manage-choice-subtitle
+            "
+          >
+            ลูกค้าเป็นลูกค้าเดิม
+            หรือลูกค้าใหม่?
+          </div>
+
+
+          <!-- EXISTING -->
+
+          <button
+            class="
+              manage-choice-card
+            "
+            onclick="
+              renderExistingCustomerEntry()
+            "
+          >
+
+            <div
+              class="
+                manage-choice-icon
+              "
+            >
+              👤
+            </div>
+
+
+            <div
+              class="
+                manage-choice-content
+              "
+            >
+
+              <div
+                class="
+                  manage-choice-title
+                "
+              >
+                ลูกค้าเดิม
+              </div>
+
+
+              <div
+                class="
+                  manage-choice-text
+                "
+              >
+                ค้นหาลูกค้าที่มีอยู่ในระบบ
+              </div>
+
+            </div>
+
+
+            <div class="manage-card-arrow">
+              ›
+            </div>
+
+          </button>
+
+
+          <!-- NEW -->
+
+          <button
+            class="
+              manage-choice-card
+            "
+            onclick="
+              renderNewCustomerForm()
+            "
+          >
+
+            <div
+              class="
+                manage-choice-icon
+              "
+            >
+              ✨
+            </div>
+
+
+            <div
+              class="
+                manage-choice-content
+              "
+            >
+
+              <div
+                class="
+                  manage-choice-title
+                "
+              >
+                ลูกค้าใหม่
+              </div>
+
+
+              <div
+                class="
+                  manage-choice-text
+                "
+              >
+                สร้าง Customer ใหม่ในระบบ
+              </div>
+
+            </div>
+
+
+            <div class="manage-card-arrow">
+              ›
+            </div>
+
+          </button>
+
+
+        </div>
+
+
+        ${renderBottomNav()}
+
+      </div>
+
+  `;
+
+}
+
+function renderNewCustomerForm() {
+
+  document
+    .getElementById('app')
+    .innerHTML = `
+
+      <div class="app">
+
+
+        <div class="topbar">
+
+          <div
+            class="agent-back"
+            onclick="
+              renderCustomerEntryChoice()
+            "
+          >
+            ← เพิ่มข้อมูลลูกค้า
+          </div>
+
+
+          <div class="brand">
+            ANC Life Planning
+          </div>
+
+        </div>
+
+
+        <div class="page">
+
+
+          <div class="page-title">
+            ✨ ลูกค้าใหม่
+          </div>
+
+
+          <div
+            class="
+              manage-subtitle
+            "
+          >
+            กรอกข้อมูลพื้นฐานของลูกค้า
+          </div>
+
+
+          <div
+            class="
+              form-card
+            "
+          >
+
+
+            <!-- FIRST NAME -->
+
+            <label class="form-label">
+              ชื่อ *
+            </label>
+
+            <input
+              id="newCustomerFirstName"
+              class="form-input"
+              type="text"
+              placeholder="ชื่อ"
+            >
+
+
+            <!-- LAST NAME -->
+
+            <label class="form-label">
+              นามสกุล *
+            </label>
+
+            <input
+              id="newCustomerLastName"
+              class="form-input"
+              type="text"
+              placeholder="นามสกุล"
+            >
+
+
+            <!-- DISPLAY NAME -->
+
+            <label class="form-label">
+              ชื่อแสดง
+            </label>
+
+            <input
+              id="newCustomerDisplayName"
+              class="form-input"
+              type="text"
+              placeholder="เช่น คุณสมชาย"
+            >
+
+
+            <!-- GENDER -->
+
+            <label class="form-label">
+              เพศ
+            </label>
+
+            <select
+              id="newCustomerGender"
+              class="form-input"
+            >
+
+              <option value="">
+                เลือกเพศ
+              </option>
+
+              <option value="MALE">
+                ชาย
+              </option>
+
+              <option value="FEMALE">
+                หญิง
+              </option>
+
+            </select>
+
+
+            <!-- BIRTH DATE -->
+
+            <label class="form-label">
+              วันเกิด
+            </label>
+
+            <input
+              id="newCustomerBirthDate"
+              class="form-input"
+              type="date"
+            >
+
+
+            <!-- PHONE -->
+
+            <label class="form-label">
+              เบอร์โทร
+            </label>
+
+            <input
+              id="newCustomerPhone"
+              class="form-input"
+              type="tel"
+              inputmode="tel"
+              placeholder="08xxxxxxxx"
+            >
+
+
+            <!-- EMAIL -->
+
+            <label class="form-label">
+              Email
+            </label>
+
+            <input
+              id="newCustomerEmail"
+              class="form-input"
+              type="email"
+              placeholder="email@example.com"
+            >
+
+
+            <div
+              id="
+                newCustomerFormMessage
+              "
+              class="
+                form-message
+              "
+            ></div>
+
+
+            <button
+              class="
+                form-submit-button
+              "
+              onclick="
+                submitNewCustomer()
+              "
+            >
+
+              บันทึกลูกค้า
+
+            </button>
+
+
+          </div>
+
+        </div>
+
+
+        ${renderBottomNav()}
+
+      </div>
+
+  `;
+
+}
+
+async function submitNewCustomer() {
+
+  const firstName =
+    document
+      .getElementById(
+        'newCustomerFirstName'
+      )
+      ?.value
+      .trim();
+
+
+  const lastName =
+    document
+      .getElementById(
+        'newCustomerLastName'
+      )
+      ?.value
+      .trim();
+
+
+  const displayName =
+    document
+      .getElementById(
+        'newCustomerDisplayName'
+      )
+      ?.value
+      .trim();
+
+
+  const gender =
+    document
+      .getElementById(
+        'newCustomerGender'
+      )
+      ?.value
+      .trim();
+
+
+  const birthDate =
+    document
+      .getElementById(
+        'newCustomerBirthDate'
+      )
+      ?.value
+      .trim();
+
+
+  const phone =
+    document
+      .getElementById(
+        'newCustomerPhone'
+      )
+      ?.value
+      .trim();
+
+
+  const email =
+    document
+      .getElementById(
+        'newCustomerEmail'
+      )
+      ?.value
+      .trim();
+
+
+  const messageBox =
+    document
+      .getElementById(
+        'newCustomerFormMessage'
+      );
+
+
+  if (!firstName) {
+
+    messageBox.textContent =
+      'กรุณากรอกชื่อ';
+
+    return;
+
+  }
+
+
+  if (!lastName) {
+
+    messageBox.textContent =
+      'กรุณากรอกนามสกุล';
+
+    return;
+
+  }
+
+
+  messageBox.textContent =
+    'กำลังบันทึก...';
+
+
+  try {
+
+    const idToken =
+      liff.getIDToken();
+
+
+    if (!idToken) {
+
+      throw new Error(
+        'ไม่พบ LINE ID Token'
+      );
+
+    }
+
+
+    const result =
+      await postAPI({
+
+        action:
+          'agentCreateCustomer',
+
+        idToken:
+          idToken,
+
+        data: {
+
+          FirstName:
+            firstName,
+
+          LastName:
+            lastName,
+
+          DisplayName:
+            displayName,
+
+          Gender:
+            gender,
+
+          BirthDate:
+            birthDate,
+
+          Phone:
+            phone,
+
+          Email:
+            email
+
+        }
+
+      });
+
+
+    if (
+      !result.success
+    ) {
+
+      if (
+        result.duplicate
+      ) {
+
+        messageBox.innerHTML = `
+
+          พบลูกค้าที่มีเบอร์โทรนี้แล้ว
+
+          <br>
+
+          Customer ID:
+          ${escapeHtml(
+            result.customerId ||
+            '-'
+          )}
+
+        `;
+
+        return;
+
+      }
+
+
+      throw new Error(
+        result.message ||
+        'ไม่สามารถบันทึกลูกค้าได้'
+      );
+
+    }
+
+
+    messageBox.innerHTML = `
+
+      <div
+        class="form-success"
+      >
+
+        ✅ สร้างลูกค้าเรียบร้อยแล้ว
+
+        <br>
+
+        Customer ID:
+        <strong>
+          ${escapeHtml(
+            result.customer.CustomerID
+          )}
+        </strong>
+
+      </div>
+
+    `;
+
+
+    /*
+     * รอเล็กน้อยแล้ว
+     * เปิด Customer Detail
+     */
+
+    setTimeout(
+      () => {
+
+        openCustomer(
+          result.customer.CustomerID
+        );
+
+      },
+      500
+    );
+
+
+  }
+
+  catch (error) {
+
+    console.error(
+      'submitNewCustomer error:',
+      error
+    );
+
+
+    messageBox.textContent =
+      error.message ||
+      'เกิดข้อผิดพลาด';
+
+  }
 
 }
 
