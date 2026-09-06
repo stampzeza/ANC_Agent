@@ -1967,6 +1967,52 @@
     
     }
 
+    /* =====================================
+       ADD POLICY
+    ===================================== */
+    
+    .agent-section-title-flex {
+    
+      display: flex;
+    
+      align-items: center;
+    
+      justify-content: space-between;
+    
+      gap: 10px;
+    
+    }
+    
+    
+    .agent-add-button {
+    
+      border: 1px solid #e5e7eb;
+    
+      background: #ffffff;
+    
+      color: #374151;
+    
+      border-radius: 10px;
+    
+      padding: 6px 9px;
+    
+      font-size: 10px;
+    
+      font-weight: 700;
+    
+      white-space: nowrap;
+    
+      cursor: pointer;
+    
+    }
+    
+    
+    .agent-add-button:active {
+    
+      transform: scale(0.97);
+    
+    }
+
   </style>
 
 </head>
@@ -1998,6 +2044,7 @@ let selectedCustomer = null;
 
 let selectedPolicyId = null;
 let selectedFamilyMemberId = null;
+let createPolicyCustomerId = null;
 
 
 async function initAgent() {
@@ -3072,10 +3119,27 @@ function renderCustomerDetail() {
 
           <!-- Policies -->
 
-          <div class="agent-section-title">
+          <div class="agent-section-title agent-section-title-flex">
 
-            🛡️ กรมธรรม์
-
+            <span>
+              🛡️ กรมธรรม์
+            </span>
+          
+          
+            <button
+              type="button"
+              class="agent-add-button"
+              onclick="
+                openCreatePolicy(
+                  '${escapeHtml(
+                    customer.CustomerID
+                  )}'
+                )
+              "
+            >
+              ＋ เพิ่มกรมธรรม์
+            </button>
+          
           </div>
 
 
@@ -6300,6 +6364,669 @@ function renderAgentManageButton() {
     </button>
 
   `;
+
+}
+
+function openCreatePolicy(
+  customerId
+) {
+
+  const id =
+    String(
+      customerId || ''
+    ).trim();
+
+
+  if (!id) {
+    return;
+  }
+
+
+  createPolicyCustomerId =
+    id;
+
+
+  renderCreatePolicyForm();
+
+}
+
+function renderCreatePolicyForm() {
+
+  const data =
+    selectedCustomer || {};
+
+
+  const customer =
+    data.customer || {};
+
+
+  const family =
+    data.family || [];
+
+
+  const displayName =
+    customer.DisplayName ||
+    (
+      (customer.FirstName || '') +
+      (
+        customer.FirstName &&
+        customer.LastName
+          ? ' '
+          : ''
+      ) +
+      (customer.LastName || '')
+    ) ||
+    '-';
+
+
+  document
+    .getElementById('app')
+    .innerHTML = `
+
+      <div class="app">
+
+
+        <div class="topbar">
+
+          <div
+            class="agent-back"
+            onclick="
+              renderPage(
+                'customer-detail'
+              )
+            "
+          >
+            ← ${escapeHtml(
+              displayName
+            )}
+          </div>
+
+
+          <div class="brand">
+            ANC Life Planning
+          </div>
+
+        </div>
+
+
+        <div class="page">
+
+
+          <div class="page-title">
+            🛡️ เพิ่มกรมธรรม์
+          </div>
+
+
+          <div class="manage-subtitle">
+
+            ${escapeHtml(
+              displayName
+            )}
+
+          </div>
+
+
+          <div class="form-card">
+
+
+            <!-- POLICY NUMBER -->
+
+            <label class="form-label">
+              เลขกรมธรรม์ *
+            </label>
+
+            <input
+              id="newPolicyNo"
+              class="form-input"
+              type="text"
+              placeholder="เช่น 123456789"
+            >
+
+
+            <!-- PLAN ID -->
+
+            <label class="form-label">
+              Plan ID
+            </label>
+
+            <input
+              id="newPolicyPlanId"
+              class="form-input"
+              type="text"
+              placeholder="เช่น HEALTH-01"
+            >
+
+
+            <!-- PLAN NAME -->
+
+            <label class="form-label">
+              ชื่อแผน *
+            </label>
+
+            <input
+              id="newPolicyPlanName"
+              class="form-input"
+              type="text"
+              placeholder="เช่น Health Max"
+            >
+
+
+            <!-- POLICY TYPE -->
+
+            <label class="form-label">
+              ประเภทกรมธรรม์
+            </label>
+
+            <select
+              id="newPolicyType"
+              class="form-input"
+            >
+
+              <option value="">
+                เลือกประเภท
+              </option>
+
+              <option value="HEALTH">
+                สุขภาพ
+              </option>
+
+              <option value="LIFE">
+                ชีวิต
+              </option>
+
+              <option value="CI">
+                โรคร้ายแรง
+              </option>
+
+              <option value="ACCIDENT">
+                อุบัติเหตุ
+              </option>
+
+              <option value="SAVINGS">
+                สะสมทรัพย์
+              </option>
+
+              <option value="OTHER">
+                อื่น ๆ
+              </option>
+
+            </select>
+
+
+            <!-- FAMILY MEMBER -->
+
+            <label class="form-label">
+              ผู้เอาประกัน
+            </label>
+
+            <select
+              id="newPolicyFamilyMember"
+              class="form-input"
+            >
+
+              <option value="">
+                เจ้าของบัญชี
+              </option>
+
+              ${
+                family
+                  .map(member => {
+
+                    const name =
+                      member.DisplayName ||
+                      (
+                        (member.FirstName || '') +
+                        (
+                          member.FirstName &&
+                          member.LastName
+                            ? ' '
+                            : ''
+                        ) +
+                        (member.LastName || '')
+                      );
+
+
+                    return `
+
+                      <option
+                        value="${escapeHtml(
+                          member.FamilyMemberID
+                        )}"
+                      >
+
+                        ${escapeHtml(name)}
+
+                        ${
+                          member.Relationship
+                            ? `
+                              -
+                              ${escapeHtml(
+                                member.Relationship
+                              )}
+                            `
+                            : ''
+                        }
+
+                      </option>
+
+                    `;
+
+                  })
+                  .join('')
+              }
+
+            </select>
+
+
+            <!-- EFFECTIVE DATE -->
+
+            <label class="form-label">
+              วันเริ่มคุ้มครอง *
+            </label>
+
+            <input
+              id="newPolicyEffectiveDate"
+              class="form-input"
+              type="date"
+            >
+
+
+            <!-- EXPIRY DATE -->
+
+            <label class="form-label">
+              วันสิ้นสุด
+            </label>
+
+            <input
+              id="newPolicyExpiryDate"
+              class="form-input"
+              type="date"
+            >
+
+
+            <!-- PAYMENT MODE -->
+
+            <label class="form-label">
+              รูปแบบการชำระเบี้ย
+            </label>
+
+            <select
+              id="newPolicyPaymentMode"
+              class="form-input"
+            >
+
+              <option value="">
+                เลือกรูปแบบ
+              </option>
+
+              <option value="YEARLY">
+                รายปี
+              </option>
+
+              <option value="HALF_YEARLY">
+                ราย 6 เดือน
+              </option>
+
+              <option value="QUARTERLY">
+                ราย 3 เดือน
+              </option>
+
+              <option value="MONTHLY">
+                รายเดือน
+              </option>
+
+              <option value="SINGLE">
+                ชำระครั้งเดียว
+              </option>
+
+            </select>
+
+
+            <!-- PREMIUM -->
+
+            <label class="form-label">
+              เบี้ยต่อปี
+            </label>
+
+            <input
+              id="newPolicyAnnualPremium"
+              class="form-input"
+              type="number"
+              min="0"
+              inputmode="decimal"
+              placeholder="0"
+            >
+
+
+            <!-- NEXT PAYMENT -->
+
+            <label class="form-label">
+              วันชำระเบี้ยครั้งต่อไป
+            </label>
+
+            <input
+              id="newPolicyNextPaymentDate"
+              class="form-input"
+              type="date"
+            >
+
+
+            <div
+              id="createPolicyMessage"
+              class="form-message"
+            ></div>
+
+
+            <button
+              type="button"
+              class="form-submit-button"
+              onclick="
+                submitCreatePolicy()
+              "
+            >
+
+              บันทึกกรมธรรม์
+
+            </button>
+
+
+          </div>
+
+        </div>
+
+
+        ${renderBottomNav()}
+
+      </div>
+
+    `;
+
+}
+
+async function submitCreatePolicy() {
+
+  const policyNo =
+    document
+      .getElementById(
+        'newPolicyNo'
+      )
+      ?.value
+      .trim();
+
+
+  const planId =
+    document
+      .getElementById(
+        'newPolicyPlanId'
+      )
+      ?.value
+      .trim();
+
+
+  const planName =
+    document
+      .getElementById(
+        'newPolicyPlanName'
+      )
+      ?.value
+      .trim();
+
+
+  const policyType =
+    document
+      .getElementById(
+        'newPolicyType'
+      )
+      ?.value
+      .trim();
+
+
+  const familyMemberId =
+    document
+      .getElementById(
+        'newPolicyFamilyMember'
+      )
+      ?.value
+      .trim();
+
+
+  const effectiveDate =
+    document
+      .getElementById(
+        'newPolicyEffectiveDate'
+      )
+      ?.value
+      .trim();
+
+
+  const expiryDate =
+    document
+      .getElementById(
+        'newPolicyExpiryDate'
+      )
+      ?.value
+      .trim();
+
+
+  const paymentMode =
+    document
+      .getElementById(
+        'newPolicyPaymentMode'
+      )
+      ?.value
+      .trim();
+
+
+  const annualPremium =
+    Number(
+      document
+        .getElementById(
+          'newPolicyAnnualPremium'
+        )
+        ?.value ||
+      0
+    );
+
+
+  const nextPaymentDate =
+    document
+      .getElementById(
+        'newPolicyNextPaymentDate'
+      )
+      ?.value
+      .trim();
+
+
+  const messageBox =
+    document
+      .getElementById(
+        'createPolicyMessage'
+      );
+
+
+  if (!policyNo) {
+
+    messageBox.textContent =
+      'กรุณากรอกเลขกรมธรรม์';
+
+    return;
+
+  }
+
+
+  if (!planName) {
+
+    messageBox.textContent =
+      'กรุณากรอกชื่อแผน';
+
+    return;
+
+  }
+
+
+  if (!effectiveDate) {
+
+    messageBox.textContent =
+      'กรุณาระบุวันเริ่มคุ้มครอง';
+
+    return;
+
+  }
+
+
+  messageBox.textContent =
+    'กำลังบันทึก...';
+
+
+  try {
+
+    const idToken =
+      liff.getIDToken();
+
+
+    if (!idToken) {
+
+      throw new Error(
+        'ไม่พบ LINE ID Token'
+      );
+
+    }
+
+
+    const result =
+      await postAPI({
+
+        action:
+          'agentCreatePolicy',
+
+        idToken:
+          idToken,
+
+        data: {
+
+          CustomerID:
+            createPolicyCustomerId,
+
+          FamilyMemberID:
+            familyMemberId,
+
+          PolicyNo:
+            policyNo,
+
+          PlanID:
+            planId,
+
+          PlanName:
+            planName,
+
+          PolicyType:
+            policyType,
+
+          EffectiveDate:
+            effectiveDate,
+
+          ExpiryDate:
+            expiryDate,
+
+          PaymentMode:
+            paymentMode,
+
+          AnnualPremium:
+            annualPremium,
+
+          NextPaymentDate:
+            nextPaymentDate
+
+        }
+
+      });
+
+
+    if (
+      !result.success
+    ) {
+
+      if (
+        result.duplicate
+      ) {
+
+        messageBox.innerHTML = `
+
+          ⚠️ เลขกรมธรรม์นี้มีอยู่ในระบบแล้ว
+
+          <br>
+
+          Policy ID:
+          ${escapeHtml(
+            result.policyId ||
+            '-'
+          )}
+
+        `;
+
+        return;
+
+      }
+
+
+      throw new Error(
+        result.message ||
+        'ไม่สามารถบันทึกกรมธรรม์ได้'
+      );
+
+    }
+
+
+    messageBox.innerHTML = `
+
+      <div class="form-success">
+
+        ✅ บันทึกกรมธรรม์เรียบร้อยแล้ว
+
+        <br>
+
+        Policy ID:
+        <strong>
+          ${escapeHtml(
+            result.policy.PolicyID
+          )}
+        </strong>
+
+      </div>
+
+    `;
+
+
+    /*
+     * โหลด Customer Detail ใหม่
+     */
+
+    setTimeout(
+      async () => {
+
+        await openCustomer(
+          createPolicyCustomerId
+        );
+
+      },
+      600
+    );
+
+  }
+
+  catch (error) {
+
+    console.error(
+      'submitCreatePolicy error:',
+      error
+    );
+
+
+    messageBox.textContent =
+      error.message ||
+      'เกิดข้อผิดพลาด';
+
+  }
 
 }
 
