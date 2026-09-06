@@ -2013,6 +2013,442 @@
     
     }
 
+    /* =====================================
+       WIZARD
+    ===================================== */
+    
+    .wizard-progress {
+    
+      display: grid;
+    
+      grid-template-columns:
+        repeat(3, 1fr);
+    
+      gap: 5px;
+    
+      margin-bottom: 18px;
+    
+    }
+    
+    
+    .wizard-progress span {
+    
+      text-align: center;
+    
+      padding: 7px 3px;
+    
+      border-radius: 8px;
+    
+      background: #f3f4f6;
+    
+      color: #9ca3af;
+    
+      font-size: 9px;
+    
+      font-weight: 700;
+    
+    }
+    
+    
+    .wizard-progress span.active {
+    
+      background: #111827;
+    
+      color: #ffffff;
+    
+    }
+    
+    
+    .wizard-progress span.done {
+    
+      background: #e5e7eb;
+    
+      color: #374151;
+    
+    }
+    
+    
+    .wizard-buttons {
+    
+      display: grid;
+    
+      grid-template-columns:
+        0.8fr 1.2fr;
+    
+      gap: 8px;
+    
+      margin-top: 16px;
+    
+    }
+    
+    
+    .wizard-secondary-button {
+    
+      border: 1px solid #d1d5db;
+    
+      background: #ffffff;
+    
+      color: #374151;
+    
+      border-radius: 13px;
+    
+      min-height: 46px;
+    
+      font-size: 12px;
+    
+      font-weight: 700;
+    
+      cursor: pointer;
+    
+    }
+    
+    
+    /* =====================================
+       RIDER HEADER
+    ===================================== */
+    
+    .rider-section-header {
+    
+      display: flex;
+    
+      justify-content: space-between;
+    
+      align-items: center;
+    
+      gap: 10px;
+    
+      margin-bottom: 10px;
+    
+    }
+    
+    
+    .rider-section-title {
+    
+      font-size: 15px;
+    
+      font-weight: 800;
+    
+    }
+    
+    
+    .rider-section-subtitle {
+    
+      margin-top: 2px;
+    
+      font-size: 10px;
+    
+      color: #9ca3af;
+    
+    }
+    
+    
+    /* =====================================
+       RIDER GRID
+    ===================================== */
+    
+    .rider-grid {
+    
+      background: #ffffff;
+    
+      border: 1px solid #e5e7eb;
+    
+      border-radius: 15px;
+    
+      overflow: hidden;
+    
+    }
+    
+    
+    .rider-grid-header,
+    .rider-grid-row {
+    
+      display: grid;
+    
+      grid-template-columns:
+        minmax(0, 1.5fr)
+        0.9fr
+        0.8fr
+        56px;
+    
+      align-items: center;
+    
+      gap: 6px;
+    
+    }
+    
+    
+    .rider-grid-header {
+    
+      padding:
+        9px 10px;
+    
+      background: #f9fafb;
+    
+      color: #9ca3af;
+    
+      font-size: 9px;
+    
+      font-weight: 700;
+    
+    }
+    
+    
+    .rider-grid-row {
+    
+      padding:
+        11px 10px;
+    
+      border-top:
+        1px solid #f0f0f0;
+    
+      font-size: 11px;
+    
+      color: #374151;
+    
+    }
+    
+    
+    .rider-grid-name {
+    
+      min-width: 0;
+    
+    }
+    
+    
+    .rider-grid-name strong {
+    
+      display: block;
+    
+      font-size: 11px;
+    
+      font-weight: 800;
+    
+      overflow: hidden;
+    
+      text-overflow: ellipsis;
+    
+      white-space: nowrap;
+    
+    }
+    
+    
+    .rider-grid-name small {
+    
+      display: block;
+    
+      margin-top: 2px;
+    
+      font-size: 9px;
+    
+      color: #9ca3af;
+    
+    }
+    
+    
+    .rider-grid-actions {
+    
+      display: flex;
+    
+      justify-content: flex-end;
+    
+      gap: 3px;
+    
+    }
+    
+    
+    .rider-grid-actions button {
+    
+      border: 0;
+    
+      background: transparent;
+    
+      padding: 4px;
+    
+      font-size: 14px;
+    
+      cursor: pointer;
+    
+    }
+    
+    
+    .rider-delete-button {
+    
+      opacity: .75;
+    
+    }
+    
+    
+    /* =====================================
+       RIDER EMPTY
+    ===================================== */
+    
+    .rider-empty {
+    
+      background: #ffffff;
+    
+      border:
+        1px dashed #d1d5db;
+    
+      border-radius: 15px;
+    
+      padding: 24px 15px;
+    
+      text-align: center;
+    
+      color: #9ca3af;
+    
+      font-size: 13px;
+    
+    }
+    
+    
+    .rider-empty small {
+    
+      display: block;
+    
+      margin-top: 4px;
+    
+      font-size: 10px;
+    
+    }
+    
+    
+    /* =====================================
+       REVIEW
+    ===================================== */
+    
+    .review-section-title {
+    
+      font-size: 13px;
+    
+      font-weight: 800;
+    
+      color: #111827;
+    
+      margin-bottom: 4px;
+    
+    }
+    
+    
+    .review-rider-title {
+    
+      margin-top: 18px;
+    
+      padding-top: 14px;
+    
+      border-top:
+        1px solid #e5e7eb;
+    
+    }
+    
+    
+    .review-row {
+    
+      display: flex;
+    
+      justify-content: space-between;
+    
+      align-items: center;
+    
+      gap: 15px;
+    
+      min-height: 42px;
+    
+      border-bottom:
+        1px solid #f3f4f6;
+    
+    }
+    
+    
+    .review-row span {
+    
+      font-size: 11px;
+    
+      color: #6b7280;
+    
+    }
+    
+    
+    .review-row strong {
+    
+      font-size: 11px;
+    
+      color: #111827;
+    
+      text-align: right;
+    
+    }
+    
+    
+    .review-rider-list {
+    
+      background: #f9fafb;
+    
+      border-radius: 12px;
+    
+      overflow: hidden;
+    
+    }
+    
+    
+    .review-rider-row {
+    
+      display: flex;
+    
+      align-items: center;
+    
+      justify-content: space-between;
+    
+      gap: 10px;
+    
+      padding:
+        10px 12px;
+    
+    }
+    
+    
+    .review-rider-row + .review-rider-row {
+    
+      border-top:
+        1px solid #e5e7eb;
+    
+    }
+    
+    
+    .review-rider-row strong {
+    
+      display: block;
+    
+      font-size: 11px;
+    
+      font-weight: 800;
+    
+    }
+    
+    
+    .review-rider-row small {
+    
+      display: block;
+    
+      margin-top: 2px;
+    
+      font-size: 9px;
+    
+      color: #9ca3af;
+    
+    }
+    
+    
+    .review-rider-amount {
+    
+      font-size: 11px;
+    
+      font-weight: 800;
+    
+      white-space: nowrap;
+    
+    }
+
   </style>
 
 </head>
@@ -2045,6 +2481,11 @@ let selectedCustomer = null;
 let selectedPolicyId = null;
 let selectedFamilyMemberId = null;
 let createPolicyCustomerId = null;
+
+let newPolicyRiders = [];
+let editingRiderIndex = -1;
+let createPolicyStep = 1;
+let createPolicyData = {};
 
 
 async function initAgent() {
@@ -6405,11 +6846,54 @@ function openCreatePolicy(
     id;
 
 
+  createPolicyStep = 1;
+
+  newPolicyRiders = [];
+
+  editingRiderIndex = -1;
+
+
   renderCreatePolicyForm();
 
 }
 
 function renderCreatePolicyForm() {
+
+  if (
+    createPolicyStep === 1
+  ) {
+
+    renderCreatePolicyStep1();
+
+    return;
+
+  }
+
+
+  if (
+    createPolicyStep === 2
+  ) {
+
+    renderCreatePolicyStep2();
+
+    return;
+
+  }
+
+
+  if (
+    createPolicyStep === 3
+  ) {
+
+    renderCreatePolicyStep3();
+
+    return;
+
+  }
+
+}
+
+function renderCreatePolicyStep1() {
 
   const data =
     selectedCustomer || {};
@@ -6470,25 +6954,35 @@ function renderCreatePolicyForm() {
 
         <div class="page">
 
+          <div class="wizard-progress">
+
+            <span class="active">
+              1 กรมธรรม์
+            </span>
+
+            <span>
+              2 Rider
+            </span>
+
+            <span>
+              3 ตรวจสอบ
+            </span>
+
+          </div>
+
 
           <div class="page-title">
-            🛡️ เพิ่มกรมธรรม์
+            🛡️ กรมธรรม์หลัก
           </div>
 
 
           <div class="manage-subtitle">
-
-            ${escapeHtml(
-              displayName
-            )}
-
+            ${escapeHtml(displayName)}
           </div>
 
 
           <div class="form-card">
 
-
-            <!-- POLICY NUMBER -->
 
             <label class="form-label">
               เลขกรมธรรม์ *
@@ -6498,11 +6992,9 @@ function renderCreatePolicyForm() {
               id="newPolicyNo"
               class="form-input"
               type="text"
-              placeholder="เช่น 123456789"
+              placeholder="เลขกรมธรรม์"
             >
 
-
-            <!-- PLAN ID -->
 
             <label class="form-label">
               Plan ID
@@ -6512,67 +7004,21 @@ function renderCreatePolicyForm() {
               id="newPolicyPlanId"
               class="form-input"
               type="text"
-              placeholder="เช่น HEALTH-01"
+              placeholder="Plan ID"
             >
 
 
-            <!-- PLAN NAME -->
-
             <label class="form-label">
-              ชื่อแผน *
+              ชื่อแผนหลัก *
             </label>
 
             <input
               id="newPolicyPlanName"
               class="form-input"
               type="text"
-              placeholder="เช่น Health Max"
+              placeholder="เช่น ประกันชีวิต..."
             >
 
-
-            <!-- POLICY TYPE -->
-
-            <label class="form-label">
-              ประเภทกรมธรรม์
-            </label>
-
-            <select
-              id="newPolicyType"
-              class="form-input"
-            >
-
-              <option value="">
-                เลือกประเภท
-              </option>
-
-              <option value="HEALTH">
-                สุขภาพ
-              </option>
-
-              <option value="LIFE">
-                ชีวิต
-              </option>
-
-              <option value="CI">
-                โรคร้ายแรง
-              </option>
-
-              <option value="ACCIDENT">
-                อุบัติเหตุ
-              </option>
-
-              <option value="SAVINGS">
-                สะสมทรัพย์
-              </option>
-
-              <option value="OTHER">
-                อื่น ๆ
-              </option>
-
-            </select>
-
-
-            <!-- FAMILY MEMBER -->
 
             <label class="form-label">
               ผู้เอาประกัน
@@ -6617,12 +7063,9 @@ function renderCreatePolicyForm() {
 
                         ${
                           member.Relationship
-                            ? `
-                              -
-                              ${escapeHtml(
+                            ? ` - ${escapeHtml(
                                 member.Relationship
-                              )}
-                            `
+                              )}`
                             : ''
                         }
 
@@ -6637,8 +7080,6 @@ function renderCreatePolicyForm() {
             </select>
 
 
-            <!-- EFFECTIVE DATE -->
-
             <label class="form-label">
               วันเริ่มคุ้มครอง *
             </label>
@@ -6649,8 +7090,6 @@ function renderCreatePolicyForm() {
               type="date"
             >
 
-
-            <!-- EXPIRY DATE -->
 
             <label class="form-label">
               วันสิ้นสุด
@@ -6663,10 +7102,8 @@ function renderCreatePolicyForm() {
             >
 
 
-            <!-- PAYMENT MODE -->
-
             <label class="form-label">
-              รูปแบบการชำระเบี้ย
+              รูปแบบชำระเบี้ย
             </label>
 
             <select
@@ -6701,8 +7138,6 @@ function renderCreatePolicyForm() {
             </select>
 
 
-            <!-- PREMIUM -->
-
             <label class="form-label">
               เบี้ยต่อปี
             </label>
@@ -6716,8 +7151,6 @@ function renderCreatePolicyForm() {
               placeholder="0"
             >
 
-
-            <!-- NEXT PAYMENT -->
 
             <label class="form-label">
               วันชำระเบี้ยครั้งต่อไป
@@ -6740,12 +7173,10 @@ function renderCreatePolicyForm() {
               type="button"
               class="form-submit-button"
               onclick="
-                submitCreatePolicy()
+                goCreatePolicyStep2()
               "
             >
-
-              บันทึกกรมธรรม์
-
+              ต่อไป →
             </button>
 
 
@@ -6762,7 +7193,7 @@ function renderCreatePolicyForm() {
 
 }
 
-async function submitCreatePolicy() {
+function goCreatePolicyStep2() {
 
   const policyNo =
     document
@@ -6786,15 +7217,6 @@ async function submitCreatePolicy() {
     document
       .getElementById(
         'newPolicyPlanName'
-      )
-      ?.value
-      .trim();
-
-
-  const policyType =
-    document
-      .getElementById(
-        'newPolicyType'
       )
       ?.value
       .trim();
@@ -6876,7 +7298,7 @@ async function submitCreatePolicy() {
   if (!planName) {
 
     messageBox.textContent =
-      'กรุณากรอกชื่อแผน';
+      'กรุณากรอกชื่อแผนหลัก';
 
     return;
 
@@ -6891,6 +7313,1086 @@ async function submitCreatePolicy() {
     return;
 
   }
+
+
+  createPolicyData = {
+
+    CustomerID:
+      createPolicyCustomerId,
+
+    FamilyMemberID:
+      familyMemberId,
+
+    PolicyNo:
+      policyNo,
+
+    PlanID:
+      planId,
+
+    PlanName:
+      planName,
+
+    EffectiveDate:
+      effectiveDate,
+
+    ExpiryDate:
+      expiryDate,
+
+    PaymentMode:
+      paymentMode,
+
+    AnnualPremium:
+      annualPremium,
+
+    NextPaymentDate:
+      nextPaymentDate
+
+  };
+
+
+  createPolicyStep = 2;
+
+  renderCreatePolicyStep2();
+
+}
+
+function renderCreatePolicyStep2() {
+
+  document
+    .getElementById('app')
+    .innerHTML = `
+
+      <div class="app">
+
+
+        <div class="topbar">
+
+          <div
+            class="agent-back"
+            onclick="
+              createPolicyStep = 1;
+              renderCreatePolicyStep1();
+            "
+          >
+            ← กรมธรรม์หลัก
+          </div>
+
+
+          <div class="brand">
+            ANC Life Planning
+          </div>
+
+        </div>
+
+
+        <div class="page">
+
+
+          <div class="wizard-progress">
+
+            <span class="done">
+              1 กรมธรรม์
+            </span>
+
+            <span class="active">
+              2 Rider
+            </span>
+
+            <span>
+              3 ตรวจสอบ
+            </span>
+
+          </div>
+
+
+          <div class="page-title">
+            Rider
+          </div>
+
+
+          <div class="rider-section-header">
+
+            <div>
+
+              <div class="rider-section-title">
+                รายการ Rider
+              </div>
+
+              <div class="rider-section-subtitle">
+                มีหรือไม่มีก็ได้
+              </div>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="agent-add-button"
+              onclick="
+                openRiderEditor(-1)
+              "
+            >
+              ＋ เพิ่ม Rider
+            </button>
+
+          </div>
+
+
+          ${
+            newPolicyRiders.length
+
+              ? `
+
+                <div class="rider-grid">
+
+                  <div
+                    class="
+                      rider-grid-header
+                    "
+                  >
+
+                    <div>
+                      Rider
+                    </div>
+
+                    <div>
+                      ทุน
+                    </div>
+
+                    <div>
+                      เบี้ย
+                    </div>
+
+                    <div>
+                      
+                    </div>
+
+                  </div>
+
+
+                  ${
+                    newPolicyRiders
+                      .map(
+                        (
+                          rider,
+                          index
+                        ) => `
+
+                          <div
+                            class="
+                              rider-grid-row
+                            "
+                          >
+
+                            <div
+                              class="
+                                rider-grid-name
+                              "
+                            >
+
+                              <strong>
+
+                                ${escapeHtml(
+                                  rider.RiderName ||
+                                  rider.RiderID ||
+                                  '-'
+                                )}
+
+                              </strong>
+
+
+                              ${
+                                rider.RiderType
+                                  ? `
+                                    <small>
+                                      ${escapeHtml(
+                                        rider.RiderType
+                                      )}
+                                    </small>
+                                  `
+                                  : ''
+                              }
+
+                            </div>
+
+
+                            <div>
+
+                              ${formatAgentNumber(
+                                rider.Coverage
+                              )}
+
+                            </div>
+
+
+                            <div>
+
+                              ${formatAgentNumber(
+                                rider.Premium
+                              )}
+
+                            </div>
+
+
+                            <div
+                              class="
+                                rider-grid-actions
+                              "
+                            >
+
+                              <button
+                                type="button"
+                                onclick="
+                                  openRiderEditor(
+                                    ${index}
+                                  )
+                                "
+                              >
+                                ✏️
+                              </button>
+
+
+                              <button
+                                type="button"
+                                class="
+                                  rider-delete-button
+                                "
+                                onclick="
+                                  deleteRider(
+                                    ${index}
+                                  )
+                                "
+                              >
+                                🗑️
+                              </button>
+
+                            </div>
+
+                          </div>
+
+                        `
+                      )
+                      .join('')
+                  }
+
+                </div>
+
+              `
+
+              : `
+
+                <div
+                  class="
+                    rider-empty
+                  "
+                >
+
+                  <div>
+                    📋
+                  </div>
+
+                  <div>
+                    ยังไม่มี Rider
+                  </div>
+
+                  <small>
+                    สามารถข้ามขั้นตอนนี้ได้
+                  </small>
+
+                </div>
+
+              `
+          }
+
+
+          <div
+            id="riderStepMessage"
+            class="form-message"
+          ></div>
+
+
+          <div class="wizard-buttons">
+
+            <button
+              type="button"
+              class="wizard-secondary-button"
+              onclick="
+                createPolicyStep = 1;
+                renderCreatePolicyStep1();
+              "
+            >
+              ← ย้อนกลับ
+            </button>
+
+
+            <button
+              type="button"
+              class="form-submit-button"
+              onclick="
+                goCreatePolicyStep3()
+              "
+            >
+              ต่อไป →
+            </button>
+
+          </div>
+
+
+        </div>
+
+
+        ${renderBottomNav()}
+
+      </div>
+
+    `;
+
+}
+
+function openRiderEditor(
+  index
+) {
+
+  editingRiderIndex =
+    Number(index);
+
+
+  const rider =
+    editingRiderIndex >= 0
+      ? newPolicyRiders[
+          editingRiderIndex
+        ]
+      : null;
+
+
+  renderRiderEditor(
+    rider
+  );
+
+}
+
+function renderRiderEditor(
+  rider
+) {
+
+  document
+    .getElementById('app')
+    .innerHTML = `
+
+      <div class="app">
+
+
+        <div class="topbar">
+
+          <div
+            class="agent-back"
+            onclick="
+              renderCreatePolicyStep2()
+            "
+          >
+            ← Rider
+          </div>
+
+
+          <div class="brand">
+            ANC Life Planning
+          </div>
+
+        </div>
+
+
+        <div class="page">
+
+
+          <div class="page-title">
+
+            ${
+              rider
+                ? '✏️ แก้ไข Rider'
+                : '＋ เพิ่ม Rider'
+            }
+
+          </div>
+
+
+          <div class="form-card">
+
+
+            <label class="form-label">
+              Rider ID *
+            </label>
+
+            <input
+              id="riderEditorId"
+              class="form-input"
+              type="text"
+              value="${escapeHtml(
+                rider?.RiderID || ''
+              )}"
+              placeholder="เช่น HSMHPDC"
+            >
+
+
+            <label class="form-label">
+              ชื่อ Rider *
+            </label>
+
+            <input
+              id="riderEditorName"
+              class="form-input"
+              type="text"
+              value="${escapeHtml(
+                rider?.RiderName || ''
+              )}"
+              placeholder="เช่น Health Max"
+            >
+
+
+            <label class="form-label">
+              ประเภท Rider
+            </label>
+
+            <input
+              id="riderEditorType"
+              class="form-input"
+              type="text"
+              value="${escapeHtml(
+                rider?.RiderType || ''
+              )}"
+              placeholder="เช่น HEALTH"
+            >
+
+
+            <label class="form-label">
+              ทุน Rider
+            </label>
+
+            <input
+              id="riderEditorCoverage"
+              class="form-input"
+              type="number"
+              min="0"
+              value="${
+                Number(
+                  rider?.Coverage || 0
+                )
+              }"
+            >
+
+
+            <label class="form-label">
+              เบี้ย Rider
+            </label>
+
+            <input
+              id="riderEditorPremium"
+              class="form-input"
+              type="number"
+              min="0"
+              value="${
+                Number(
+                  rider?.Premium || 0
+                )
+              }"
+            >
+
+
+            <div
+              id="riderEditorMessage"
+              class="form-message"
+            ></div>
+
+
+            <button
+              type="button"
+              class="form-submit-button"
+              onclick="
+                saveRiderEditor()
+              "
+            >
+              บันทึก Rider
+            </button>
+
+
+          </div>
+
+        </div>
+
+
+        ${renderBottomNav()}
+
+      </div>
+
+    `;
+
+}
+
+function saveRiderEditor() {
+
+  const riderId =
+    document
+      .getElementById(
+        'riderEditorId'
+      )
+      ?.value
+      .trim();
+
+
+  const riderName =
+    document
+      .getElementById(
+        'riderEditorName'
+      )
+      ?.value
+      .trim();
+
+
+  const riderType =
+    document
+      .getElementById(
+        'riderEditorType'
+      )
+      ?.value
+      .trim();
+
+
+  const coverage =
+    Number(
+      document
+        .getElementById(
+          'riderEditorCoverage'
+        )
+        ?.value ||
+      0
+    );
+
+
+  const premium =
+    Number(
+      document
+        .getElementById(
+          'riderEditorPremium'
+        )
+        ?.value ||
+      0
+    );
+
+
+  const messageBox =
+    document
+      .getElementById(
+        'riderEditorMessage'
+      );
+
+
+  if (!riderId) {
+
+    messageBox.textContent =
+      'กรุณาระบุ Rider ID';
+
+    return;
+
+  }
+
+
+  if (!riderName) {
+
+    messageBox.textContent =
+      'กรุณาระบุชื่อ Rider';
+
+    return;
+
+  }
+
+
+  /*
+   * ป้องกัน Rider ซ้ำ
+   */
+
+  const duplicateIndex =
+    newPolicyRiders.findIndex(
+      (item, index) =>
+
+        index !== editingRiderIndex &&
+
+        String(
+          item.RiderID || ''
+        ).trim().toLowerCase() ===
+        riderId.toLowerCase()
+
+    );
+
+
+  if (
+    duplicateIndex >= 0
+  ) {
+
+    messageBox.textContent =
+      'Rider นี้มีอยู่ในรายการแล้ว';
+
+    return;
+
+  }
+
+
+  const rider = {
+
+    RiderID:
+      riderId,
+
+    RiderName:
+      riderName,
+
+    RiderType:
+      riderType,
+
+    Coverage:
+      coverage,
+
+    Premium:
+      premium
+
+  };
+
+
+  if (
+    editingRiderIndex >= 0
+  ) {
+
+    newPolicyRiders[
+      editingRiderIndex
+    ] = rider;
+
+  }
+
+  else {
+
+    newPolicyRiders.push(
+      rider
+    );
+
+  }
+
+
+  editingRiderIndex = -1;
+
+
+  renderCreatePolicyStep2();
+
+}
+
+function deleteRider(
+  index
+) {
+
+  if (
+    index < 0 ||
+    index >= newPolicyRiders.length
+  ) {
+
+    return;
+
+  }
+
+
+  const rider =
+    newPolicyRiders[index];
+
+
+  const name =
+    rider.RiderName ||
+    rider.RiderID ||
+    'Rider นี้';
+
+
+  const confirmed =
+    window.confirm(
+      `ต้องการลบ ${name} หรือไม่?`
+    );
+
+
+  if (!confirmed) {
+
+    return;
+
+  }
+
+
+  newPolicyRiders.splice(
+    index,
+    1
+  );
+
+
+  renderCreatePolicyStep2();
+
+}
+
+function goCreatePolicyStep3() {
+
+  createPolicyStep = 3;
+
+  renderCreatePolicyStep3();
+
+}
+
+function renderCreatePolicyStep3() {
+
+  const data =
+    selectedCustomer || {};
+
+
+  const customer =
+    data.customer || {};
+
+
+  const family =
+    data.family || [];
+
+
+  const familyMember =
+    family.find(member =>
+      String(
+        member.FamilyMemberID || ''
+      ).trim() ===
+      String(
+        createPolicyData.FamilyMemberID || ''
+      ).trim()
+    );
+
+
+  const ownerName =
+    familyMember
+      ? (
+          familyMember.DisplayName ||
+          (
+            (familyMember.FirstName || '') +
+            (
+              familyMember.FirstName &&
+              familyMember.LastName
+                ? ' '
+                : ''
+            ) +
+            (familyMember.LastName || '')
+          )
+        )
+      : (
+          customer.DisplayName ||
+          customer.FirstName ||
+          '-'
+        );
+
+
+  document
+    .getElementById('app')
+    .innerHTML = `
+
+      <div class="app">
+
+
+        <div class="topbar">
+
+          <div
+            class="agent-back"
+            onclick="
+              createPolicyStep = 2;
+              renderCreatePolicyStep2();
+            "
+          >
+            ← Rider
+          </div>
+
+
+          <div class="brand">
+            ANC Life Planning
+          </div>
+
+        </div>
+
+
+        <div class="page">
+
+
+          <div class="wizard-progress">
+
+            <span class="done">
+              1 กรมธรรม์
+            </span>
+
+            <span class="done">
+              2 Rider
+            </span>
+
+            <span class="active">
+              3 ตรวจสอบ
+            </span>
+
+          </div>
+
+
+          <div class="page-title">
+            ตรวจสอบข้อมูล
+          </div>
+
+
+          <div class="form-card">
+
+
+            <div
+              class="
+                review-section-title
+              "
+            >
+              กรมธรรม์หลัก
+            </div>
+
+
+            ${renderReviewRow(
+              'ผู้เอาประกัน',
+              ownerName
+            )}
+
+
+            ${renderReviewRow(
+              'เลขกรมธรรม์',
+              createPolicyData.PolicyNo
+            )}
+
+
+            ${renderReviewRow(
+              'Plan ID',
+              createPolicyData.PlanID ||
+              '-'
+            )}
+
+
+            ${renderReviewRow(
+              'แผนหลัก',
+              createPolicyData.PlanName
+            )}
+
+
+            ${renderReviewRow(
+              'เริ่มคุ้มครอง',
+              formatDateDisplay(
+                createPolicyData.EffectiveDate
+              )
+            )}
+
+
+            ${renderReviewRow(
+              'สิ้นสุด',
+              createPolicyData.ExpiryDate
+                ? formatDateDisplay(
+                    createPolicyData.ExpiryDate
+                  )
+                : '-'
+            )}
+
+
+            ${renderReviewRow(
+              'ชำระเบี้ย',
+              createPolicyData.PaymentMode ||
+              '-'
+            )}
+
+
+            ${renderReviewRow(
+              'เบี้ยต่อปี',
+              `${formatAgentNumber(
+                createPolicyData.AnnualPremium
+              )} บาท`
+            )}
+
+
+            ${renderReviewRow(
+              'ชำระครั้งต่อไป',
+              createPolicyData.NextPaymentDate
+                ? formatDateDisplay(
+                    createPolicyData.NextPaymentDate
+                  )
+                : '-'
+            )}
+
+
+            <div
+              class="
+                review-section-title
+                review-rider-title
+              "
+            >
+              Rider
+              (${newPolicyRiders.length})
+            </div>
+
+
+            ${
+              newPolicyRiders.length
+
+                ? `
+
+                  <div
+                    class="
+                      review-rider-list
+                    "
+                  >
+
+                    ${
+                      newPolicyRiders
+                        .map(
+                          rider => `
+
+                            <div
+                              class="
+                                review-rider-row
+                              "
+                            >
+
+                              <div>
+
+                                <strong>
+
+                                  ${escapeHtml(
+                                    rider.RiderName
+                                  )}
+
+                                </strong>
+
+
+                                <small>
+
+                                  ${escapeHtml(
+                                    rider.RiderID
+                                  )}
+
+                                </small>
+
+                              </div>
+
+
+                              <div
+                                class="
+                                  review-rider-amount
+                                "
+                              >
+
+                                ${formatAgentNumber(
+                                  rider.Coverage
+                                )}
+
+                              </div>
+
+                            </div>
+
+                          `
+                        )
+                        .join('')
+                    }
+
+                  </div>
+
+                `
+
+                : `
+
+                  <div
+                    class="
+                      rider-empty
+                    "
+                  >
+
+                    ไม่มี Rider
+
+                  </div>
+
+                `
+            }
+
+
+            <div
+              id="createPolicyMessage"
+              class="form-message"
+            ></div>
+
+
+            <div class="wizard-buttons">
+
+
+              <button
+                type="button"
+                class="
+                  wizard-secondary-button
+                "
+                onclick="
+                  createPolicyStep = 2;
+                  renderCreatePolicyStep2();
+                "
+              >
+                ← แก้ไข
+              </button>
+
+
+              <button
+                type="button"
+                class="form-submit-button"
+                onclick="
+                  submitCreatePolicy()
+                "
+              >
+                ยืนยันและบันทึก
+              </button>
+
+
+            </div>
+
+
+          </div>
+
+        </div>
+
+
+        ${renderBottomNav()}
+
+      </div>
+
+    `;
+
+}
+
+function renderReviewRow(
+  label,
+  value
+) {
+
+  return `
+
+    <div
+      class="
+        review-row
+      "
+    >
+
+      <span>
+        ${escapeHtml(label)}
+      </span>
+
+      <strong>
+        ${escapeHtml(value)}
+      </strong>
+
+    </div>
+
+  `;
+
+}
+
+async function submitCreatePolicy() {
+
+  const messageBox =
+    document
+      .getElementById(
+        'createPolicyMessage'
+      );
 
 
   messageBox.textContent =
@@ -6916,7 +8418,7 @@ async function submitCreatePolicy() {
       await postAPI({
 
         action:
-          'agentCreatePolicy',
+          'agentCreatePolicyWithRiders',
 
         idToken:
           idToken,
@@ -6924,37 +8426,37 @@ async function submitCreatePolicy() {
         data: {
 
           CustomerID:
-            createPolicyCustomerId,
+            createPolicyData.CustomerID,
 
           FamilyMemberID:
-            familyMemberId,
+            createPolicyData.FamilyMemberID,
 
           PolicyNo:
-            policyNo,
+            createPolicyData.PolicyNo,
 
           PlanID:
-            planId,
+            createPolicyData.PlanID,
 
           PlanName:
-            planName,
-
-          PolicyType:
-            policyType,
+            createPolicyData.PlanName,
 
           EffectiveDate:
-            effectiveDate,
+            createPolicyData.EffectiveDate,
 
           ExpiryDate:
-            expiryDate,
+            createPolicyData.ExpiryDate,
 
           PaymentMode:
-            paymentMode,
+            createPolicyData.PaymentMode,
 
           AnnualPremium:
-            annualPremium,
+            createPolicyData.AnnualPremium,
 
           NextPaymentDate:
-            nextPaymentDate
+            createPolicyData.NextPaymentDate,
+
+          Riders:
+            newPolicyRiders
 
         }
 
@@ -6969,19 +8471,8 @@ async function submitCreatePolicy() {
         result.duplicate
       ) {
 
-        messageBox.innerHTML = `
-
-          ⚠️ เลขกรมธรรม์นี้มีอยู่ในระบบแล้ว
-
-          <br>
-
-          Policy ID:
-          ${escapeHtml(
-            result.policyId ||
-            '-'
-          )}
-
-        `;
+        messageBox.textContent =
+          `เลขกรมธรรม์นี้มีอยู่แล้ว (${result.policyId})`;
 
         return;
 
@@ -7011,14 +8502,20 @@ async function submitCreatePolicy() {
           )}
         </strong>
 
+        <br>
+
+        Rider:
+        <strong>
+          ${formatAgentNumber(
+            result.riderCount
+          )}
+        </strong>
+        รายการ
+
       </div>
 
     `;
 
-
-    /*
-     * โหลด Customer Detail ใหม่
-     */
 
     setTimeout(
       async () => {
@@ -7028,7 +8525,7 @@ async function submitCreatePolicy() {
         );
 
       },
-      600
+      700
     );
 
   }
