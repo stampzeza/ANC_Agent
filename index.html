@@ -1822,6 +1822,151 @@
     
     }
 
+    /* =====================================
+       TOPBAR
+    ===================================== */
+    
+    .topbar-main {
+    
+      display: flex;
+    
+      align-items: center;
+    
+      justify-content: space-between;
+    
+      gap: 12px;
+    
+    }
+    
+    
+    .agent-manage-button {
+    
+      display: inline-flex;
+    
+      align-items: center;
+    
+      justify-content: center;
+    
+      gap: 5px;
+    
+      border: 1px solid #e5e7eb;
+    
+      background: #ffffff;
+    
+      color: #374151;
+    
+      border-radius: 11px;
+    
+      padding: 8px 10px;
+    
+      min-height: 36px;
+    
+      font-size: 11px;
+    
+      font-weight: 700;
+    
+      white-space: nowrap;
+    
+      cursor: pointer;
+    
+      box-shadow:
+        0 2px 7px rgba(0,0,0,0.04);
+    
+    }
+    
+    
+    .agent-manage-button:active {
+    
+      transform: scale(0.97);
+    
+    }
+    
+    
+    .agent-manage-icon {
+    
+      font-size: 15px;
+    
+      line-height: 1;
+    
+    }
+    
+    
+    /* =====================================
+       BOTTOM NAV
+    ===================================== */
+    
+    .bottom-nav {
+    
+      position: fixed;
+    
+      left: 0;
+    
+      right: 0;
+    
+      bottom: 0;
+    
+      height: 64px;
+    
+      background: #ffffff;
+    
+      border-top:
+        1px solid #e5e7eb;
+    
+      display: grid;
+    
+      grid-template-columns:
+        repeat(2, 1fr);
+    
+      z-index: 100;
+    
+      box-shadow:
+        0 -3px 12px rgba(0,0,0,0.04);
+    
+    }
+    
+    
+    .nav-item {
+    
+      border: 0;
+    
+      background: transparent;
+    
+      color: #9ca3af;
+    
+      font-size: 10px;
+    
+      font-weight: 700;
+    
+      cursor: pointer;
+    
+      display: flex;
+    
+      flex-direction: column;
+    
+      align-items: center;
+    
+      justify-content: center;
+    
+      gap: 3px;
+    
+    }
+    
+    
+    .nav-item.active {
+    
+      color: #111827;
+    
+    }
+    
+    
+    .nav-icon {
+    
+      font-size: 19px;
+    
+      line-height: 1;
+    
+    }
+
   </style>
 
 </head>
@@ -2105,21 +2250,29 @@ function renderDashboard() {
 
         <div class="topbar">
 
-          <div class="brand">
-            ANC Life Planning
+          <div class="topbar-main">
+        
+            <div>
+        
+              <div class="brand">
+                ANC Life Planning
+              </div>
+        
+              <div class="agent-name">
+        
+                ${escapeHtml(
+                  agent?.AgentName || ''
+                )}
+        
+              </div>
+        
+            </div>
+        
+        
+            ${renderAgentManageButton()}
+        
           </div>
-
-          <div class="agent-name">
-
-            ${
-              escapeHtml(
-                agent?.AgentName ||
-                ''
-              )
-            }
-
-          </div>
-
+        
         </div>
 
 
@@ -2238,21 +2391,29 @@ function renderCustomers() {
 
         <div class="topbar">
 
-          <div class="brand">
-            ANC Life Planning
+          <div class="topbar-main">
+        
+            <div>
+        
+              <div class="brand">
+                ANC Life Planning
+              </div>
+        
+              <div class="agent-name">
+        
+                ${escapeHtml(
+                  agent?.AgentName || ''
+                )}
+        
+              </div>
+        
+            </div>
+        
+        
+            ${renderAgentManageButton()}
+        
           </div>
-
-          <div class="agent-name">
-
-            ${
-              escapeHtml(
-                agent?.AgentName ||
-                ''
-              )
-            }
-
-          </div>
-
+        
         </div>
 
 
@@ -2304,12 +2465,12 @@ function renderCustomers() {
 
 }
 
-
 function renderBottomNav() {
 
   return `
 
     <div class="bottom-nav">
+
 
       <button
         class="
@@ -2325,9 +2486,13 @@ function renderBottomNav() {
         "
       >
 
-        🏠
-        <br>
-        Dashboard
+        <span class="nav-icon">
+          🏠
+        </span>
+
+        <span>
+          Dashboard
+        </span>
 
       </button>
 
@@ -2346,11 +2511,16 @@ function renderBottomNav() {
         "
       >
 
-        👥
-        <br>
-        ลูกค้า
+        <span class="nav-icon">
+          👥
+        </span>
+
+        <span>
+          ลูกค้า
+        </span>
 
       </button>
+
 
     </div>
 
@@ -2765,16 +2935,18 @@ function renderCustomerDetail() {
           <div
             class="agent-back"
             onclick="
-              renderPage('customers')
+              renderPage(
+                'customers'
+              )
             "
           >
             ← ลูกค้า
           </div>
-
+        
           <div class="brand">
             ANC Life Planning
           </div>
-
+        
         </div>
 
 
@@ -6125,6 +6297,32 @@ async function submitNewCustomer() {
       'เกิดข้อผิดพลาด';
 
   }
+
+}
+
+function renderAgentManageButton() {
+
+  return `
+
+    <button
+      class="agent-manage-button"
+      type="button"
+      onclick="
+        renderPage('manage')
+      "
+    >
+
+      <span class="agent-manage-icon">
+        ⚙️
+      </span>
+
+      <span>
+        จัดการ
+      </span>
+
+    </button>
+
+  `;
 
 }
 
