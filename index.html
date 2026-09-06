@@ -1418,6 +1418,74 @@
     
     }
 
+    /* =====================================
+       AGENT FAMILY DETAIL
+    ===================================== */
+    
+    .agent-family-detail-header {
+    
+      display: flex;
+    
+      align-items: center;
+    
+      gap: 13px;
+    
+      background: #ffffff;
+    
+      border: 1px solid #e5e7eb;
+    
+      border-radius: 18px;
+    
+      padding: 17px;
+    
+      margin-bottom: 4px;
+    
+    }
+    
+    
+    .agent-family-detail-avatar {
+    
+      width: 54px;
+      height: 54px;
+    
+      border-radius: 50%;
+    
+      background: #f3f4f6;
+    
+      display: flex;
+    
+      align-items: center;
+    
+      justify-content: center;
+    
+      font-size: 25px;
+    
+      flex-shrink: 0;
+    
+    }
+    
+    
+    .agent-family-detail-name {
+    
+      font-size: 17px;
+    
+      font-weight: 800;
+    
+      color: #111827;
+    
+    }
+    
+    
+    .agent-family-detail-relation {
+    
+      margin-top: 4px;
+    
+      font-size: 11px;
+    
+      color: #9ca3af;
+    
+    }
+
   </style>
 
 </head>
@@ -1448,6 +1516,7 @@ let selectedCustomerId = null;
 let selectedCustomer = null;
 
 let selectedPolicyId = null;
+let selectedFamilyMemberId = null;
 
 
 async function initAgent() {
@@ -1601,13 +1670,11 @@ function renderPage(page) {
 
   }
 
-
   else if (page === 'customers') {
 
     renderCustomers();
 
   }
-
 
   else if (page === 'customer-detail') {
 
@@ -1615,10 +1682,15 @@ function renderPage(page) {
 
   }
 
-
   else if (page === 'policy-detail') {
 
     renderAgentPolicyDetail();
+
+  }
+
+  else if (page === 'family-detail') {
+
+    renderAgentFamilyDetail();
 
   }
 
@@ -4413,31 +4485,28 @@ function renderAgentFamilyCard(
 
   return `
 
-    <div class="agent-family-card">
+    <div
+      class="agent-family-card"
+      onclick="
+        openAgentFamily(
+          '${escapeHtml(memberId)}'
+        )
+      "
+    >
 
-      <div
-        class="agent-family-avatar"
-      >
+      <div class="agent-family-avatar">
         👤
       </div>
 
 
-      <div
-        class="agent-family-info"
-      >
+      <div class="agent-family-info">
 
-        <div
-          class="agent-family-name"
-        >
-
+        <div class="agent-family-name">
           ${escapeHtml(name)}
-
         </div>
 
 
-        <div
-          class="agent-family-relation"
-        >
+        <div class="agent-family-relation">
 
           ${escapeHtml(
             member.Relationship || ''
@@ -4460,6 +4529,317 @@ function renderAgentFamilyCard(
     </div>
 
   `;
+
+}
+
+function openAgentFamily(
+  familyMemberId
+) {
+
+  const id =
+    String(
+      familyMemberId || ''
+    ).trim();
+
+
+  if (!id) {
+    return;
+  }
+
+
+  selectedFamilyMemberId =
+    id;
+
+
+  renderPage(
+    'family-detail'
+  );
+
+}
+
+function renderAgentFamilyDetail() {
+
+  const data =
+    selectedCustomer || {};
+
+
+  const family =
+    data.family || [];
+
+
+  const policies =
+    data.policies || [];
+
+
+  const member =
+    family.find(item =>
+      String(
+        item.FamilyMemberID || ''
+      ).trim() ===
+      String(
+        selectedFamilyMemberId || ''
+      ).trim()
+    );
+
+
+  if (!member) {
+
+    document
+      .getElementById('app')
+      .innerHTML = `
+
+        <div class="app">
+
+          <div class="page">
+
+            <div class="agent-empty">
+              ไม่พบข้อมูลสมาชิกครอบครัว
+            </div>
+
+          </div>
+
+        </div>
+
+      `;
+
+    return;
+  }
+
+
+  const memberId =
+    String(
+      member.FamilyMemberID || ''
+    ).trim();
+
+
+  const memberPolicies =
+    policies.filter(policy =>
+      String(
+        policy.FamilyMemberID || ''
+      ).trim() === memberId
+    );
+
+
+  const name =
+    member.DisplayName ||
+    (
+      (member.FirstName || '') +
+      (
+        member.FirstName &&
+        member.LastName
+          ? ' '
+          : ''
+      ) +
+      (member.LastName || '')
+    ) ||
+    '-';
+
+
+  let html = `
+
+    <div class="app">
+
+
+      <div class="topbar">
+
+        <div
+          class="agent-back"
+          onclick="
+            renderPage(
+              'customer-detail'
+            )
+          "
+        >
+          ← กลับลูกค้า
+        </div>
+
+
+        <div class="brand">
+          ANC Life Planning
+        </div>
+
+      </div>
+
+
+      <div class="page">
+
+
+        <!-- FAMILY HEADER -->
+
+        <div class="agent-family-detail-header">
+
+          <div class="agent-family-detail-avatar">
+            👤
+          </div>
+
+
+          <div>
+
+            <div
+              class="
+                agent-family-detail-name
+              "
+            >
+
+              ${escapeHtml(name)}
+
+            </div>
+
+
+            <div
+              class="
+                agent-family-detail-relation
+              "
+            >
+
+              ${escapeHtml(
+                member.Relationship || ''
+              )}
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- BASIC INFO -->
+
+        <div
+          class="
+            agent-detail-section
+          "
+        >
+
+          <div
+            class="
+              agent-detail-section-title
+            "
+          >
+            ข้อมูลสมาชิก
+          </div>
+
+
+          <div
+            class="
+              agent-info-card
+            "
+          >
+
+            <div class="agent-info-row">
+
+              <span>
+                👤 ชื่อ
+              </span>
+
+              <strong>
+                ${escapeHtml(name)}
+              </strong>
+
+            </div>
+
+
+            <div class="agent-info-row">
+
+              <span>
+                🎂 วันเกิด
+              </span>
+
+              <strong>
+
+                ${
+                  member.BirthDate
+                    ? formatDateDisplay(
+                        member.BirthDate
+                      )
+                    : '-'
+                }
+
+              </strong>
+
+            </div>
+
+
+            <div class="agent-info-row">
+
+              <span>
+                🛡️ กรมธรรม์
+              </span>
+
+              <strong>
+                ${memberPolicies.length}
+                ฉบับ
+              </strong>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- POLICIES -->
+
+        <div
+          class="
+            agent-detail-section
+          "
+        >
+
+          <div
+            class="
+              agent-detail-section-title
+            "
+          >
+            🛡️ กรมธรรม์ของสมาชิก
+          </div>
+
+
+          ${
+            memberPolicies.length
+
+              ? memberPolicies
+                  .map(
+                    policy =>
+                      renderAgentPolicyCard(
+                        policy
+                      )
+                  )
+                  .join('')
+
+              : `
+
+                <div class="agent-empty">
+
+                  ยังไม่มีข้อมูลกรมธรรม์
+                  ของสมาชิกในระบบ ANC
+
+                </div>
+
+              `
+          }
+
+        </div>
+
+      </div>
+
+
+      ${renderBottomNav()}
+
+    </div>
+
+  `;
+
+
+  document
+    .getElementById('app')
+    .innerHTML = html;
+
+
+  window.scrollTo(
+    0,
+    0
+  );
 
 }
 
