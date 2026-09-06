@@ -5356,9 +5356,28 @@ function renderAgentFamilyDetail() {
 
             <div class="agent-info-row">
 
-              <span>
-                🛡️ กรมธรรม์
-              </span>
+              <div class="agent-section-title agent-section-title-flex">
+
+                <span>
+                  🛡️ กรมธรรม์
+                </span>
+              
+              
+                <button
+                  type="button"
+                  class="agent-add-button"
+                  onclick="
+                    openCreatePolicy(
+                      '${escapeHtml(
+                        customer.CustomerID
+                      )}'
+                    )
+                  "
+                >
+                  ＋ เพิ่มกรมธรรม์
+                </button>
+              
+              </div>
 
               <strong>
                 ${memberPolicies.length}
