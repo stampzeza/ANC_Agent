@@ -6827,6 +6827,7 @@ function renderAgentManageButton() {
 
 }
 
+
 function openCreatePolicy(
   customerId
 ) {
@@ -6836,39 +6837,152 @@ function openCreatePolicy(
       customerId || ''
     ).trim();
 
-
   if (!id) {
+
+    console.error(
+      'openCreatePolicy: ไม่พบ Customer ID'
+    );
+
     return;
+
   }
 
+
+  // =========================================================
+  // CUSTOMER
+  // =========================================================
+
+  const customer =
+    selectedCustomer?.customer ||
+    {};
+
+
+  const family =
+    Array.isArray(
+      selectedCustomer?.family
+    )
+      ? selectedCustomer.family
+      : [];
+
+
+  // =========================================================
+  // STATE
+  // =========================================================
 
   createPolicyCustomerId =
     id;
 
+  createPolicyStep =
+    1;
 
-  createPolicyStep = 1;
+  newPolicyRiders =
+    [];
 
-  newPolicyRiders = [];
+  editingRiderIndex =
+    -1;
 
-  editingRiderIndex = -1;
 
+  // =========================================================
+  // CREATE POLICY DATA
+  // =========================================================
+
+  createPolicyData = {
+
+    CustomerID:
+      id,
+
+    customer:
+      customer,
+
+    family:
+      family,
+
+    PolicyNo:
+      '',
+
+    PlanID:
+      '',
+
+    PlanName:
+      '',
+
+    PolicyType:
+      'LIFE',
+
+    FamilyMemberID:
+      '',
+
+    LifeSumAssured:
+      '',
+
+    EffectiveDate:
+      '',
+
+    ExpiryDate:
+      '',
+
+    PaymentMode:
+      'YEARLY',
+
+    AnnualPremium:
+      '',
+
+    NextPaymentDate:
+      '',
+
+    SavingsProgress:
+      null
+
+  };
+
+
+  console.log(
+    'OPEN CREATE POLICY:',
+    createPolicyData
+  );
+
+
+  // =========================================================
+  // SHOW STEP 1
+  // =========================================================
 
   renderCreatePolicyForm();
 
 }
 
+
 function renderCreatePolicyForm() {
+
+  // =========================================================
+  // STEP 1
+  // =========================================================
 
   if (
     createPolicyStep === 1
   ) {
 
-    renderCreatePolicyStep1();
+    const app =
+      document.getElementById(
+        'app'
+      );
+
+    if (!app) {
+      console.error(
+        'ไม่พบ #app'
+      );
+      return;
+    }
+
+    app.innerHTML =
+      renderCreatePolicyStep1();
 
     return;
-
   }
 
+
+  // =========================================================
+  // STEP 2
+  // =========================================================
 
   if (
     createPolicyStep === 2
@@ -6877,9 +6991,12 @@ function renderCreatePolicyForm() {
     renderCreatePolicyStep2();
 
     return;
-
   }
 
+
+  // =========================================================
+  // STEP 3
+  // =========================================================
 
   if (
     createPolicyStep === 3
@@ -6888,7 +7005,6 @@ function renderCreatePolicyForm() {
     renderCreatePolicyStep3();
 
     return;
-
   }
 
 }
