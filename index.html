@@ -6895,433 +6895,856 @@ function renderCreatePolicyForm() {
 
 function renderCreatePolicyStep1() {
 
-  const data =
-    selectedCustomer || {};
-
-
   const customer =
-    data.customer || {};
-
+    agentCustomerData?.customer || {};
 
   const family =
-    data.family || [];
+    Array.isArray(agentCustomerData?.family)
+      ? agentCustomerData.family
+      : [];
 
+  const data =
+    createPolicyData || {};
 
-  const displayName =
-    customer.DisplayName ||
-    (
-      (customer.FirstName || '') +
-      (
-        customer.FirstName &&
-        customer.LastName
-          ? ' '
-          : ''
-      ) +
-      (customer.LastName || '')
-    ) ||
-    '-';
+  const policyType =
+    String(
+      data.PolicyType || 'LIFE'
+    )
+      .trim()
+      .toUpperCase();
 
+  const selectedFamilyMemberId =
+    String(
+      data.FamilyMemberID || ''
+    ).trim();
 
-  document
-    .getElementById('app')
-    .innerHTML = `
+  const familyOptions = family
+    .map(member => {
 
-      <div class="app">
+      const memberId =
+        String(
+          member.FamilyMemberID || ''
+        ).trim();
 
+      const memberName =
+        member.DisplayName ||
+        (
+          String(member.FirstName || '') +
+          ' ' +
+          String(member.LastName || '')
+        ).trim() ||
+        memberId;
 
-        <div class="topbar">
+      return `
+        <option
+          value="${escapeHtml(memberId)}"
+          ${selectedFamilyMemberId === memberId ? 'selected' : ''}
+        >
+          ${escapeHtml(memberName)}
+        </option>
+      `;
+    })
+    .join('');
 
-          <div
-            class="agent-back"
-            onclick="
-              renderPage(
-                'customer-detail'
-              )
-            "
+  return `
+
+    <div class="section">
+
+      <div class="section-title">
+        🛡️ สร้างกรมธรรม์
+      </div>
+
+      <div class="card">
+
+        <!-- ===================================== -->
+        <!-- เจ้าของกรมธรรม์ -->
+        <!-- ===================================== -->
+
+        <div class="form-group">
+
+          <label class="form-label">
+            เจ้าของกรมธรรม์
+          </label>
+
+          <select
+            id="familyMemberId"
+            class="form-input"
           >
-            ← ${escapeHtml(
-              displayName
-            )}
-          </div>
 
+            <option value="">
+              ${escapeHtml(
+                customer.DisplayName ||
+                (
+                  String(customer.FirstName || '') +
+                  ' ' +
+                  String(customer.LastName || '')
+                ).trim() ||
+                'ตัวเอง'
+              )}
+            </option>
 
-          <div class="brand">
-            ANC Life Planning
+            ${familyOptions}
+
+          </select>
+
+          <div class="muted" style="margin-top:6px">
+            เว้นว่าง = เจ้าของ Account
           </div>
 
         </div>
 
 
-        <div class="page">
+        <!-- ===================================== -->
+        <!-- Policy No -->
+        <!-- ===================================== -->
 
-          <div class="wizard-progress">
+        <div class="form-group">
 
-            <span class="active">
-              1 กรมธรรม์
-            </span>
+          <label class="form-label">
+            เลขกรมธรรม์ *
+          </label>
 
-            <span>
-              2 Rider
-            </span>
+          <input
+            id="policyNo"
+            class="form-input"
+            type="text"
+            autocomplete="off"
+            value="${escapeHtml(data.PolicyNo || '')}"
+            placeholder="เช่น 123456789"
+          >
 
-            <span>
-              3 ตรวจสอบ
-            </span>
+        </div>
+
+
+        <!-- ===================================== -->
+        <!-- Policy Type -->
+        <!-- ===================================== -->
+
+        <div class="form-group">
+
+          <label class="form-label">
+            ประเภทกรมธรรม์ *
+          </label>
+
+          <select
+            id="policyType"
+            class="form-input"
+            onchange="handlePolicyTypeChange()"
+          >
+
+            <option
+              value="LIFE"
+              ${policyType === 'LIFE' ? 'selected' : ''}
+            >
+              LIFE — ประกันชีวิต
+            </option>
+
+            <option
+              value="SAVINGS"
+              ${policyType === 'SAVINGS' ? 'selected' : ''}
+            >
+              SAVINGS — ประกันออมทรัพย์
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- ===================================== -->
+        <!-- Plan ID -->
+        <!-- ===================================== -->
+
+        <div class="form-group">
+
+          <label class="form-label">
+            Plan ID
+          </label>
+
+          <input
+            id="planId"
+            class="form-input"
+            type="text"
+            autocomplete="off"
+            value="${escapeHtml(data.PlanID || '')}"
+            placeholder="เช่น Plan001"
+          >
+
+        </div>
+
+
+        <!-- ===================================== -->
+        <!-- Plan Name -->
+        <!-- ===================================== -->
+
+        <div class="form-group">
+
+          <label class="form-label">
+            ชื่อแผน *
+          </label>
+
+          <input
+            id="planName"
+            class="form-input"
+            type="text"
+            autocomplete="off"
+            value="${escapeHtml(data.PlanName || '')}"
+            placeholder="เช่น My Whole Life"
+          >
+
+        </div>
+
+
+        <!-- ===================================== -->
+        <!-- Life Sum Assured -->
+        <!-- ===================================== -->
+
+        <div class="form-group">
+
+          <label class="form-label">
+            ทุนประกันชีวิตหลัก *
+          </label>
+
+          <input
+            id="lifeSumAssured"
+            class="form-input"
+            type="number"
+            min="0"
+            step="1"
+            inputmode="numeric"
+            value="${data.LifeSumAssured || ''}"
+            placeholder="เช่น 500000"
+          >
+
+          <div class="muted" style="margin-top:6px">
+            บันทึกเป็น Coverage Type = LIFE
+          </div>
+
+        </div>
+
+
+        <!-- ===================================== -->
+        <!-- Effective Date -->
+        <!-- ===================================== -->
+
+        <div class="form-group">
+
+          <label class="form-label">
+            วันเริ่มคุ้มครอง *
+          </label>
+
+          <input
+            id="effectiveDate"
+            class="form-input"
+            type="date"
+            value="${escapeHtml(data.EffectiveDate || '')}"
+          >
+
+        </div>
+
+
+        <!-- ===================================== -->
+        <!-- Expiry Date -->
+        <!-- ===================================== -->
+
+        <div class="form-group">
+
+          <label class="form-label">
+            วันสิ้นสุดกรมธรรม์
+          </label>
+
+          <input
+            id="expiryDate"
+            class="form-input"
+            type="date"
+            value="${escapeHtml(data.ExpiryDate || '')}"
+          >
+
+        </div>
+
+
+        <!-- ===================================== -->
+        <!-- Payment Mode -->
+        <!-- ===================================== -->
+
+        <div class="form-group">
+
+          <label class="form-label">
+            ความถี่การชำระเบี้ย
+          </label>
+
+          <select
+            id="paymentMode"
+            class="form-input"
+          >
+
+            <option
+              value="YEARLY"
+              ${String(data.PaymentMode || 'YEARLY') === 'YEARLY' ? 'selected' : ''}
+            >
+              รายปี
+            </option>
+
+            <option
+              value="HALF_YEAR"
+              ${String(data.PaymentMode || '') === 'HALF_YEAR' ? 'selected' : ''}
+            >
+              ราย 6 เดือน
+            </option>
+
+            <option
+              value="QUARTER"
+              ${String(data.PaymentMode || '') === 'QUARTER' ? 'selected' : ''}
+            >
+              ราย 3 เดือน
+            </option>
+
+            <option
+              value="MONTHLY"
+              ${String(data.PaymentMode || '') === 'MONTHLY' ? 'selected' : ''}
+            >
+              รายเดือน
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- ===================================== -->
+        <!-- Annual Premium -->
+        <!-- ===================================== -->
+
+        <div class="form-group">
+
+          <label class="form-label">
+            เบี้ยประกันต่อปี
+          </label>
+
+          <input
+            id="annualPremium"
+            class="form-input"
+            type="number"
+            min="0"
+            step="1"
+            inputmode="numeric"
+            value="${data.AnnualPremium || ''}"
+            placeholder="เช่น 3216"
+          >
+
+        </div>
+
+
+        <!-- ===================================== -->
+        <!-- Next Payment Date -->
+        <!-- ===================================== -->
+
+        <div class="form-group">
+
+          <label class="form-label">
+            วันชำระเบี้ยครั้งถัดไป
+          </label>
+
+          <input
+            id="nextPaymentDate"
+            class="form-input"
+            type="date"
+            value="${escapeHtml(data.NextPaymentDate || '')}"
+          >
+
+        </div>
+
+
+        <!-- ===================================== -->
+        <!-- SAVINGS PROGRESS -->
+        <!-- ===================================== -->
+
+        <div
+          id="savingsFields"
+          style="
+            display:${policyType === 'SAVINGS' ? 'block' : 'none'};
+            margin-top:18px;
+            padding:16px;
+            background:#f7fafb;
+            border:1px solid #e3ecef;
+            border-radius:16px;
+          "
+        >
+
+          <div
+            style="
+              font-size:15px;
+              font-weight:800;
+              color:#0f4c5c;
+              margin-bottom:14px;
+            "
+          >
+            💰 ข้อมูล Savings Progress
+          </div>
+
+
+          <!-- Payment Term -->
+
+          <div class="form-group">
+
+            <label class="form-label">
+              ระยะเวลาชำระเบี้ย (ปี) *
+            </label>
+
+            <input
+              id="paymentTermYears"
+              class="form-input"
+              type="number"
+              min="1"
+              step="1"
+              inputmode="numeric"
+              value="${
+                data.SavingsProgress?.PaymentTermYears || ''
+              }"
+              placeholder="เช่น 10"
+            >
 
           </div>
 
 
-          <div class="page-title">
-            🛡️ กรมธรรม์หลัก
+          <!-- Maturity Term -->
+
+          <div class="form-group">
+
+            <label class="form-label">
+              ระยะเวลาครบสัญญา (ปี) *
+            </label>
+
+            <input
+              id="maturityTermYears"
+              class="form-input"
+              type="number"
+              min="1"
+              step="1"
+              inputmode="numeric"
+              value="${
+                data.SavingsProgress?.MaturityTermYears || ''
+              }"
+              placeholder="เช่น 20"
+            >
+
           </div>
 
 
-          <div class="manage-subtitle">
-            ${escapeHtml(displayName)}
-          </div>
+          <!-- Payment Frequency -->
 
-
-          <div class="form-card">
-
+          <div class="form-group">
 
             <label class="form-label">
-              เลขกรมธรรม์ *
-            </label>
-
-            <input
-              id="newPolicyNo"
-              class="form-input"
-              type="text"
-              placeholder="เลขกรมธรรม์"
-            >
-
-
-            <label class="form-label">
-              Plan ID
-            </label>
-
-            <input
-              id="newPolicyPlanId"
-              class="form-input"
-              type="text"
-              placeholder="Plan ID"
-            >
-
-
-            <label class="form-label">
-              ชื่อแผนหลัก *
-            </label>
-
-            <input
-              id="newPolicyPlanName"
-              class="form-input"
-              type="text"
-              placeholder="เช่น ประกันชีวิต..."
-            >
-
-
-            <label class="form-label">
-              ผู้เอาประกัน
+              ความถี่การชำระใน Savings *
             </label>
 
             <select
-              id="newPolicyFamilyMember"
+              id="savingsPaymentFrequency"
               class="form-input"
             >
 
-              <option value="">
-                เจ้าของบัญชี
-              </option>
-
-              ${
-                family
-                  .map(member => {
-
-                    const name =
-                      member.DisplayName ||
-                      (
-                        (member.FirstName || '') +
-                        (
-                          member.FirstName &&
-                          member.LastName
-                            ? ' '
-                            : ''
-                        ) +
-                        (member.LastName || '')
-                      );
-
-
-                    return `
-
-                      <option
-                        value="${escapeHtml(
-                          member.FamilyMemberID
-                        )}"
-                      >
-
-                        ${escapeHtml(name)}
-
-                        ${
-                          member.Relationship
-                            ? ` - ${escapeHtml(
-                                member.Relationship
-                              )}`
-                            : ''
-                        }
-
-                      </option>
-
-                    `;
-
-                  })
-                  .join('')
-              }
-
-            </select>
-
-
-            <label class="form-label">
-              วันเริ่มคุ้มครอง *
-            </label>
-
-            <input
-              id="newPolicyEffectiveDate"
-              class="form-input"
-              type="date"
-            >
-
-
-            <label class="form-label">
-              วันสิ้นสุด
-            </label>
-
-            <input
-              id="newPolicyExpiryDate"
-              class="form-input"
-              type="date"
-            >
-
-
-            <label class="form-label">
-              รูปแบบชำระเบี้ย
-            </label>
-
-            <select
-              id="newPolicyPaymentMode"
-              class="form-input"
-            >
-
-              <option value="">
-                เลือกรูปแบบ
-              </option>
-
-              <option value="YEARLY">
+              <option
+                value="YEARLY"
+                ${
+                  String(
+                    data.SavingsProgress?.PaymentFrequency ||
+                    data.PaymentMode ||
+                    'YEARLY'
+                  ) === 'YEARLY'
+                    ? 'selected'
+                    : ''
+                }
+              >
                 รายปี
               </option>
 
-              <option value="HALF_YEARLY">
+              <option
+                value="HALF_YEAR"
+                ${
+                  String(
+                    data.SavingsProgress?.PaymentFrequency ||
+                    ''
+                  ) === 'HALF_YEAR'
+                    ? 'selected'
+                    : ''
+                }
+              >
                 ราย 6 เดือน
               </option>
 
-              <option value="QUARTERLY">
+              <option
+                value="QUARTER"
+                ${
+                  String(
+                    data.SavingsProgress?.PaymentFrequency ||
+                    ''
+                  ) === 'QUARTER'
+                    ? 'selected'
+                    : ''
+                }
+              >
                 ราย 3 เดือน
               </option>
 
-              <option value="MONTHLY">
+              <option
+                value="MONTHLY"
+                ${
+                  String(
+                    data.SavingsProgress?.PaymentFrequency ||
+                    ''
+                  ) === 'MONTHLY'
+                    ? 'selected'
+                    : ''
+                }
+              >
                 รายเดือน
-              </option>
-
-              <option value="SINGLE">
-                ชำระครั้งเดียว
               </option>
 
             </select>
 
+          </div>
+
+
+          <!-- Premium End Date -->
+
+          <div class="form-group">
 
             <label class="form-label">
-              เบี้ยต่อปี
+              วันจ่ายเบี้ยหมด *
             </label>
 
             <input
-              id="newPolicyAnnualPremium"
+              id="premiumEndDate"
+              class="form-input"
+              type="date"
+              value="${
+                escapeHtml(
+                  data.SavingsProgress?.PremiumEndDate || ''
+                )
+              }"
+            >
+
+          </div>
+
+
+          <!-- Maturity Date -->
+
+          <div class="form-group">
+
+            <label class="form-label">
+              วันครบสัญญา *
+            </label>
+
+            <input
+              id="maturityDate"
+              class="form-input"
+              type="date"
+              value="${
+                escapeHtml(
+                  data.SavingsProgress?.MaturityDate || ''
+                )
+              }"
+            >
+
+          </div>
+
+
+          <!-- Maturity Amount -->
+
+          <div class="form-group">
+
+            <label class="form-label">
+              เงินครบสัญญา *
+            </label>
+
+            <input
+              id="maturityAmount"
               class="form-input"
               type="number"
               min="0"
-              inputmode="decimal"
-              placeholder="0"
+              step="1"
+              inputmode="numeric"
+              value="${
+                data.SavingsProgress?.MaturityAmount || ''
+              }"
+              placeholder="เช่น 1000000"
             >
-
-
-            <label class="form-label">
-              วันชำระเบี้ยครั้งต่อไป
-            </label>
-
-            <input
-              id="newPolicyNextPaymentDate"
-              class="form-input"
-              type="date"
-            >
-
-
-            <div
-              id="createPolicyMessage"
-              class="form-message"
-            ></div>
-
-
-            <button
-              type="button"
-              class="form-submit-button"
-              onclick="
-                goCreatePolicyStep2()
-              "
-            >
-              ต่อไป →
-            </button>
-
 
           </div>
 
         </div>
 
 
-        ${renderBottomNav()}
+        <!-- ===================================== -->
+        <!-- ACTION -->
+        <!-- ===================================== -->
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          onclick="goCreatePolicyStep2()"
+        >
+          ถัดไป → เพิ่ม Rider
+        </button>
 
       </div>
 
-    `;
+    </div>
 
+  `;
+}
+
+function handlePolicyTypeChange() {
+
+  const policyType =
+    String(
+      document.getElementById('policyType')?.value || 'LIFE'
+    )
+      .trim()
+      .toUpperCase();
+
+  const savingsFields =
+    document.getElementById('savingsFields');
+
+  if (!savingsFields) {
+    return;
+  }
+
+  savingsFields.style.display =
+    policyType === 'SAVINGS'
+      ? 'block'
+      : 'none';
 }
 
 function goCreatePolicyStep2() {
 
   const policyNo =
-    document
-      .getElementById(
-        'newPolicyNo'
-      )
-      ?.value
-      .trim();
+    String(
+      document.getElementById('policyNo')?.value || ''
+    ).trim();
 
+  const policyType =
+    String(
+      document.getElementById('policyType')?.value || ''
+    )
+      .trim()
+      .toUpperCase();
 
   const planId =
-    document
-      .getElementById(
-        'newPolicyPlanId'
-      )
-      ?.value
-      .trim();
-
+    String(
+      document.getElementById('planId')?.value || ''
+    ).trim();
 
   const planName =
-    document
-      .getElementById(
-        'newPolicyPlanName'
-      )
-      ?.value
-      .trim();
-
+    String(
+      document.getElementById('planName')?.value || ''
+    ).trim();
 
   const familyMemberId =
-    document
-      .getElementById(
-        'newPolicyFamilyMember'
-      )
-      ?.value
-      .trim();
+    String(
+      document.getElementById('familyMemberId')?.value || ''
+    ).trim();
 
+  const lifeSumAssured =
+    Number(
+      document.getElementById('lifeSumAssured')?.value || 0
+    );
 
   const effectiveDate =
-    document
-      .getElementById(
-        'newPolicyEffectiveDate'
-      )
-      ?.value
-      .trim();
-
+    document.getElementById('effectiveDate')?.value || '';
 
   const expiryDate =
-    document
-      .getElementById(
-        'newPolicyExpiryDate'
-      )
-      ?.value
-      .trim();
-
+    document.getElementById('expiryDate')?.value || '';
 
   const paymentMode =
-    document
-      .getElementById(
-        'newPolicyPaymentMode'
-      )
-      ?.value
-      .trim();
-
+    String(
+      document.getElementById('paymentMode')?.value || 'YEARLY'
+    ).trim();
 
   const annualPremium =
     Number(
-      document
-        .getElementById(
-          'newPolicyAnnualPremium'
-        )
-        ?.value ||
-      0
+      document.getElementById('annualPremium')?.value || 0
     );
 
-
   const nextPaymentDate =
-    document
-      .getElementById(
-        'newPolicyNextPaymentDate'
-      )
-      ?.value
-      .trim();
+    document.getElementById('nextPaymentDate')?.value || '';
 
 
-  const messageBox =
-    document
-      .getElementById(
-        'createPolicyMessage'
+  // ==========================================
+  // Validate Main Policy
+  // ==========================================
+
+  if (!policyNo) {
+    alert('กรุณาระบุเลขกรมธรรม์');
+    return;
+  }
+
+  if (
+    !['LIFE', 'SAVINGS'].includes(policyType)
+  ) {
+    alert('กรุณาเลือกประเภทกรมธรรม์');
+    return;
+  }
+
+  if (!planName) {
+    alert('กรุณาระบุชื่อแผน');
+    return;
+  }
+
+  if (
+    !Number.isFinite(lifeSumAssured) ||
+    lifeSumAssured <= 0
+  ) {
+    alert('กรุณาระบุทุนประกันชีวิตหลัก');
+    return;
+  }
+
+  if (!effectiveDate) {
+    alert('กรุณาระบุวันเริ่มคุ้มครอง');
+    return;
+  }
+
+
+  // ==========================================
+  // Validate SAVINGS
+  // ==========================================
+
+  let savingsProgress = null;
+
+  if (policyType === 'SAVINGS') {
+
+    const paymentTermYears =
+      Number(
+        document.getElementById('paymentTermYears')?.value || 0
+      );
+
+    const maturityTermYears =
+      Number(
+        document.getElementById('maturityTermYears')?.value || 0
+      );
+
+    const paymentFrequency =
+      String(
+        document.getElementById(
+          'savingsPaymentFrequency'
+        )?.value || ''
+      ).trim();
+
+    const premiumEndDate =
+      document.getElementById('premiumEndDate')?.value || '';
+
+    const maturityDate =
+      document.getElementById('maturityDate')?.value || '';
+
+    const maturityAmount =
+      Number(
+        document.getElementById('maturityAmount')?.value || 0
       );
 
 
-  if (!policyNo) {
+    if (
+      !Number.isFinite(paymentTermYears) ||
+      paymentTermYears <= 0
+    ) {
+      alert(
+        'กรุณาระบุระยะเวลาชำระเบี้ย'
+      );
+      return;
+    }
 
-    messageBox.textContent =
-      'กรุณากรอกเลขกรมธรรม์';
 
-    return;
+    if (
+      !Number.isFinite(maturityTermYears) ||
+      maturityTermYears <= 0
+    ) {
+      alert(
+        'กรุณาระบุระยะเวลาครบสัญญา'
+      );
+      return;
+    }
 
+
+    if (
+      maturityTermYears <
+      paymentTermYears
+    ) {
+      alert(
+        'ระยะเวลาครบสัญญาต้องไม่น้อยกว่าระยะเวลาชำระเบี้ย'
+      );
+      return;
+    }
+
+
+    if (!paymentFrequency) {
+      alert(
+        'กรุณาเลือกความถี่การชำระ'
+      );
+      return;
+    }
+
+
+    if (!premiumEndDate) {
+      alert(
+        'กรุณาระบุวันจ่ายเบี้ยหมด'
+      );
+      return;
+    }
+
+
+    if (!maturityDate) {
+      alert(
+        'กรุณาระบุวันครบสัญญา'
+      );
+      return;
+    }
+
+
+    if (
+      !Number.isFinite(maturityAmount) ||
+      maturityAmount <= 0
+    ) {
+      alert(
+        'กรุณาระบุเงินครบสัญญา'
+      );
+      return;
+    }
+
+
+    savingsProgress = {
+
+      StartDate:
+        effectiveDate,
+
+      PaymentTermYears:
+        paymentTermYears,
+
+      MaturityTermYears:
+        maturityTermYears,
+
+      PaymentFrequency:
+        paymentFrequency,
+
+      PremiumEndDate:
+        premiumEndDate,
+
+      MaturityDate:
+        maturityDate,
+
+      MaturityAmount:
+        maturityAmount,
+
+      Status:
+        'ACTIVE'
+    };
   }
 
 
-  if (!planName) {
-
-    messageBox.textContent =
-      'กรุณากรอกชื่อแผนหลัก';
-
-    return;
-
-  }
-
-
-  if (!effectiveDate) {
-
-    messageBox.textContent =
-      'กรุณาระบุวันเริ่มคุ้มครอง';
-
-    return;
-
-  }
-
+  // ==========================================
+  // เก็บ State
+  // ==========================================
 
   createPolicyData = {
-
-    CustomerID:
-      createPolicyCustomerId,
-
-    FamilyMemberID:
-      familyMemberId,
 
     PolicyNo:
       policyNo,
@@ -7331,6 +7754,15 @@ function goCreatePolicyStep2() {
 
     PlanName:
       planName,
+
+    PolicyType:
+      policyType,
+
+    FamilyMemberID:
+      familyMemberId,
+
+    LifeSumAssured:
+      lifeSumAssured,
 
     EffectiveDate:
       effectiveDate,
@@ -7342,18 +7774,25 @@ function goCreatePolicyStep2() {
       paymentMode,
 
     AnnualPremium:
-      annualPremium,
+      Number.isFinite(annualPremium)
+        ? annualPremium
+        : 0,
 
     NextPaymentDate:
-      nextPaymentDate
+      nextPaymentDate,
 
+    SavingsProgress:
+      savingsProgress
   };
 
 
+  // ==========================================
+  // ไป Step 2
+  // ==========================================
+
   createPolicyStep = 2;
 
-  renderCreatePolicyStep2();
-
+  renderCreatePolicyForm();
 }
 
 function renderCreatePolicyStep2() {
