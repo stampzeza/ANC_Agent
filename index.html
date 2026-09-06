@@ -1009,41 +1009,130 @@ async function openCustomer(
 
 async function loadDashboardStats() {
 
-  /*
-   * ตอนนี้ทำ Dashboard Shell ก่อน
-   * Step ถัดไปจะต่อ Stats API จริง
-   */
+  try {
 
-  document
-    .getElementById(
-      'customerCount'
-    )
-    .textContent =
-    '';
+    const idToken =
+      liff.getIDToken();
 
 
-  document
-    .getElementById(
-      'policyCount'
-    )
-    .textContent =
-    '';
+    if (!idToken) {
+      return;
+    }
 
 
-  document
-    .getElementById(
-      'eventCount'
-    )
-    .textContent =
-    '';
+    const result =
+      await postAPI({
+
+        action:
+          'agentDashboard',
+
+        idToken:
+          idToken
+
+      });
 
 
-  document
-    .getElementById(
-      'followCount'
-    )
-    .textContent =
-    '';
+    if (
+      !result.success
+    ) {
+
+      throw new Error(
+        result.message ||
+        'ไม่สามารถโหลด Dashboard ได้'
+      );
+
+    }
+
+
+    const stats =
+      result.stats || {};
+
+
+    const customerCount =
+      document.getElementById(
+        'customerCount'
+      );
+
+
+    const policyCount =
+      document.getElementById(
+        'policyCount'
+      );
+
+
+    const eventCount =
+      document.getElementById(
+        'eventCount'
+      );
+
+
+    const followCount =
+      document.getElementById(
+        'followCount'
+      );
+
+
+    if (customerCount) {
+
+      customerCount.textContent =
+        formatNumber(
+          stats.customerCount || 0
+        );
+
+    }
+
+
+    if (policyCount) {
+
+      policyCount.textContent =
+        formatNumber(
+          stats.policyCount || 0
+        );
+
+    }
+
+
+    if (eventCount) {
+
+      eventCount.textContent =
+        formatNumber(
+          stats.eventCount || 0
+        );
+
+    }
+
+
+    if (followCount) {
+
+      followCount.textContent =
+        formatNumber(
+          stats.followCount || 0
+        );
+
+    }
+
+  }
+
+  catch (error) {
+
+    console.error(
+      'loadDashboardStats error:',
+      error
+    );
+
+  }
+
+}
+
+function formatNumber(
+  value
+) {
+
+  return Number(
+    value || 0
+  ).toLocaleString(
+    'th-TH'
+  );
 
 }
 
