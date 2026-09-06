@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+
+<html lang="th">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="
+      width=device-width,
+      initial-scale=1,
+      maximum-scale=1,
+      user-scalable=no
+    "
+  >
+
+  <title>
+    ANC Agent
+  </title>
+
+
+  <script src="
+    https://static.line-scdn.net/liff/edge/2/sdk.js
+  "></script>
+
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+
+    body {
+
+      margin: 0;
+
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      background: #f5f7fa;
+
+      color: #111827;
+
+    }
+
+
+    .app {
+
+      max-width: 600px;
+
+      margin: auto;
+
+      min-height: 100vh;
+
+      padding-bottom: 80px;
+
+    }
+
+
+    .topbar {
+
+      background: #ffffff;
+
+      padding: 18px;
+
+      border-bottom:
+        1px solid #e5e7eb;
+
+    }
+
+
+    .brand {
+
+      font-size: 19px;
+
+      font-weight: 800;
+
+    }
+
+
+    .agent-name {
+
+      margin-top: 3px;
+
+      font-size: 12px;
+
+      color: #6b7280;
+
+    }
+
+
+    .page {
+
+      padding: 18px;
+
+    }
+
+
+    .page-title {
+
+      font-size: 22px;
+
+      font-weight: 800;
+
+      margin-bottom: 18px;
+
+    }
+
+
+    .dashboard-grid {
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, 1fr);
+
+      gap: 12px;
+
+    }
+
+
+    .stat-card {
+
+      background: #ffffff;
+
+      border:
+        1px solid #e5e7eb;
+
+      border-radius: 18px;
+
+      padding: 17px;
+
+    }
+
+
+    .stat-icon {
+
+      font-size: 22px;
+
+    }
+
+
+    .stat-label {
+
+      margin-top: 8px;
+
+      font-size: 12px;
+
+      color: #6b7280;
+
+    }
+
+
+    .stat-value {
+
+      margin-top: 4px;
+
+      font-size: 24px;
+
+      font-weight: 800;
+
+    }
+
+
+    .search-box {
+
+      display: flex;
+
+      gap: 8px;
+
+      margin-bottom: 16px;
+
+    }
+
+
+    .search-input {
+
+      flex: 1;
+
+      min-width: 0;
+
+      border:
+        1px solid #d1d5db;
+
+      border-radius: 14px;
+
+      padding:
+        13px 14px;
+
+      font-size: 14px;
+
+      outline: none;
+
+    }
+
+
+    .search-button {
+
+      border: 0;
+
+      border-radius: 14px;
+
+      padding: 0 16px;
+
+      background: #111827;
+
+      color: #ffffff;
+
+      font-weight: 700;
+
+      cursor: pointer;
+
+    }
+
+
+    .customer-card {
+
+      background: #ffffff;
+
+      border:
+        1px solid #e5e7eb;
+
+      border-radius: 17px;
+
+      padding: 15px;
+
+      margin-bottom: 10px;
+
+      cursor: pointer;
+
+    }
+
+
+    .customer-name {
+
+      font-size: 15px;
+
+      font-weight: 800;
+
+    }
+
+
+    .customer-info {
+
+      margin-top: 5px;
+
+      font-size: 12px;
+
+      color: #6b7280;
+
+      line-height: 1.6;
+
+    }
+
+
+    .bottom-nav {
+
+      position: fixed;
+
+      left: 0;
+
+      right: 0;
+
+      bottom: 0;
+
+      height: 64px;
+
+      background: #ffffff;
+
+      border-top:
+        1px solid #e5e7eb;
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(2, 1fr);
+
+      z-index: 100;
+
+    }
+
+
+    .nav-item {
+
+      border: 0;
+
+      background: transparent;
+
+      color: #9ca3af;
+
+      font-size: 12px;
+
+      font-weight: 700;
+
+      cursor: pointer;
+
+    }
+
+
+    .nav-item.active {
+
+      color: #111827;
+
+    }
+
+
+    .loading {
+
+      text-align: center;
+
+      padding: 40px;
+
+      color: #6b7280;
+
+    }
+
+
+    .error {
+
+      background: #fef2f2;
+
+      color: #991b1b;
+
+      border:
+        1px solid #fecaca;
+
+      border-radius: 15px;
+
+      padding: 14px;
+
+      line-height: 1.6;
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+<div id="app"></div>
+
+
+<script>
+
+const CONFIG = {
+
+  LIFF_ID:
+    '2011442900-sIGhnuTJ',
+
+  API_URL:
+    'https://script.google.com/macros/s/AKfycbxiaKpavAocuYtKoB_YYke9I_J1r9uTkEmOmcdxb9byJI_15Elzh8qovqMGlbhqqzEq/exec'
+
+};
+
+
+let agent = null;
+
+let currentPage = 'dashboard';
+
+
+async function initAgent() {
+
+  try {
+
+    renderLoading();
+
+
+    await liff.init({
+
+      liffId:
+        CONFIG.LIFF_ID
+
+    });
+
+
+    if (
+      !liff.isLoggedIn() &&
+      !liff.isInClient()
+    ) {
+
+      liff.login();
+
+      return;
+
+    }
+
+
+    const idToken =
+      liff.getIDToken();
+
+
+    if (!idToken) {
+
+      throw new Error(
+        'ไม่พบ LINE ID Token'
+      );
+
+    }
+
+
+    const result =
+      await postAPI({
+
+        action:
+          'agentLogin',
+
+        idToken:
+          idToken
+
+      });
+
+
+    if (
+      !result.success ||
+      !result.authorized
+    ) {
+
+      throw new Error(
+        result.message ||
+        'บัญชีนี้ไม่มีสิทธิ์ใช้งาน'
+      );
+
+    }
+
+
+    agent =
+      result.agent;
+
+
+    renderPage(
+      'dashboard'
+    );
+
+
+  }
+
+  catch (error) {
+
+    console.error(
+      error
+    );
+
+
+    renderError(
+      error.message
+    );
+
+  }
+
+}
+
+
+async function postAPI(
+  data
+) {
+
+  const response =
+    await fetch(
+      CONFIG.API_URL,
+      {
+
+        method:
+          'POST',
+
+        headers: {
+
+          'Content-Type':
+            'text/plain;charset=utf-8'
+
+        },
+
+        body:
+          JSON.stringify(
+            data
+          )
+
+      }
+    );
+
+
+  if (!response.ok) {
+
+    throw new Error(
+      'API Error'
+    );
+
+  }
+
+
+  return await response.json();
+
+}
+
+
+function renderPage(
+  page
+) {
+
+  currentPage =
+    page;
+
+
+  if (
+    page === 'dashboard'
+  ) {
+
+    renderDashboard();
+
+  }
+
+
+  else if (
+    page === 'customers'
+  ) {
+
+    renderCustomers();
+
+  }
+
+}
+
+
+function renderLoading() {
+
+  document
+    .getElementById('app')
+    .innerHTML = `
+
+      <div class="loading">
+
+        กำลังเข้าสู่
+        ANC Agent...
+
+      </div>
+
+    `;
+
+}
+
+
+function renderError(
+  message
+) {
+
+  document
+    .getElementById('app')
+    .innerHTML = `
+
+      <div class="page">
+
+        <div class="error">
+
+          ${escapeHtml(
+            message
+          )}
+
+        </div>
+
+      </div>
+
+    `;
+
+}
+
+
+function renderDashboard() {
+
+  document
+    .getElementById('app')
+    .innerHTML = `
+
+      <div class="app">
+
+        <div class="topbar">
+
+          <div class="brand">
+            ANC Life Planning
+          </div>
+
+          <div class="agent-name">
+
+            ${
+              escapeHtml(
+                agent?.AgentName ||
+                ''
+              )
+            }
+
+          </div>
+
+        </div>
+
+
+        <div class="page">
+
+          <div class="page-title">
+            Dashboard
+          </div>
+
+
+          <div class="dashboard-grid">
+
+            <div class="stat-card">
+
+              <div class="stat-icon">
+                👥
+              </div>
+
+              <div class="stat-label">
+                ลูกค้า
+              </div>
+
+              <div
+                class="stat-value"
+                id="customerCount"
+              >
+                -
+              </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+              <div class="stat-icon">
+                🛡️
+              </div>
+
+              <div class="stat-label">
+                กรมธรรม์
+              </div>
+
+              <div
+                class="stat-value"
+                id="policyCount"
+              >
+                -
+              </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+              <div class="stat-icon">
+                🔔
+              </div>
+
+              <div class="stat-label">
+                Events
+              </div>
+
+              <div
+                class="stat-value"
+                id="eventCount"
+              >
+                -
+              </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+              <div class="stat-icon">
+                ⚠️
+              </div>
+
+              <div class="stat-label">
+                รายการติดตาม
+              </div>
+
+              <div
+                class="stat-value"
+                id="followCount"
+              >
+                -
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        ${renderBottomNav()}
+
+      </div>
+
+    `;
+
+
+  loadDashboardStats();
+
+}
+
+
+function renderCustomers() {
+
+  document
+    .getElementById('app')
+    .innerHTML = `
+
+      <div class="app">
+
+        <div class="topbar">
+
+          <div class="brand">
+            ANC Life Planning
+          </div>
+
+          <div class="agent-name">
+
+            ${
+              escapeHtml(
+                agent?.AgentName ||
+                ''
+              )
+            }
+
+          </div>
+
+        </div>
+
+
+        <div class="page">
+
+          <div class="page-title">
+            ค้นหาลูกค้า
+          </div>
+
+
+          <div class="search-box">
+
+            <input
+              id="customerSearchInput"
+              class="search-input"
+              type="text"
+              placeholder="
+                ชื่อ / เบอร์โทร /
+                เลขกรมธรรม์
+              "
+              onkeydown="
+                if(event.key==='Enter'){
+                  searchCustomers();
+                }
+              "
+            >
+
+
+            <button
+              class="search-button"
+              onclick="searchCustomers()"
+            >
+              ค้นหา
+            </button>
+
+          </div>
+
+
+          <div id="customerResults"></div>
+
+        </div>
+
+
+        ${renderBottomNav()}
+
+      </div>
+
+    `;
+
+}
+
+
+function renderBottomNav() {
+
+  return `
+
+    <div class="bottom-nav">
+
+      <button
+        class="
+          nav-item
+          ${
+            currentPage === 'dashboard'
+              ? 'active'
+              : ''
+          }
+        "
+        onclick="
+          renderPage('dashboard')
+        "
+      >
+
+        🏠
+        <br>
+        Dashboard
+
+      </button>
+
+
+      <button
+        class="
+          nav-item
+          ${
+            currentPage === 'customers'
+              ? 'active'
+              : ''
+          }
+        "
+        onclick="
+          renderPage('customers')
+        "
+      >
+
+        👥
+        <br>
+        ลูกค้า
+
+      </button>
+
+    </div>
+
+  `;
+
+}
+
+
+async function searchCustomers() {
+
+  const input =
+    document.getElementById(
+      'customerSearchInput'
+    );
+
+
+  const keyword =
+    input
+      ? input.value.trim()
+      : '';
+
+
+  if (!keyword) {
+
+    return;
+
+  }
+
+
+  const resultBox =
+    document.getElementById(
+      'customerResults'
+    );
+
+
+  resultBox.innerHTML = `
+
+    <div class="loading">
+      กำลังค้นหา...
+    </div>
+
+  `;
+
+
+  try {
+
+    const result =
+      await postAPI({
+
+        action:
+          'agentSearchCustomers',
+
+        keyword:
+          keyword
+
+      });
+
+
+    const customers =
+      result.customers || [];
+
+
+    if (!customers.length) {
+
+      resultBox.innerHTML = `
+
+        <div class="loading">
+          ไม่พบลูกค้า
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+    resultBox.innerHTML =
+
+      customers
+        .map(
+          customer => `
+
+            <div
+              class="customer-card"
+              onclick="
+                openCustomer(
+                  '${escapeHtml(
+                    customer.CustomerID
+                  )}'
+                )
+              "
+            >
+
+              <div class="customer-name">
+
+                ${escapeHtml(
+                  customer.DisplayName ||
+                  (
+                    customer.FirstName +
+                    ' ' +
+                    customer.LastName
+                  )
+                )}
+
+              </div>
+
+
+              <div class="customer-info">
+
+                ${
+                  customer.Phone
+                    ? `
+                      📞
+                      ${escapeHtml(
+                        customer.Phone
+                      )}
+                    `
+                    : ''
+                }
+
+                <br>
+
+                ID:
+                ${escapeHtml(
+                  customer.CustomerID
+                )}
+
+              </div>
+
+            </div>
+
+          `
+        )
+        .join('');
+
+  }
+
+  catch (error) {
+
+    resultBox.innerHTML = `
+
+      <div class="error">
+
+        ${escapeHtml(
+          error.message
+        )}
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+async function openCustomer(
+  customerId
+) {
+
+  /*
+   * Phase ถัดไป:
+   * Customer Detail
+   */
+
+  alert(
+    'Customer ID: ' +
+    customerId
+  );
+
+}
+
+
+async function loadDashboardStats() {
+
+  /*
+   * ตอนนี้ทำ Dashboard Shell ก่อน
+   * Step ถัดไปจะต่อ Stats API จริง
+   */
+
+  document
+    .getElementById(
+      'customerCount'
+    )
+    .textContent =
+    '';
+
+
+  document
+    .getElementById(
+      'policyCount'
+    )
+    .textContent =
+    '';
+
+
+  document
+    .getElementById(
+      'eventCount'
+    )
+    .textContent =
+    '';
+
+
+  document
+    .getElementById(
+      'followCount'
+    )
+    .textContent =
+    '';
+
+}
+
+
+function escapeHtml(
+  value
+) {
+
+  return String(
+    value ?? ''
+  )
+  .replace(
+    /&/g,
+    '&amp;'
+  )
+  .replace(
+    /</g,
+    '&lt;'
+  )
+  .replace(
+    />/g,
+    '&gt;'
+  )
+  .replace(
+    /"/g,
+    '&quot;'
+  )
+  .replace(
+    /'/g,
+    '&#039;'
+  );
+
+}
+
+
+document.addEventListener(
+  'DOMContentLoaded',
+  initAgent
+);
+
+</script>
+
+</body>
+
+</html>
