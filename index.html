@@ -8629,6 +8629,59 @@ function renderCreatePolicyStep2() {
     `;
 }
 
+function openRiderEditor(index) {
+
+  editingRiderIndex = Number(index);
+
+  const rider =
+    editingRiderIndex >= 0
+      ? newPolicyRiders[editingRiderIndex]
+      : null;
+
+  renderRiderEditor(rider);
+}
+
+function deleteRider(index) {
+
+  if (
+    index < 0 ||
+    index >= newPolicyRiders.length
+  ) {
+    return;
+  }
+
+  const rider =
+    newPolicyRiders[index];
+
+  const name =
+    rider.RiderName ||
+    rider.RiderID ||
+    'Rider นี้';
+
+  const confirmed =
+    window.confirm(
+      `ต้องการลบ ${name} หรือไม่?`
+    );
+
+  if (!confirmed) {
+    return;
+  }
+
+  newPolicyRiders.splice(
+    index,
+    1
+  );
+
+  renderCreatePolicyStep2();
+}
+
+function goCreatePolicyStep3() {
+
+  createPolicyStep = 3;
+
+  renderCreatePolicyStep3();
+}
+
 
 document.addEventListener(
   'DOMContentLoaded',
