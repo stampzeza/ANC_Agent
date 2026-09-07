@@ -8694,7 +8694,8 @@ function goCreatePolicyStep2() {
   // ==========================================
 
   createPolicyData = {
-
+    ...createPolicyData,
+    
     CustomerID:
       createPolicyData.CustomerID ||
       createPolicyCustomerId ||
