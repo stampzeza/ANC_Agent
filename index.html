@@ -7013,192 +7013,143 @@ function renderCreatePolicyForm() {
 
 function renderCreatePolicyStep1() {
 
-  // =======================================================
-  // STATE
-  // =======================================================
-
   const data =
     createPolicyData || {};
 
-
-  // =======================================================
-  // CUSTOMER
-  // =======================================================
-
-  const customer =
+  const customerData =
     selectedCustomer?.customer ||
     data.customer ||
+    data.Customer ||
     {};
 
-
-  // =======================================================
-  // FAMILY
-  // =======================================================
-
-  const family =
-    Array.isArray(
-      selectedCustomer?.family
-    )
+  const familyData =
+    Array.isArray(selectedCustomer?.family)
       ? selectedCustomer.family
       : (
-          Array.isArray(
-            data.family
-          )
+          Array.isArray(data.family)
             ? data.family
-            : []
+            : (
+                Array.isArray(data.Family)
+                  ? data.Family
+                  : []
+              )
         );
-
-
-  // =======================================================
-  // POLICY TYPE
-  // =======================================================
 
   const policyType =
     String(
-      data.PolicyType ||
-      'LIFE'
+      data.PolicyType || 'LIFE'
     )
       .trim()
       .toUpperCase();
 
-
-  // =======================================================
-  // FAMILY MEMBER
-  // =======================================================
-
-  const selectedFamilyMemberId =
+  const familyMemberId =
     String(
-      data.FamilyMemberID ||
-      ''
+      data.FamilyMemberID || ''
+    ).trim();
+
+  const coverageMode =
+    String(
+      data.CoverageMode || 'AGE'
     )
-      .trim();
+      .trim()
+      .toUpperCase();
 
+  const premiumTermYears =
+    Number(
+      data.PremiumTermYears || 0
+    );
 
-  // =======================================================
-  // CUSTOMER NAME
-  // =======================================================
+  const coverageToAge =
+    Number(
+      data.CoverageToAge || 0
+    );
+
+  const coverageTermYears =
+    Number(
+      data.CoverageTermYears || 0
+    );
 
   const customerName =
-    customer.DisplayName ||
-
+    customerData.DisplayName ||
     (
-      String(
-        customer.FirstName ||
-        ''
-      ) +
-      ' ' +
-      String(
-        customer.LastName ||
-        ''
-      )
+      `${customerData.FirstName || ''} ${customerData.LastName || ''}`
     ).trim() ||
-
     'ตัวเอง';
 
 
-  // =======================================================
-  // FAMILY OPTIONS
-  // =======================================================
+  // ==========================================
+  // Family Options
+  // ==========================================
 
   const familyOptions =
-    family
-      .map(
-        member => {
+    familyData
+      .map(member => {
 
-          const memberId =
-            String(
-              member.FamilyMemberID ||
-              ''
-            )
-              .trim();
+        const memberId =
+          String(
+            member.FamilyMemberID || ''
+          ).trim();
 
-
-          if (!memberId) {
-            return '';
-          }
-
-
-          const memberName =
-            member.DisplayName ||
-
-            (
-              String(
-                member.FirstName ||
-                ''
-              ) +
-              ' ' +
-              String(
-                member.LastName ||
-                ''
-              )
-            ).trim() ||
-
-            memberId;
-
-
-          return `
-
-            <option
-              value="${escapeHtml(
-                memberId
-              )}"
-              ${
-                selectedFamilyMemberId === memberId
-                  ? 'selected'
-                  : ''
-              }
-            >
-              ${escapeHtml(
-                memberName
-              )}
-            </option>
-
-          `;
-
+        if (!memberId) {
+          return '';
         }
-      )
+
+        const memberName =
+          member.DisplayName ||
+          (
+            `${member.FirstName || ''} ${member.LastName || ''}`
+          ).trim() ||
+          memberId;
+
+        return `
+          <option
+            value="${escapeHtml(memberId)}"
+            ${
+              familyMemberId === memberId
+                ? 'selected'
+                : ''
+            }
+          >
+            ${escapeHtml(memberName)}
+          </option>
+        `;
+      })
       .join('');
 
 
-  // =======================================================
-  // SAVINGS DATA
-  // =======================================================
+  // ==========================================
+  // Selected Owner BirthDate
+  // ==========================================
 
-  const savings =
-    data.SavingsProgress ||
-    {};
+  const birthDate =
+    getCreatePolicyOwnerBirthDate();
 
 
-  // =======================================================
-  // RENDER
-  // =======================================================
+  // ==========================================
+  // HTML
+  // ==========================================
 
   document
-    .getElementById(
-      'app'
-    )
+    .getElementById('app')
     .innerHTML = `
 
       <div class="app">
 
-
-        <!-- ================================================= -->
+        <!-- ==================================== -->
         <!-- TOP BAR -->
-        <!-- ================================================= -->
+        <!-- ==================================== -->
 
         <div class="topbar">
 
           <div
             class="agent-back"
             onclick="
-              openCustomer(
-                createPolicyCustomerId
-              )
+              currentPage = 'customer-detail';
+              renderPage();
             "
           >
-            ← ลูกค้า
+            ← กลับ
           </div>
-
 
           <div class="brand">
             ANC Life Planning
@@ -7207,16 +7158,11 @@ function renderCreatePolicyStep1() {
         </div>
 
 
-        <!-- ================================================= -->
-        <!-- PAGE -->
-        <!-- ================================================= -->
-
         <div class="page">
 
-
-          <!-- ================================================= -->
-          <!-- WIZARD PROGRESS -->
-          <!-- ================================================= -->
+          <!-- ================================== -->
+          <!-- WIZARD -->
+          <!-- ================================== -->
 
           <div class="wizard-progress">
 
@@ -7235,183 +7181,85 @@ function renderCreatePolicyStep1() {
           </div>
 
 
-          <!-- ================================================= -->
+          <!-- ================================== -->
           <!-- TITLE -->
-          <!-- ================================================= -->
+          <!-- ================================== -->
 
           <div class="page-title">
-            ＋ เพิ่มกรมธรรม์
+            สร้างกรมธรรม์
           </div>
 
 
-          <!-- ================================================= -->
-          <!-- CUSTOMER SUMMARY -->
-          <!-- ================================================= -->
+          <!-- ================================== -->
+          <!-- CUSTOMER -->
+          <!-- ================================== -->
 
-          <div
-            class="agent-detail-section"
-            style="margin-top:0"
-          >
+          <div class="agent-customer-header">
 
-            <div
-              class="
-                agent-customer-header
-              "
-              style="
-                margin-bottom:0;
-              "
-            >
+            <div class="agent-customer-header-name">
+              ${escapeHtml(customerName)}
+            </div>
 
-              <div
-                class="
-                  agent-customer-avatar
-                "
-              >
-                👤
-              </div>
-
-
-              <div
-                class="
-                  agent-customer-header-info
-                "
-              >
-
-                <div
-                  class="
-                    agent-customer-name
-                  "
-                >
-                  ${escapeHtml(
-                    customerName
-                  )}
-                </div>
-
-
-                <div
-                  class="
-                    agent-customer-id
-                  "
-                >
-                  Customer ID:
-                  ${escapeHtml(
-                    createPolicyCustomerId ||
-                    customer.CustomerID ||
-                    '-'
-                  )}
-                </div>
-
-              </div>
-
+            <div class="agent-customer-header-sub">
+              ${birthDate
+                ? `🎂 วันเกิด ${formatDateDisplay(birthDate)}`
+                : 'ยังไม่มีข้อมูลวันเกิด'}
             </div>
 
           </div>
 
 
-          <!-- ================================================= -->
+          <!-- ================================== -->
           <!-- MAIN FORM -->
-          <!-- ================================================= -->
+          <!-- ================================== -->
 
-          <div
-            class="form-card"
-            style="margin-top:18px"
-          >
+          <div class="form-card">
 
 
-            <!-- =============================================== -->
             <!-- OWNER -->
-            <!-- =============================================== -->
-
-            <div
-              style="
-                font-size:14px;
-                font-weight:800;
-                color:#111827;
-                margin-bottom:4px;
-              "
-            >
-              👤 ผู้เอาประกัน
-            </div>
-
-
-            <div
-              style="
-                font-size:10px;
-                color:#9ca3af;
-                margin-bottom:8px;
-              "
-            >
-              เลือกว่าจะเป็นเจ้าของ Account
-              หรือสมาชิกครอบครัว
-            </div>
-
-
             <label class="form-label">
-              เจ้าของกรมธรรม์
+              ผู้เอาประกัน
             </label>
-
 
             <select
               id="familyMemberId"
               class="form-input"
+              onchange="updateCreatePolicyCalculatedDates()"
             >
 
-              <option
-                value=""
-                ${
-                  selectedFamilyMemberId === ''
-                    ? 'selected'
-                    : ''
-                }
-              >
-                ${escapeHtml(
-                  customerName
-                )}
+              <option value="">
+                ${escapeHtml(customerName)}
               </option>
-
 
               ${familyOptions}
 
             </select>
 
 
-            <!-- =============================================== -->
             <!-- POLICY NO -->
-            <!-- =============================================== -->
-
             <label class="form-label">
               เลขกรมธรรม์ *
             </label>
-
 
             <input
               id="policyNo"
               class="form-input"
               type="text"
               autocomplete="off"
-              value="${escapeHtml(
-                data.PolicyNo ||
-                ''
-              )}"
+              value="${escapeHtml(data.PolicyNo || '')}"
               placeholder="เช่น 123456789"
             >
 
 
-            <!-- =============================================== -->
             <!-- POLICY TYPE -->
-            <!-- =============================================== -->
-
             <label class="form-label">
               ประเภทกรมธรรม์ *
             </label>
 
-
             <select
               id="policyType"
               class="form-input"
-              onchange="
-                handlePolicyTypeChange()
-              "
+              onchange="handlePolicyTypeChange(); updateCreatePolicyCalculatedDates();"
             >
 
               <option
@@ -7424,7 +7272,6 @@ function renderCreatePolicyStep1() {
               >
                 LIFE — ประกันชีวิต
               </option>
-
 
               <option
                 value="SAVINGS"
@@ -7440,146 +7287,345 @@ function renderCreatePolicyStep1() {
             </select>
 
 
-            <!-- =============================================== -->
             <!-- PLAN ID -->
-            <!-- =============================================== -->
-
             <label class="form-label">
               Plan ID
             </label>
-
 
             <input
               id="planId"
               class="form-input"
               type="text"
               autocomplete="off"
-              value="${escapeHtml(
-                data.PlanID ||
-                ''
-              )}"
+              value="${escapeHtml(data.PlanID || '')}"
               placeholder="เช่น Plan001"
             >
 
 
-            <!-- =============================================== -->
             <!-- PLAN NAME -->
-            <!-- =============================================== -->
-
             <label class="form-label">
               ชื่อแผน *
             </label>
-
 
             <input
               id="planName"
               class="form-input"
               type="text"
               autocomplete="off"
-              value="${escapeHtml(
-                data.PlanName ||
-                ''
-              )}"
-              placeholder="เช่น My Whole Life"
+              value="${escapeHtml(data.PlanName || '')}"
+              placeholder="เช่น มาย โฮล์ ไลฟ์ A99/20"
             >
 
 
-            <!-- =============================================== -->
             <!-- LIFE SUM ASSURED -->
-            <!-- =============================================== -->
-
             <label class="form-label">
               ทุนประกันชีวิตหลัก *
             </label>
-
 
             <input
               id="lifeSumAssured"
               class="form-input"
               type="number"
-              min="1"
+              min="0"
               step="1"
               inputmode="numeric"
-              value="${
-                data.LifeSumAssured ||
-                ''
-              }"
-              placeholder="เช่น 500000"
+              value="${data.LifeSumAssured || ''}"
+              placeholder="เช่น 5000000"
             >
 
 
-            <div
-              style="
-                margin-top:5px;
-                font-size:10px;
-                color:#9ca3af;
-              "
-            >
-              ระบบจะบันทึกเป็น
-              Coverage Type = LIFE
-            </div>
-
-
-            <!-- =============================================== -->
             <!-- EFFECTIVE DATE -->
-            <!-- =============================================== -->
-
             <label class="form-label">
               วันเริ่มคุ้มครอง *
             </label>
-
 
             <input
               id="effectiveDate"
               class="form-input"
               type="date"
               value="${escapeHtml(
-                data.EffectiveDate ||
-                ''
+                data.EffectiveDate || ''
               )}"
+              onchange="
+                updateCreatePolicyCalculatedDates()
+              "
             >
 
 
-            <!-- =============================================== -->
-            <!-- EXPIRY DATE -->
-            <!-- =============================================== -->
+            <!-- ================================== -->
+            <!-- LIFE POLICY CALCULATION -->
+            <!-- ================================== -->
 
-            <label class="form-label">
-              วันสิ้นสุดกรมธรรม์
-            </label>
-
-
-            <input
-              id="expiryDate"
-              class="form-input"
-              type="date"
-              value="${escapeHtml(
-                data.ExpiryDate ||
-                ''
-              )}"
+            <div
+              id="lifeCalculationFields"
+              style="
+                display:${policyType === 'LIFE' ? 'block' : 'none'};
+                margin-top:18px;
+                padding:16px;
+                background:#f7fafb;
+                border:1px solid #e3ecef;
+                border-radius:16px;
+              "
             >
 
+              <div
+                style="
+                  font-size:15px;
+                  font-weight:800;
+                  color:#0f4c5c;
+                  margin-bottom:14px;
+                "
+              >
+                📅 ระยะเวลาคุ้มครอง
+              </div>
 
-            <!-- =============================================== -->
+
+              <!-- PREMIUM TERM -->
+              <label class="form-label">
+                ระยะเวลาจ่ายเบี้ย (ปี) *
+              </label>
+
+              <input
+                id="premiumTermYears"
+                class="form-input"
+                type="number"
+                min="1"
+                step="1"
+                inputmode="numeric"
+                value="${premiumTermYears || ''}"
+                placeholder="เช่น 20"
+                oninput="
+                  updateCreatePolicyCalculatedDates()
+                "
+              >
+
+
+              <!-- COVERAGE MODE -->
+              <label class="form-label">
+                รูปแบบการคุ้มครอง *
+              </label>
+
+              <select
+                id="coverageMode"
+                class="form-input"
+                onchange="
+                  updateCreatePolicyCoverageMode()
+                "
+              >
+
+                <option
+                  value="AGE"
+                  ${
+                    coverageMode === 'AGE'
+                      ? 'selected'
+                      : ''
+                  }
+                >
+                  คุ้มครองถึงอายุ
+                </option>
+
+                <option
+                  value="TERM"
+                  ${
+                    coverageMode === 'TERM'
+                      ? 'selected'
+                      : ''
+                  }
+                >
+                  คุ้มครองตามจำนวนปี
+                </option>
+
+              </select>
+
+
+              <!-- AGE -->
+              <div
+                id="coverageAgeField"
+                style="
+                  display:${coverageMode === 'AGE'
+                    ? 'block'
+                    : 'none'};
+                "
+              >
+
+                <label class="form-label">
+                  คุ้มครองถึงอายุ *
+                </label>
+
+                <input
+                  id="coverageToAge"
+                  class="form-input"
+                  type="number"
+                  min="1"
+                  step="1"
+                  value="${coverageToAge || ''}"
+                  placeholder="เช่น 99"
+                  oninput="
+                    updateCreatePolicyCalculatedDates()
+                  "
+                >
+
+              </div>
+
+
+              <!-- TERM -->
+              <div
+                id="coverageTermField"
+                style="
+                  display:${coverageMode === 'TERM'
+                    ? 'block'
+                    : 'none'};
+                "
+              >
+
+                <label class="form-label">
+                  ระยะเวลาคุ้มครอง (ปี) *
+                </label>
+
+                <input
+                  id="coverageTermYears"
+                  class="form-input"
+                  type="number"
+                  min="1"
+                  step="1"
+                  value="${coverageTermYears || ''}"
+                  placeholder="เช่น 20"
+                  oninput="
+                    updateCreatePolicyCalculatedDates()
+                  "
+                >
+
+              </div>
+
+
+              <!-- CALCULATED RESULT -->
+              <div
+                style="
+                  margin-top:16px;
+                  padding:14px;
+                  background:#ffffff;
+                  border:1px solid #e5e7eb;
+                  border-radius:13px;
+                "
+              >
+
+                <div
+                  style="
+                    font-size:11px;
+                    color:#6b7280;
+                    margin-bottom:8px;
+                    font-weight:700;
+                  "
+                >
+                  ระบบคำนวณให้อัตโนมัติ
+                </div>
+
+
+                <div
+                  style="
+                    display:flex;
+                    justify-content:space-between;
+                    gap:12px;
+                    min-height:36px;
+                    align-items:center;
+                  "
+                >
+
+                  <span style="font-size:12px;">
+                    จ่ายเบี้ยถึง
+                  </span>
+
+                  <strong
+                    id="calculatedPremiumEndDate"
+                    style="
+                      font-size:13px;
+                    "
+                  >
+                    -
+                  </strong>
+
+                </div>
+
+
+                <div
+                  style="
+                    border-top:1px solid #f1f1f1;
+                    display:flex;
+                    justify-content:space-between;
+                    gap:12px;
+                    min-height:36px;
+                    align-items:center;
+                  "
+                >
+
+                  <span style="font-size:12px;">
+                    คุ้มครองถึง
+                  </span>
+
+                  <strong
+                    id="calculatedExpiryDate"
+                    style="
+                      font-size:13px;
+                    "
+                  >
+                    -
+                  </strong>
+
+                </div>
+
+
+                <div
+                  style="
+                    border-top:1px solid #f1f1f1;
+                    display:flex;
+                    justify-content:space-between;
+                    gap:12px;
+                    min-height:36px;
+                    align-items:center;
+                  "
+                >
+
+                  <span style="font-size:12px;">
+                    ชำระครั้งถัดไป
+                  </span>
+
+                  <strong
+                    id="calculatedNextPaymentDate"
+                    style="
+                      font-size:13px;
+                    "
+                  >
+                    -
+                  </strong>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <!-- ================================== -->
             <!-- PAYMENT MODE -->
-            <!-- =============================================== -->
+            <!-- ================================== -->
 
             <label class="form-label">
               ความถี่การชำระเบี้ย
             </label>
 
-
             <select
               id="paymentMode"
               class="form-input"
+              onchange="
+                updateCreatePolicyCalculatedDates()
+              "
             >
 
               <option
                 value="YEARLY"
                 ${
                   String(
-                    data.PaymentMode ||
-                    'YEARLY'
+                    data.PaymentMode || 'YEARLY'
                   ) === 'YEARLY'
                     ? 'selected'
                     : ''
@@ -7588,13 +7634,11 @@ function renderCreatePolicyStep1() {
                 รายปี
               </option>
 
-
               <option
                 value="HALF_YEAR"
                 ${
                   String(
-                    data.PaymentMode ||
-                    ''
+                    data.PaymentMode || ''
                   ) === 'HALF_YEAR'
                     ? 'selected'
                     : ''
@@ -7603,13 +7647,11 @@ function renderCreatePolicyStep1() {
                 ราย 6 เดือน
               </option>
 
-
               <option
                 value="QUARTER"
                 ${
                   String(
-                    data.PaymentMode ||
-                    ''
+                    data.PaymentMode || ''
                   ) === 'QUARTER'
                     ? 'selected'
                     : ''
@@ -7618,13 +7660,11 @@ function renderCreatePolicyStep1() {
                 ราย 3 เดือน
               </option>
 
-
               <option
                 value="MONTHLY"
                 ${
                   String(
-                    data.PaymentMode ||
-                    ''
+                    data.PaymentMode || ''
                   ) === 'MONTHLY'
                     ? 'selected'
                     : ''
@@ -7636,14 +7676,13 @@ function renderCreatePolicyStep1() {
             </select>
 
 
-            <!-- =============================================== -->
+            <!-- ================================== -->
             <!-- ANNUAL PREMIUM -->
-            <!-- =============================================== -->
+            <!-- ================================== -->
 
             <label class="form-label">
               เบี้ยประกันต่อปี
             </label>
-
 
             <input
               id="annualPremium"
@@ -7652,89 +7691,44 @@ function renderCreatePolicyStep1() {
               min="0"
               step="1"
               inputmode="numeric"
-              value="${
-                data.AnnualPremium ||
-                ''
-              }"
-              placeholder="เช่น 3216"
+              value="${data.AnnualPremium || ''}"
+              placeholder="เช่น 32160"
             >
 
 
-            <!-- =============================================== -->
-            <!-- NEXT PAYMENT -->
-            <!-- =============================================== -->
-
-            <label class="form-label">
-              วันชำระเบี้ยครั้งถัดไป
-            </label>
-
-
-            <input
-              id="nextPaymentDate"
-              class="form-input"
-              type="date"
-              value="${escapeHtml(
-                data.NextPaymentDate ||
-                ''
-              )}"
-            >
-
-
-            <!-- =============================================== -->
+            <!-- ================================== -->
             <!-- SAVINGS -->
-            <!-- =============================================== -->
+            <!-- ================================== -->
 
             <div
               id="savingsFields"
               style="
-                display:${
-                  policyType === 'SAVINGS'
-                    ? 'block'
-                    : 'none'
-                };
-
-                margin-top:20px;
-
-                padding:15px;
-
-                background:#f9fafb;
-
-                border:
-                  1px solid #e5e7eb;
-
-                border-radius:15px;
+                display:${policyType === 'SAVINGS'
+                  ? 'block'
+                  : 'none'};
+                margin-top:18px;
+                padding:16px;
+                background:#f7fafb;
+                border:1px solid #e3ecef;
+                border-radius:16px;
               "
             >
 
               <div
                 style="
-                  font-size:14px;
+                  font-size:15px;
                   font-weight:800;
-                  color:#111827;
-                  margin-bottom:3px;
+                  color:#0f4c5c;
+                  margin-bottom:14px;
                 "
               >
-                💰 Savings Progress
+                💰 ข้อมูล Savings Progress
               </div>
 
-
-              <div
-                style="
-                  font-size:10px;
-                  color:#9ca3af;
-                  margin-bottom:10px;
-                "
-              >
-                ข้อมูลการสะสมและวันครบสัญญา
-              </div>
-
-
-              <!-- Payment Term -->
 
               <label class="form-label">
                 ระยะเวลาชำระเบี้ย (ปี) *
               </label>
-
 
               <input
                 id="paymentTermYears"
@@ -7742,21 +7736,17 @@ function renderCreatePolicyStep1() {
                 type="number"
                 min="1"
                 step="1"
-                inputmode="numeric"
                 value="${
-                  savings.PaymentTermYears ||
-                  ''
+                  data.SavingsProgress
+                    ?.PaymentTermYears || ''
                 }"
                 placeholder="เช่น 10"
               >
 
 
-              <!-- Maturity Term -->
-
               <label class="form-label">
                 ระยะเวลาครบสัญญา (ปี) *
               </label>
-
 
               <input
                 id="maturityTermYears"
@@ -7764,143 +7754,55 @@ function renderCreatePolicyStep1() {
                 type="number"
                 min="1"
                 step="1"
-                inputmode="numeric"
                 value="${
-                  savings.MaturityTermYears ||
-                  ''
+                  data.SavingsProgress
+                    ?.MaturityTermYears || ''
                 }"
                 placeholder="เช่น 20"
               >
 
 
-              <!-- Payment Frequency -->
-
               <label class="form-label">
                 ความถี่การชำระใน Savings *
               </label>
-
 
               <select
                 id="savingsPaymentFrequency"
                 class="form-input"
               >
 
-                <option
-                  value="YEARLY"
-                  ${
-                    String(
-                      savings.PaymentFrequency ||
-                      data.PaymentMode ||
-                      'YEARLY'
-                    ) === 'YEARLY'
-                      ? 'selected'
-                      : ''
-                  }
-                >
+                <option value="YEARLY">
                   รายปี
                 </option>
 
-
-                <option
-                  value="HALF_YEAR"
-                  ${
-                    String(
-                      savings.PaymentFrequency ||
-                      ''
-                    ) === 'HALF_YEAR'
-                      ? 'selected'
-                      : ''
-                  }
-                >
+                <option value="HALF_YEAR">
                   ราย 6 เดือน
                 </option>
 
-
-                <option
-                  value="QUARTER"
-                  ${
-                    String(
-                      savings.PaymentFrequency ||
-                      ''
-                    ) === 'QUARTER'
-                      ? 'selected'
-                      : ''
-                  }
-                >
+                <option value="QUARTER">
                   ราย 3 เดือน
                 </option>
 
-
-                <option
-                  value="MONTHLY"
-                  ${
-                    String(
-                      savings.PaymentFrequency ||
-                      ''
-                    ) === 'MONTHLY'
-                      ? 'selected'
-                      : ''
-                  }
-                >
+                <option value="MONTHLY">
                   รายเดือน
                 </option>
 
               </select>
 
 
-              <!-- Premium End Date -->
-
-              <label class="form-label">
-                วันจ่ายเบี้ยหมด *
-              </label>
-
-
-              <input
-                id="premiumEndDate"
-                class="form-input"
-                type="date"
-                value="${escapeHtml(
-                  savings.PremiumEndDate ||
-                  ''
-                )}"
-              >
-
-
-              <!-- Maturity Date -->
-
-              <label class="form-label">
-                วันครบสัญญา *
-              </label>
-
-
-              <input
-                id="maturityDate"
-                class="form-input"
-                type="date"
-                value="${escapeHtml(
-                  savings.MaturityDate ||
-                  ''
-                )}"
-              >
-
-
-              <!-- Maturity Amount -->
-
               <label class="form-label">
                 เงินครบสัญญา *
               </label>
-
 
               <input
                 id="maturityAmount"
                 class="form-input"
                 type="number"
-                min="1"
+                min="0"
                 step="1"
-                inputmode="numeric"
                 value="${
-                  savings.MaturityAmount ||
-                  ''
+                  data.SavingsProgress
+                    ?.MaturityAmount || ''
                 }"
                 placeholder="เช่น 1000000"
               >
@@ -7908,60 +7810,269 @@ function renderCreatePolicyStep1() {
             </div>
 
 
-            <!-- =============================================== -->
-            <!-- BUTTONS -->
-            <!-- =============================================== -->
+            <!-- ================================== -->
+            <!-- MESSAGE -->
+            <!-- ================================== -->
 
-            <div class="wizard-buttons">
-
-
-              <button
-                type="button"
-                class="wizard-secondary-button"
-                onclick="
-                  openCustomer(
-                    createPolicyCustomerId
-                  )
-                "
-              >
-                ยกเลิก
-              </button>
+            <div
+              id="createPolicyMessage"
+              class="form-message"
+            ></div>
 
 
-              <button
-                id="btnNextCreatePolicyStep2"
-                type="button"
-                class="form-submit-button"
-              >
-                ถัดไป → Rider
-              </button>
+            <!-- ================================== -->
+            <!-- NEXT -->
+            <!-- ================================== -->
 
-
-            </div>
-
+            <button
+              type="button"
+              class="form-submit-button"
+              onclick="
+                goCreatePolicyStep2()
+              "
+            >
+              ถัดไป → เพิ่ม Rider
+            </button>
 
           </div>
 
         </div>
 
-
         ${renderBottomNav()}
 
       </div>
-
     `;
 
-  const nextButton = document.getElementById(
-    'btnNextCreatePolicyStep2'
-  );
-  
-  if (nextButton) {
-    nextButton.addEventListener(
-      'click',
-      goCreatePolicyStep2
+
+  // ==========================================
+  // Initial Calculation
+  // ==========================================
+
+  updateCreatePolicyCalculatedDates();
+}
+
+function updateCreatePolicyCoverageMode() {
+
+  const mode =
+    String(
+      document.getElementById(
+        'coverageMode'
+      )?.value || 'AGE'
+    )
+      .trim()
+      .toUpperCase();
+
+
+  const ageField =
+    document.getElementById(
+      'coverageAgeField'
     );
+
+  const termField =
+    document.getElementById(
+      'coverageTermField'
+    );
+
+
+  if (ageField) {
+
+    ageField.style.display =
+      mode === 'AGE'
+        ? 'block'
+        : 'none';
   }
 
+
+  if (termField) {
+
+    termField.style.display =
+      mode === 'TERM'
+        ? 'block'
+        : 'none';
+  }
+
+
+  updateCreatePolicyCalculatedDates();
+}
+
+function updateCreatePolicyCalculatedDates() {
+
+  const effectiveDate =
+    document.getElementById(
+      'effectiveDate'
+    )?.value || '';
+
+
+  const premiumTermYears =
+    Number(
+      document.getElementById(
+        'premiumTermYears'
+      )?.value || 0
+    );
+
+
+  const coverageMode =
+    String(
+      document.getElementById(
+        'coverageMode'
+      )?.value || 'AGE'
+    )
+      .trim()
+      .toUpperCase();
+
+
+  const coverageToAge =
+    Number(
+      document.getElementById(
+        'coverageToAge'
+      )?.value || 0
+    );
+
+
+  const coverageTermYears =
+    Number(
+      document.getElementById(
+        'coverageTermYears'
+      )?.value || 0
+    );
+
+
+  const paymentMode =
+    String(
+      document.getElementById(
+        'paymentMode'
+      )?.value || 'YEARLY'
+    )
+      .trim()
+      .toUpperCase();
+
+
+  // ==========================================
+  // BirthDate ของผู้เอาประกัน
+  // ==========================================
+
+  const birthDate =
+    getCreatePolicyOwnerBirthDate();
+
+
+  // ==========================================
+  // Calculate
+  // ==========================================
+
+  const result =
+    calculatePolicyDates({
+
+      effectiveDate:
+        effectiveDate,
+
+      premiumTermYears:
+        premiumTermYears,
+
+      coverageMode:
+        coverageMode,
+
+      coverageToAge:
+        coverageToAge,
+
+      coverageTermYears:
+        coverageTermYears,
+
+      paymentMode:
+        paymentMode,
+
+      birthDate:
+        birthDate
+
+    });
+
+
+  // ==========================================
+  // Display
+  // ==========================================
+
+  const premiumBox =
+    document.getElementById(
+      'calculatedPremiumEndDate'
+    );
+
+  const expiryBox =
+    document.getElementById(
+      'calculatedExpiryDate'
+    );
+
+  const nextPaymentBox =
+    document.getElementById(
+      'calculatedNextPaymentDate'
+    );
+
+
+  if (premiumBox) {
+
+    premiumBox.textContent =
+      result.PremiumEndDate
+        ? formatDateDisplay(
+            result.PremiumEndDate
+          )
+        : '-';
+  }
+
+
+  if (expiryBox) {
+
+    expiryBox.textContent =
+      result.ExpiryDate
+        ? formatDateDisplay(
+            result.ExpiryDate
+          )
+        : '-';
+  }
+
+
+  if (nextPaymentBox) {
+
+    nextPaymentBox.textContent =
+      result.NextPaymentDate
+        ? formatDateDisplay(
+            result.NextPaymentDate
+          )
+        : '-';
+  }
+
+
+  // ==========================================
+  // เก็บค่าคำนวณไว้ใน State
+  // ==========================================
+
+  createPolicyData =
+    createPolicyData || {};
+
+
+  createPolicyData.PremiumTermYears =
+    premiumTermYears;
+
+
+  createPolicyData.CoverageMode =
+    coverageMode;
+
+
+  createPolicyData.CoverageToAge =
+    coverageToAge;
+
+
+  createPolicyData.CoverageTermYears =
+    coverageTermYears;
+
+
+  createPolicyData.PremiumEndDate =
+    result.PremiumEndDate;
+
+
+  createPolicyData.ExpiryDate =
+    result.ExpiryDate;
+
+
+  createPolicyData.NextPaymentDate =
+    result.NextPaymentDate;
 }
 
 function formatDateDisplay(value) {
@@ -8046,10 +8157,15 @@ function escapeHtml(
 
 function goCreatePolicyStep2() {
 
+  // ==========================================
+  // อ่านค่าจาก Step 1
+  // ==========================================
+
   const policyNo =
     String(
       document.getElementById('policyNo')?.value || ''
     ).trim();
+
 
   const policyType =
     String(
@@ -8058,98 +8174,365 @@ function goCreatePolicyStep2() {
       .trim()
       .toUpperCase();
 
+
   const planId =
     String(
       document.getElementById('planId')?.value || ''
     ).trim();
+
 
   const planName =
     String(
       document.getElementById('planName')?.value || ''
     ).trim();
 
+
   const familyMemberId =
     String(
       document.getElementById('familyMemberId')?.value || ''
     ).trim();
+
 
   const lifeSumAssured =
     Number(
       document.getElementById('lifeSumAssured')?.value || 0
     );
 
+
   const effectiveDate =
     document.getElementById('effectiveDate')?.value || '';
 
-  const expiryDate =
-    document.getElementById('expiryDate')?.value || '';
 
   const paymentMode =
     String(
       document.getElementById('paymentMode')?.value || 'YEARLY'
     ).trim();
 
+
   const annualPremium =
     Number(
       document.getElementById('annualPremium')?.value || 0
     );
 
-  const nextPaymentDate =
-    document.getElementById('nextPaymentDate')?.value || '';
-
 
   // ==========================================
-  // Validate Main Policy
+  // ตรวจสอบ Main Policy
   // ==========================================
 
   if (!policyNo) {
-    alert('กรุณาระบุเลขกรมธรรม์');
+
+    alert(
+      'กรุณาระบุเลขกรมธรรม์'
+    );
+
     return;
   }
 
+
   if (
-    !['LIFE', 'SAVINGS'].includes(policyType)
+    !['LIFE', 'SAVINGS'].includes(
+      policyType
+    )
   ) {
-    alert('กรุณาเลือกประเภทกรมธรรม์');
+
+    alert(
+      'กรุณาเลือกประเภทกรมธรรม์'
+    );
+
     return;
   }
+
 
   if (!planName) {
-    alert('กรุณาระบุชื่อแผน');
+
+    alert(
+      'กรุณาระบุชื่อแผน'
+    );
+
     return;
   }
+
 
   if (
-    !Number.isFinite(lifeSumAssured) ||
+    !Number.isFinite(
+      lifeSumAssured
+    ) ||
     lifeSumAssured <= 0
   ) {
-    alert('กรุณาระบุทุนประกันชีวิตหลัก');
+
+    alert(
+      'กรุณาระบุทุนประกันชีวิตหลัก'
+    );
+
     return;
   }
+
 
   if (!effectiveDate) {
-    alert('กรุณาระบุวันเริ่มคุ้มครอง');
+
+    alert(
+      'กรุณาระบุวันเริ่มคุ้มครอง'
+    );
+
     return;
   }
 
 
   // ==========================================
-  // Validate SAVINGS
+  // คำนวณวันที่
   // ==========================================
 
-  let savingsProgress = null;
+  let calculatedDates = {
 
-  if (policyType === 'SAVINGS') {
+    PremiumEndDate:
+      '',
+
+    ExpiryDate:
+      '',
+
+    NextPaymentDate:
+      ''
+
+  };
+
+
+  // ==========================================
+  // LIFE
+  // ==========================================
+
+  if (
+    policyType === 'LIFE'
+  ) {
+
+    const premiumTermYears =
+      Number(
+        document.getElementById(
+          'premiumTermYears'
+        )?.value || 0
+      );
+
+
+    const coverageMode =
+      String(
+        document.getElementById(
+          'coverageMode'
+        )?.value || ''
+      )
+        .trim()
+        .toUpperCase();
+
+
+    const coverageToAge =
+      Number(
+        document.getElementById(
+          'coverageToAge'
+        )?.value || 0
+      );
+
+
+    const coverageTermYears =
+      Number(
+        document.getElementById(
+          'coverageTermYears'
+        )?.value || 0
+      );
+
+
+    // ========================================
+    // Validate
+    // ========================================
+
+    if (
+      !Number.isFinite(
+        premiumTermYears
+      ) ||
+      premiumTermYears <= 0
+    ) {
+
+      alert(
+        'กรุณาระบุระยะเวลาจ่ายเบี้ย'
+      );
+
+      return;
+    }
+
+
+    if (
+      !['AGE', 'TERM'].includes(
+        coverageMode
+      )
+    ) {
+
+      alert(
+        'กรุณาเลือกรูปแบบการคุ้มครอง'
+      );
+
+      return;
+    }
+
+
+    if (
+      coverageMode === 'AGE' &&
+      (
+        !Number.isFinite(
+          coverageToAge
+        ) ||
+        coverageToAge <= 0
+      )
+    ) {
+
+      alert(
+        'กรุณาระบุอายุสิ้นสุดความคุ้มครอง'
+      );
+
+      return;
+    }
+
+
+    if (
+      coverageMode === 'TERM' &&
+      (
+        !Number.isFinite(
+          coverageTermYears
+        ) ||
+        coverageTermYears <= 0
+      )
+    ) {
+
+      alert(
+        'กรุณาระบุระยะเวลาคุ้มครอง'
+      );
+
+      return;
+    }
+
+
+    // ========================================
+    // BirthDate ของผู้เอาประกัน
+    // ========================================
+
+    const birthDate =
+      getCreatePolicyOwnerBirthDate();
+
+
+    if (
+      coverageMode === 'AGE' &&
+      !birthDate
+    ) {
+
+      alert(
+        'ไม่พบวันเกิดของผู้เอาประกัน จึงไม่สามารถคำนวณวันสิ้นสุดความคุ้มครองได้'
+      );
+
+      return;
+    }
+
+
+    // ========================================
+    // Calculate
+    // ========================================
+
+    calculatedDates =
+      calculatePolicyDates({
+
+        effectiveDate:
+          effectiveDate,
+
+        premiumTermYears:
+          premiumTermYears,
+
+        coverageMode:
+          coverageMode,
+
+        coverageToAge:
+          coverageToAge,
+
+        coverageTermYears:
+          coverageTermYears,
+
+        paymentMode:
+          paymentMode,
+
+        birthDate:
+          birthDate
+
+      });
+
+
+    if (
+      !calculatedDates.PremiumEndDate
+    ) {
+
+      alert(
+        'ไม่สามารถคำนวณวันสิ้นสุดการจ่ายเบี้ยได้'
+      );
+
+      return;
+    }
+
+
+    if (
+      !calculatedDates.ExpiryDate
+    ) {
+
+      alert(
+        'ไม่สามารถคำนวณวันสิ้นสุดความคุ้มครองได้'
+      );
+
+      return;
+    }
+
+
+    if (
+      !calculatedDates.NextPaymentDate
+    ) {
+
+      alert(
+        'ไม่สามารถคำนวณวันชำระเบี้ยครั้งถัดไปได้'
+      );
+
+      return;
+    }
+
+  }
+
+
+  // ==========================================
+  // SAVINGS
+  // ใช้ Logic เดิม
+  // ==========================================
+
+  let savingsProgress =
+    null;
+
+
+  let savingsExpiryDate =
+    '';
+
+
+  let savingsNextPaymentDate =
+    '';
+
+
+  if (
+    policyType === 'SAVINGS'
+  ) {
 
     const paymentTermYears =
       Number(
-        document.getElementById('paymentTermYears')?.value || 0
+        document.getElementById(
+          'paymentTermYears'
+        )?.value || 0
       );
+
 
     const maturityTermYears =
       Number(
-        document.getElementById('maturityTermYears')?.value || 0
+        document.getElementById(
+          'maturityTermYears'
+        )?.value || 0
       );
+
 
     const paymentFrequency =
       String(
@@ -8158,69 +8541,126 @@ function goCreatePolicyStep2() {
         )?.value || ''
       ).trim();
 
-    const premiumEndDate =
-      document.getElementById('premiumEndDate')?.value || '';
-
-    const maturityDate =
-      document.getElementById('maturityDate')?.value || '';
 
     const maturityAmount =
       Number(
-        document.getElementById('maturityAmount')?.value || 0
+        document.getElementById(
+          'maturityAmount'
+        )?.value || 0
       );
 
 
+    // ========================================
+    // Validate Savings
+    // ========================================
+
     if (
-      !Number.isFinite(paymentTermYears) ||
+      !Number.isFinite(
+        paymentTermYears
+      ) ||
       paymentTermYears <= 0
     ) {
-      alert('กรุณาระบุระยะเวลาชำระเบี้ย');
+
+      alert(
+        'กรุณาระบุระยะเวลาชำระเบี้ย'
+      );
+
       return;
     }
 
+
     if (
-      !Number.isFinite(maturityTermYears) ||
+      !Number.isFinite(
+        maturityTermYears
+      ) ||
       maturityTermYears <= 0
     ) {
-      alert('กรุณาระบุระยะเวลาครบสัญญา');
+
+      alert(
+        'กรุณาระบุระยะเวลาครบสัญญา'
+      );
+
       return;
     }
+
 
     if (
       maturityTermYears <
       paymentTermYears
     ) {
+
       alert(
         'ระยะเวลาครบสัญญาต้องไม่น้อยกว่าระยะเวลาชำระเบี้ย'
       );
+
       return;
     }
+
 
     if (!paymentFrequency) {
-      alert('กรุณาเลือกความถี่การชำระ');
+
+      alert(
+        'กรุณาเลือกความถี่การชำระ'
+      );
+
       return;
     }
 
-    if (!premiumEndDate) {
-      alert('กรุณาระบุวันจ่ายเบี้ยหมด');
-      return;
-    }
-
-    if (!maturityDate) {
-      alert('กรุณาระบุวันครบสัญญา');
-      return;
-    }
 
     if (
-      !Number.isFinite(maturityAmount) ||
+      !Number.isFinite(
+        maturityAmount
+      ) ||
       maturityAmount <= 0
     ) {
-      alert('กรุณาระบุเงินครบสัญญา');
+
+      alert(
+        'กรุณาระบุเงินครบสัญญา'
+      );
+
       return;
     }
+
+
+    // ========================================
+    // Savings Dates
+    // ========================================
+
+    const savingsDates =
+      calculatePolicyDates({
+
+        effectiveDate:
+          effectiveDate,
+
+        premiumTermYears:
+          paymentTermYears,
+
+        coverageMode:
+          'TERM',
+
+        coverageTermYears:
+          maturityTermYears,
+
+        paymentMode:
+          paymentFrequency
+
+      });
+
+
+    savingsExpiryDate =
+      savingsDates.ExpiryDate;
+
+
+    savingsNextPaymentDate =
+      savingsDates.NextPaymentDate;
+
+
+    const premiumEndDate =
+      savingsDates.PremiumEndDate;
 
 
     savingsProgress = {
+
       StartDate:
         effectiveDate,
 
@@ -8237,24 +8677,28 @@ function goCreatePolicyStep2() {
         premiumEndDate,
 
       MaturityDate:
-        maturityDate,
+        savingsExpiryDate,
 
       MaturityAmount:
         maturityAmount,
 
       Status:
         'ACTIVE'
+
     };
   }
 
 
   // ==========================================
-  // เก็บ State
+  // State สำหรับ Step 2 / Step 3
   // ==========================================
 
   createPolicyData = {
+
     CustomerID:
-      createPolicyCustomerId,
+      createPolicyData.CustomerID ||
+      createPolicyCustomerId ||
+      '',
 
     PolicyNo:
       policyNo,
@@ -8277,22 +8721,80 @@ function goCreatePolicyStep2() {
     EffectiveDate:
       effectiveDate,
 
+    PremiumTermYears:
+      policyType === 'LIFE'
+        ? Number(
+            document.getElementById(
+              'premiumTermYears'
+            )?.value || 0
+          )
+        : Number(
+            document.getElementById(
+              'paymentTermYears'
+            )?.value || 0
+          ),
+
+    CoverageMode:
+      policyType === 'LIFE'
+        ? String(
+            document.getElementById(
+              'coverageMode'
+            )?.value || ''
+          )
+            .trim()
+            .toUpperCase()
+        : 'TERM',
+
+    CoverageToAge:
+      policyType === 'LIFE'
+        ? Number(
+            document.getElementById(
+              'coverageToAge'
+            )?.value || 0
+          )
+        : 0,
+
+    CoverageTermYears:
+      policyType === 'LIFE'
+        ? Number(
+            document.getElementById(
+              'coverageTermYears'
+            )?.value || 0
+          )
+        : Number(
+            document.getElementById(
+              'maturityTermYears'
+            )?.value || 0
+          ),
+
+    PremiumEndDate:
+      policyType === 'LIFE'
+        ? calculatedDates.PremiumEndDate
+        : savingsProgress?.PremiumEndDate || '',
+
     ExpiryDate:
-      expiryDate,
+      policyType === 'LIFE'
+        ? calculatedDates.ExpiryDate
+        : savingsExpiryDate,
 
     PaymentMode:
       paymentMode,
 
     AnnualPremium:
-      Number.isFinite(annualPremium)
+      Number.isFinite(
+        annualPremium
+      )
         ? annualPremium
         : 0,
 
     NextPaymentDate:
-      nextPaymentDate,
+      policyType === 'LIFE'
+        ? calculatedDates.NextPaymentDate
+        : savingsNextPaymentDate,
 
     SavingsProgress:
       savingsProgress
+
   };
 
 
@@ -9914,6 +10416,415 @@ function handlePolicyTypeChange() {
     policyType === 'SAVINGS'
       ? 'block'
       : 'none';
+}
+
+function getCreatePolicyOwnerBirthDate() {
+
+  const data =
+    createPolicyData || {};
+
+  const customer =
+    data.customer ||
+    data.Customer ||
+    {};
+
+  const family =
+    Array.isArray(data.family)
+      ? data.family
+      : Array.isArray(data.Family)
+        ? data.Family
+        : [];
+
+  const familyMemberId =
+    String(
+      data.FamilyMemberID || ''
+    ).trim();
+
+  // ==========================================
+  // ถ้าเลือกสมาชิกครอบครัว
+  // ==========================================
+
+  if (familyMemberId) {
+
+    const member =
+      family.find(item =>
+        String(
+          item.FamilyMemberID || ''
+        ).trim() ===
+        familyMemberId
+      );
+
+    if (member?.BirthDate) {
+      return String(
+        member.BirthDate
+      ).trim();
+    }
+  }
+
+  // ==========================================
+  // ถ้าไม่เลือก = เจ้าของ Account
+  // ==========================================
+
+  return String(
+    customer.BirthDate || ''
+  ).trim();
+}
+
+function addPolicyYears(dateString, years) {
+
+  if (!dateString) {
+    return '';
+  }
+
+  const parts =
+    String(dateString)
+      .split('-')
+      .map(Number);
+
+  if (
+    parts.length !== 3 ||
+    parts.some(
+      value => !Number.isFinite(value)
+    )
+  ) {
+    return '';
+  }
+
+  const year =
+    parts[0];
+
+  const month =
+    parts[1];
+
+  const day =
+    parts[2];
+
+  const targetYear =
+    year + Number(years || 0);
+
+  // กรณี 29 ก.พ. → ถ้าปลายทางไม่ใช่ leap year
+  // ให้ใช้วันสุดท้ายของเดือนกุมภาพันธ์
+  const lastDay =
+    new Date(
+      targetYear,
+      month,
+      0
+    ).getDate();
+
+  const targetDay =
+    Math.min(
+      day,
+      lastDay
+    );
+
+  return [
+    targetYear,
+    String(month).padStart(2, '0'),
+    String(targetDay).padStart(2, '0')
+  ].join('-');
+}
+
+function addPolicyMonths(dateString, months) {
+
+  if (!dateString) {
+    return '';
+  }
+
+  const parts =
+    String(dateString)
+      .split('-')
+      .map(Number);
+
+  if (
+    parts.length !== 3 ||
+    parts.some(
+      value => !Number.isFinite(value)
+    )
+  ) {
+    return '';
+  }
+
+  const year =
+    parts[0];
+
+  const month =
+    parts[1];
+
+  const day =
+    parts[2];
+
+  const totalMonths =
+    (month - 1) +
+    Number(months || 0);
+
+  const targetYear =
+    year +
+    Math.floor(
+      totalMonths / 12
+    );
+
+  const targetMonth =
+    (totalMonths % 12) + 1;
+
+  const lastDay =
+    new Date(
+      targetYear,
+      targetMonth,
+      0
+    ).getDate();
+
+  const targetDay =
+    Math.min(
+      day,
+      lastDay
+    );
+
+  return [
+    targetYear,
+    String(targetMonth).padStart(2, '0'),
+    String(targetDay).padStart(2, '0')
+  ].join('-');
+}
+
+function calculatePolicyDates(options = {}) {
+
+  const effectiveDate =
+    String(
+      options.effectiveDate || ''
+    ).trim();
+
+  const premiumTermYears =
+    Number(
+      options.premiumTermYears || 0
+    );
+
+  const coverageMode =
+    String(
+      options.coverageMode || ''
+    )
+      .trim()
+      .toUpperCase();
+
+  const coverageToAge =
+    Number(
+      options.coverageToAge || 0
+    );
+
+  const coverageTermYears =
+    Number(
+      options.coverageTermYears || 0
+    );
+
+  const paymentMode =
+    String(
+      options.paymentMode || 'YEARLY'
+    )
+      .trim()
+      .toUpperCase();
+
+  const birthDate =
+    String(
+      options.birthDate || ''
+    ).trim();
+
+
+  let premiumEndDate =
+    '';
+
+  let expiryDate =
+    '';
+
+  let nextPaymentDate =
+    '';
+
+
+  // ==========================================
+  // 1. Premium End Date
+  // ==========================================
+
+  if (
+    effectiveDate &&
+    premiumTermYears > 0
+  ) {
+
+    premiumEndDate =
+      addPolicyYears(
+        effectiveDate,
+        premiumTermYears
+      );
+
+    if (premiumEndDate) {
+
+      const date =
+        new Date(
+          premiumEndDate +
+          'T00:00:00'
+        );
+
+      date.setDate(
+        date.getDate() - 1
+      );
+
+      premiumEndDate =
+        [
+          date.getFullYear(),
+          String(
+            date.getMonth() + 1
+          ).padStart(2, '0'),
+          String(
+            date.getDate()
+          ).padStart(2, '0')
+        ].join('-');
+    }
+  }
+
+
+  // ==========================================
+  // 2. Expiry Date
+  // ==========================================
+
+  if (
+    coverageMode === 'AGE' &&
+    birthDate &&
+    coverageToAge > 0
+  ) {
+
+    const birthParts =
+      birthDate
+        .split('-')
+        .map(Number);
+
+    if (
+      birthParts.length === 3 &&
+      birthParts.every(
+        value =>
+          Number.isFinite(value)
+      )
+    ) {
+
+      const expiryYear =
+        birthParts[0] +
+        coverageToAge;
+
+      // ตามกติกาที่ตกลงกัน:
+      // คุ้มครองถึงอายุ XX
+      // = 31/12 ของปีนั้น
+
+      expiryDate =
+        [
+          expiryYear,
+          '12',
+          '31'
+        ].join('-');
+    }
+
+  }
+  else if (
+    coverageMode === 'TERM' &&
+    effectiveDate &&
+    coverageTermYears > 0
+  ) {
+
+    expiryDate =
+      addPolicyYears(
+        effectiveDate,
+        coverageTermYears
+      );
+
+    if (expiryDate) {
+
+      const date =
+        new Date(
+          expiryDate +
+          'T00:00:00'
+        );
+
+      date.setDate(
+        date.getDate() - 1
+      );
+
+      expiryDate =
+        [
+          date.getFullYear(),
+          String(
+            date.getMonth() + 1
+          ).padStart(2, '0'),
+          String(
+            date.getDate()
+          ).padStart(2, '0')
+        ].join('-');
+    }
+  }
+
+
+  // ==========================================
+  // 3. Next Payment Date
+  // ==========================================
+
+  if (effectiveDate) {
+
+    switch (paymentMode) {
+
+      case 'MONTHLY':
+
+        nextPaymentDate =
+          addPolicyMonths(
+            effectiveDate,
+            1
+          );
+
+        break;
+
+
+      case 'QUARTER':
+
+        nextPaymentDate =
+          addPolicyMonths(
+            effectiveDate,
+            3
+          );
+
+        break;
+
+
+      case 'HALF_YEAR':
+
+        nextPaymentDate =
+          addPolicyMonths(
+            effectiveDate,
+            6
+          );
+
+        break;
+
+
+      case 'YEARLY':
+
+      default:
+
+        nextPaymentDate =
+          addPolicyMonths(
+            effectiveDate,
+            12
+          );
+
+        break;
+    }
+  }
+
+
+  return {
+
+    PremiumEndDate:
+      premiumEndDate,
+
+    ExpiryDate:
+      expiryDate,
+
+    NextPaymentDate:
+      nextPaymentDate
+
+  };
 }
 
 
