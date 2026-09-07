@@ -8306,6 +8306,330 @@ function goCreatePolicyStep2() {
 }
 
 
+function renderCreatePolicyStep2() {
+
+  const riders =
+    Array.isArray(newPolicyRiders)
+      ? newPolicyRiders
+      : [];
+
+  document
+    .getElementById('app')
+    .innerHTML = `
+      <div class="app">
+
+        <div class="topbar">
+
+          <div
+            class="agent-back"
+            onclick="
+              createPolicyStep = 1;
+              renderCreatePolicyStep1();
+            "
+          >
+            ← กรมธรรม์หลัก
+          </div>
+
+          <div class="brand">
+            ANC Life Planning
+          </div>
+
+        </div>
+
+
+        <div class="page">
+
+          <!-- ===================================== -->
+          <!-- WIZARD PROGRESS -->
+          <!-- ===================================== -->
+
+          <div class="wizard-progress">
+
+            <span class="done">
+              1 กรมธรรม์
+            </span>
+
+            <span class="active">
+              2 Rider
+            </span>
+
+            <span>
+              3 ตรวจสอบ
+            </span>
+
+          </div>
+
+
+          <!-- ===================================== -->
+          <!-- TITLE -->
+          <!-- ===================================== -->
+
+          <div class="page-title">
+            Rider
+          </div>
+
+
+          <!-- ===================================== -->
+          <!-- RIDER HEADER -->
+          <!-- ===================================== -->
+
+          <div class="rider-section-header">
+
+            <div>
+
+              <div class="rider-section-title">
+                รายการ Rider
+              </div>
+
+              <div class="rider-section-subtitle">
+                มีหรือไม่มีก็ได้
+              </div>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="agent-add-button"
+              onclick="
+                openRiderEditor(-1)
+              "
+            >
+              ＋ เพิ่ม Rider
+            </button>
+
+          </div>
+
+
+          <!-- ===================================== -->
+          <!-- RIDER LIST -->
+          <!-- ===================================== -->
+
+          ${
+            riders.length
+              ? `
+
+                <div class="rider-grid">
+
+                  <!-- HEADER -->
+
+                  <div
+                    class="
+                      rider-grid-header
+                    "
+                  >
+
+                    <div>
+                      Rider
+                    </div>
+
+                    <div>
+                      ทุน
+                    </div>
+
+                    <div>
+                      เบี้ย
+                    </div>
+
+                    <div>
+                    </div>
+
+                  </div>
+
+
+                  <!-- ROWS -->
+
+                  ${
+                    riders
+                      .map(
+                        (
+                          rider,
+                          index
+                        ) => `
+
+                          <div
+                            class="
+                              rider-grid-row
+                            "
+                          >
+
+                            <!-- Rider Name -->
+
+                            <div
+                              class="
+                                rider-grid-name
+                              "
+                            >
+
+                              <strong>
+                                ${escapeHtml(
+                                  rider.RiderName ||
+                                  rider.RiderID ||
+                                  '-'
+                                )}
+                              </strong>
+
+
+                              ${
+                                rider.RiderType
+                                  ? `
+                                    <small>
+                                      ${escapeHtml(
+                                        rider.RiderType
+                                      )}
+                                    </small>
+                                  `
+                                  : ''
+                              }
+
+                            </div>
+
+
+                            <!-- Coverage -->
+
+                            <div>
+
+                              ${formatAgentNumber(
+                                rider.Coverage
+                              )}
+
+                            </div>
+
+
+                            <!-- Premium -->
+
+                            <div>
+
+                              ${formatAgentNumber(
+                                rider.Premium
+                              )}
+
+                            </div>
+
+
+                            <!-- Actions -->
+
+                            <div
+                              class="
+                                rider-grid-actions
+                              "
+                            >
+
+                              <button
+                                type="button"
+                                onclick="
+                                  openRiderEditor(
+                                    ${index}
+                                  )
+                                "
+                              >
+                                ✏️
+                              </button>
+
+
+                              <button
+                                type="button"
+                                class="
+                                  rider-delete-button
+                                "
+                                onclick="
+                                  deleteRider(
+                                    ${index}
+                                  )
+                                "
+                              >
+                                🗑️
+                              </button>
+
+                            </div>
+
+                          </div>
+
+                        `
+                      )
+                      .join('')
+                  }
+
+                </div>
+
+              `
+              : `
+
+                <div
+                  class="
+                    rider-empty
+                  "
+                >
+
+                  <div>
+                    📋
+                  </div>
+
+                  <div>
+                    ยังไม่มี Rider
+                  </div>
+
+                  <small>
+                    สามารถข้ามขั้นตอนนี้ได้
+                  </small>
+
+                </div>
+
+              `
+          }
+
+
+          <!-- ===================================== -->
+          <!-- MESSAGE -->
+          <!-- ===================================== -->
+
+          <div
+            id="riderStepMessage"
+            class="form-message"
+          ></div>
+
+
+          <!-- ===================================== -->
+          <!-- ACTION BUTTONS -->
+          <!-- ===================================== -->
+
+          <div class="wizard-buttons">
+
+            <button
+              type="button"
+              class="wizard-secondary-button"
+              onclick="
+                createPolicyStep = 1;
+                renderCreatePolicyStep1();
+              "
+            >
+              ← ย้อนกลับ
+            </button>
+
+
+            <button
+              type="button"
+              class="form-submit-button"
+              onclick="
+                goCreatePolicyStep3()
+              "
+            >
+              ต่อไป →
+            </button>
+
+          </div>
+
+
+        </div>
+
+
+        ${renderBottomNav()}
+
+      </div>
+    `;
+}
+
+
 document.addEventListener(
   'DOMContentLoaded',
   initAgent
