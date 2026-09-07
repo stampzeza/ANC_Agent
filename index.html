@@ -8682,6 +8682,350 @@ function goCreatePolicyStep3() {
   renderCreatePolicyStep3();
 }
 
+function renderRiderEditor(rider) {
+
+  document
+    .getElementById('app')
+    .innerHTML = `
+      <div class="app">
+
+        <div class="topbar">
+
+          <div
+            class="agent-back"
+            onclick="
+              renderCreatePolicyStep2()
+            "
+          >
+            ← Rider
+          </div>
+
+          <div class="brand">
+            ANC Life Planning
+          </div>
+
+        </div>
+
+
+        <div class="page">
+
+          <div class="wizard-progress">
+
+            <span class="done">
+              1 กรมธรรม์
+            </span>
+
+            <span class="active">
+              2 Rider
+            </span>
+
+            <span>
+              3 ตรวจสอบ
+            </span>
+
+          </div>
+
+
+          <div class="page-title">
+            ${
+              rider
+                ? '✏️ แก้ไข Rider'
+                : '＋ เพิ่ม Rider'
+            }
+          </div>
+
+
+          <div class="form-card">
+
+            <label class="form-label">
+              Rider ID *
+            </label>
+
+            <input
+              id="riderEditorId"
+              class="form-input"
+              type="text"
+              autocomplete="off"
+              value="${escapeHtml(
+                rider?.RiderID || ''
+              )}"
+              placeholder="เช่น HSMHPDC"
+            >
+
+
+            <label class="form-label">
+              ชื่อ Rider *
+            </label>
+
+            <input
+              id="riderEditorName"
+              class="form-input"
+              type="text"
+              autocomplete="off"
+              value="${escapeHtml(
+                rider?.RiderName || ''
+              )}"
+              placeholder="เช่น Health Max"
+            >
+
+
+            <label class="form-label">
+              ประเภท Rider
+            </label>
+
+            <input
+              id="riderEditorType"
+              class="form-input"
+              type="text"
+              autocomplete="off"
+              value="${escapeHtml(
+                rider?.RiderType || ''
+              )}"
+              placeholder="เช่น HEALTH"
+            >
+
+
+            <label class="form-label">
+              ทุน Rider
+            </label>
+
+            <input
+              id="riderEditorCoverage"
+              class="form-input"
+              type="number"
+              min="0"
+              step="1"
+              inputmode="numeric"
+              value="${
+                Number(
+                  rider?.Coverage || 0
+                )
+              }"
+              placeholder="เช่น 8000000"
+            >
+
+
+            <label class="form-label">
+              เบี้ย Rider
+            </label>
+
+            <input
+              id="riderEditorPremium"
+              class="form-input"
+              type="number"
+              min="0"
+              step="1"
+              inputmode="numeric"
+              value="${
+                Number(
+                  rider?.Premium || 0
+                )
+              }"
+              placeholder="เช่น 12000"
+            >
+
+
+            <div
+              id="riderEditorMessage"
+              class="form-message"
+            ></div>
+
+
+            <button
+              type="button"
+              class="form-submit-button"
+              onclick="
+                saveRiderEditor()
+              "
+            >
+              บันทึก Rider
+            </button>
+
+          </div>
+
+        </div>
+
+
+        ${renderBottomNav()}
+
+      </div>
+    `;
+}
+
+function saveRiderEditor() {
+
+  const riderId =
+    document
+      .getElementById('riderEditorId')
+      ?.value
+      .trim();
+
+  const riderName =
+    document
+      .getElementById('riderEditorName')
+      ?.value
+      .trim();
+
+  const riderType =
+    document
+      .getElementById('riderEditorType')
+      ?.value
+      .trim();
+
+  const coverage =
+    Number(
+      document
+        .getElementById('riderEditorCoverage')
+        ?.value ||
+      0
+    );
+
+  const premium =
+    Number(
+      document
+        .getElementById('riderEditorPremium')
+        ?.value ||
+      0
+    );
+
+  const messageBox =
+    document
+      .getElementById('riderEditorMessage');
+
+
+  // ==========================================
+  // Validate
+  // ==========================================
+
+  if (!riderId) {
+
+    messageBox.textContent =
+      'กรุณาระบุ Rider ID';
+
+    return;
+  }
+
+
+  if (!riderName) {
+
+    messageBox.textContent =
+      'กรุณาระบุชื่อ Rider';
+
+    return;
+  }
+
+
+  if (
+    !Number.isFinite(coverage) ||
+    coverage < 0
+  ) {
+
+    messageBox.textContent =
+      'ทุน Rider ไม่ถูกต้อง';
+
+    return;
+  }
+
+
+  if (
+    !Number.isFinite(premium) ||
+    premium < 0
+  ) {
+
+    messageBox.textContent =
+      'เบี้ย Rider ไม่ถูกต้อง';
+
+    return;
+  }
+
+
+  // ==========================================
+  // ป้องกัน Rider ซ้ำ
+  // ==========================================
+
+  const duplicateIndex =
+    newPolicyRiders.findIndex(
+      (item, index) =>
+        index !== editingRiderIndex &&
+        String(
+          item.RiderID || ''
+        )
+          .trim()
+          .toLowerCase() ===
+        riderId.toLowerCase()
+    );
+
+
+  if (
+    duplicateIndex >= 0
+  ) {
+
+    messageBox.textContent =
+      'Rider นี้มีอยู่ในรายการแล้ว';
+
+    return;
+  }
+
+
+  // ==========================================
+  // สร้าง Rider Object
+  // ==========================================
+
+  const rider = {
+
+    RiderID:
+      riderId,
+
+    RiderName:
+      riderName,
+
+    RiderType:
+      riderType,
+
+    Coverage:
+      coverage,
+
+    Premium:
+      premium
+
+  };
+
+
+  // ==========================================
+  // เพิ่ม / แก้ไข
+  // ==========================================
+
+  if (
+    editingRiderIndex >= 0
+  ) {
+
+    newPolicyRiders[
+      editingRiderIndex
+    ] = rider;
+
+  } else {
+
+    newPolicyRiders.push(
+      rider
+    );
+
+  }
+
+
+  // ==========================================
+  // Reset Editor
+  // ==========================================
+
+  editingRiderIndex = -1;
+
+
+  // ==========================================
+  // กลับ Step 2
+  // ==========================================
+
+  renderCreatePolicyStep2();
+}
+
 
 document.addEventListener(
   'DOMContentLoaded',
