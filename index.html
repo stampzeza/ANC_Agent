@@ -9894,6 +9894,28 @@ async function submitCreatePolicy() {
   }
 }
 
+function handlePolicyTypeChange() {
+
+  const policyType =
+    String(
+      document.getElementById('policyType')?.value || 'LIFE'
+    )
+      .trim()
+      .toUpperCase();
+
+  const savingsFields =
+    document.getElementById('savingsFields');
+
+  if (!savingsFields) {
+    return;
+  }
+
+  savingsFields.style.display =
+    policyType === 'SAVINGS'
+      ? 'block'
+      : 'none';
+}
+
 
 document.addEventListener(
   'DOMContentLoaded',
