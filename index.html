@@ -7929,11 +7929,9 @@ function renderCreatePolicyStep1() {
 
 
               <button
+                id="btnNextCreatePolicyStep2"
                 type="button"
                 class="form-submit-button"
-                onclick="
-                  window.goCreatePolicyStep2()
-                "
               >
                 ถัดไป → Rider
               </button>
@@ -7952,6 +7950,17 @@ function renderCreatePolicyStep1() {
       </div>
 
     `;
+
+  const nextButton = document.getElementById(
+    'btnNextCreatePolicyStep2'
+  );
+  
+  if (nextButton) {
+    nextButton.addEventListener(
+      'click',
+      goCreatePolicyStep2
+    );
+  }
 
 }
 
@@ -8039,16 +8048,6 @@ document.addEventListener(
   'DOMContentLoaded',
   initAgent
 );
-
-window.goCreatePolicyStep2 = goCreatePolicyStep2;
-window.renderCreatePolicyStep2 = renderCreatePolicyStep2;
-window.openRiderEditor = openRiderEditor;
-window.saveRiderEditor = saveRiderEditor;
-window.deleteRider = deleteRider;
-window.goCreatePolicyStep3 = goCreatePolicyStep3;
-window.renderCreatePolicyStep1 = renderCreatePolicyStep1;
-window.renderCreatePolicyStep3 = renderCreatePolicyStep3;
-window.submitCreatePolicy = submitCreatePolicy;
 
 </script>
 
