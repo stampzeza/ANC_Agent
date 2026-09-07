@@ -7932,7 +7932,7 @@ function renderCreatePolicyStep1() {
                 type="button"
                 class="form-submit-button"
                 onclick="
-                  goCreatePolicyStep2()
+                  window.goCreatePolicyStep2()
                 "
               >
                 ถัดไป → Rider
@@ -8039,6 +8039,16 @@ document.addEventListener(
   'DOMContentLoaded',
   initAgent
 );
+
+window.goCreatePolicyStep2 = goCreatePolicyStep2;
+window.renderCreatePolicyStep2 = renderCreatePolicyStep2;
+window.openRiderEditor = openRiderEditor;
+window.saveRiderEditor = saveRiderEditor;
+window.deleteRider = deleteRider;
+window.goCreatePolicyStep3 = goCreatePolicyStep3;
+window.renderCreatePolicyStep1 = renderCreatePolicyStep1;
+window.renderCreatePolicyStep3 = renderCreatePolicyStep3;
+window.submitCreatePolicy = submitCreatePolicy;
 
 </script>
 
