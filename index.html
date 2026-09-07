@@ -9560,34 +9560,22 @@ function renderCreatePolicyStep3() {
       ? (
           familyMember.DisplayName ||
           (
-            (familyMember.FirstName || '') +
-            (
-              familyMember.FirstName &&
-              familyMember.LastName
-                ? ' '
-                : ''
-            ) +
-            (familyMember.LastName || '')
-          )
+            `${familyMember.FirstName || ''} ${familyMember.LastName || ''}`
+          ).trim() ||
+          familyMember.FamilyMemberID ||
+          '-'
         )
       : (
           customer.DisplayName ||
           (
-            (customer.FirstName || '') +
-            (
-              customer.FirstName &&
-              customer.LastName
-                ? ' '
-                : ''
-            ) +
-            (customer.LastName || '')
-          ) ||
+            `${customer.FirstName || ''} ${customer.LastName || ''}`
+          ).trim() ||
           '-'
         );
 
 
   // ==========================================
-  // Policy Type
+  // Policy
   // ==========================================
 
   const policyType =
@@ -9598,22 +9586,66 @@ function renderCreatePolicyStep3() {
       .toUpperCase();
 
 
-  // ==========================================
-  // Savings
-  // ==========================================
-
-  const savings =
-    createPolicyData.SavingsProgress;
+  const policyTypeLabel =
+    policyType === 'SAVINGS'
+      ? 'SAVINGS — ประกันออมทรัพย์'
+      : 'LIFE — ประกันชีวิต';
 
 
   // ==========================================
-  // Rider
+  // Coverage
+  // ==========================================
+
+  const coverageMode =
+    String(
+      createPolicyData.CoverageMode || ''
+    )
+      .trim()
+      .toUpperCase();
+
+
+  let coverageDescription =
+    '-';
+
+
+  if (coverageMode === 'AGE') {
+
+    coverageDescription =
+      createPolicyData.CoverageToAge
+        ? `ถึงอายุ ${formatAgentNumber(
+            createPolicyData.CoverageToAge
+          )} ปี`
+        : '-';
+
+  }
+  else if (coverageMode === 'TERM') {
+
+    coverageDescription =
+      createPolicyData.CoverageTermYears
+        ? `คุ้มครอง ${formatAgentNumber(
+            createPolicyData.CoverageTermYears
+          )} ปี`
+        : '-';
+  }
+
+
+  // ==========================================
+  // Riders
   // ==========================================
 
   const riders =
     Array.isArray(newPolicyRiders)
       ? newPolicyRiders
       : [];
+
+
+  // ==========================================
+  // Savings
+  // ==========================================
+
+  const savings =
+    createPolicyData.SavingsProgress ||
+    null;
 
 
   // ==========================================
@@ -9649,15 +9681,10 @@ function renderCreatePolicyStep3() {
         </div>
 
 
-        <!-- ================================== -->
-        <!-- PAGE -->
-        <!-- ================================== -->
-
         <div class="page">
 
-
           <!-- ================================== -->
-          <!-- PROGRESS -->
+          <!-- WIZARD -->
           <!-- ================================== -->
 
           <div class="wizard-progress">
@@ -9677,17 +9704,13 @@ function renderCreatePolicyStep3() {
           </div>
 
 
-          <!-- ================================== -->
-          <!-- TITLE -->
-          <!-- ================================== -->
-
           <div class="page-title">
             ตรวจสอบข้อมูล
           </div>
 
 
           <!-- ================================== -->
-          <!-- POLICY -->
+          <!-- POLICY SUMMARY -->
           <!-- ================================== -->
 
           <div class="form-card">
@@ -9705,30 +9728,25 @@ function renderCreatePolicyStep3() {
 
             ${renderReviewRow(
               'ประเภทกรมธรรม์',
-              policyType === 'SAVINGS'
-                ? 'SAVINGS — ประกันออมทรัพย์'
-                : 'LIFE — ประกันชีวิต'
+              policyTypeLabel
             )}
 
 
             ${renderReviewRow(
               'เลขกรมธรรม์',
-              createPolicyData.PolicyNo ||
-              '-'
+              createPolicyData.PolicyNo || '-'
             )}
 
 
             ${renderReviewRow(
               'Plan ID',
-              createPolicyData.PlanID ||
-              '-'
+              createPolicyData.PlanID || '-'
             )}
 
 
             ${renderReviewRow(
               'แผนหลัก',
-              createPolicyData.PlanName ||
-              '-'
+              createPolicyData.PlanName || '-'
             )}
 
 
@@ -9741,9 +9759,22 @@ function renderCreatePolicyStep3() {
                 : '-'
             )}
 
+          </div>
+
+
+          <!-- ================================== -->
+          <!-- ระยะเวลา / วันที่ -->
+          <!-- ================================== -->
+
+          <div class="form-card">
+
+            <div class="review-section-title">
+              📅 ระยะเวลาและวันที่
+            </div>
+
 
             ${renderReviewRow(
-              'เริ่มคุ้มครอง',
+              'วันเริ่มคุ้มครอง',
               createPolicyData.EffectiveDate
                 ? formatDateDisplay(
                     createPolicyData.EffectiveDate
@@ -9753,7 +9784,61 @@ function renderCreatePolicyStep3() {
 
 
             ${renderReviewRow(
-              'สิ้นสุด',
+              'ระยะเวลาจ่ายเบี้ย',
+              createPolicyData.PremiumTermYears
+                ? `${formatAgentNumber(
+                    createPolicyData.PremiumTermYears
+                  )} ปี`
+                : '-'
+            )}
+
+
+            ${renderReviewRow(
+              'รูปแบบคุ้มครอง',
+              coverageDescription
+            )}
+
+
+            ${
+              coverageMode === 'AGE'
+                ? renderReviewRow(
+                    'คุ้มครองถึงอายุ',
+                    createPolicyData.CoverageToAge
+                      ? `${formatAgentNumber(
+                          createPolicyData.CoverageToAge
+                        )} ปี`
+                      : '-'
+                  )
+                : ''
+            }
+
+
+            ${
+              coverageMode === 'TERM'
+                ? renderReviewRow(
+                    'ระยะเวลาคุ้มครอง',
+                    createPolicyData.CoverageTermYears
+                      ? `${formatAgentNumber(
+                          createPolicyData.CoverageTermYears
+                        )} ปี`
+                      : '-'
+                  )
+                : ''
+            }
+
+
+            ${renderReviewRow(
+              'จ่ายเบี้ยถึง',
+              createPolicyData.PremiumEndDate
+                ? formatDateDisplay(
+                    createPolicyData.PremiumEndDate
+                  )
+                : '-'
+            )}
+
+
+            ${renderReviewRow(
+              'คุ้มครองถึง',
               createPolicyData.ExpiryDate
                 ? formatDateDisplay(
                     createPolicyData.ExpiryDate
@@ -9763,24 +9848,13 @@ function renderCreatePolicyStep3() {
 
 
             ${renderReviewRow(
-              'ชำระเบี้ย',
-              createPolicyData.PaymentMode ||
-              '-'
+              'ความถี่การชำระ',
+              createPolicyData.PaymentMode || '-'
             )}
 
 
             ${renderReviewRow(
-              'เบี้ยต่อปี',
-              createPolicyData.AnnualPremium
-                ? `${formatAgentNumber(
-                    createPolicyData.AnnualPremium
-                  )} บาท`
-                : '-'
-            )}
-
-
-            ${renderReviewRow(
-              'ชำระครั้งต่อไป',
+              'ชำระครั้งถัดไป',
               createPolicyData.NextPaymentDate
                 ? formatDateDisplay(
                     createPolicyData.NextPaymentDate
@@ -9796,8 +9870,7 @@ function renderCreatePolicyStep3() {
           <!-- ================================== -->
 
           ${
-            policyType === 'SAVINGS' &&
-            savings
+            policyType === 'SAVINGS' && savings
               ? `
 
                 <div class="form-card">
@@ -9809,20 +9882,27 @@ function renderCreatePolicyStep3() {
 
                   ${renderReviewRow(
                     'ระยะเวลาชำระเบี้ย',
-                    `${savings.PaymentTermYears || 0} ปี`
+                    savings.PaymentTermYears
+                      ? `${formatAgentNumber(
+                          savings.PaymentTermYears
+                        )} ปี`
+                      : '-'
                   )}
 
 
                   ${renderReviewRow(
                     'ระยะเวลาครบสัญญา',
-                    `${savings.MaturityTermYears || 0} ปี`
+                    savings.MaturityTermYears
+                      ? `${formatAgentNumber(
+                          savings.MaturityTermYears
+                        )} ปี`
+                      : '-'
                   )}
 
 
                   ${renderReviewRow(
                     'ความถี่ชำระ',
-                    savings.PaymentFrequency ||
-                    '-'
+                    savings.PaymentFrequency || '-'
                   )}
 
 
@@ -9858,8 +9938,7 @@ function renderCreatePolicyStep3() {
 
                   ${renderReviewRow(
                     'สถานะ',
-                    savings.Status ||
-                    'ACTIVE'
+                    savings.Status || 'ACTIVE'
                   )}
 
                 </div>
@@ -9870,7 +9949,7 @@ function renderCreatePolicyStep3() {
 
 
           <!-- ================================== -->
-          <!-- RIDER -->
+          <!-- RIDERS -->
           <!-- ================================== -->
 
           <div class="form-card">
@@ -9881,7 +9960,9 @@ function renderCreatePolicyStep3() {
                 review-rider-title
               "
             >
-              Rider (${riders.length})
+              Rider (${formatAgentNumber(
+                riders.length
+              )})
             </div>
 
 
@@ -9974,7 +10055,6 @@ function renderCreatePolicyStep3() {
 
                 `
             }
-
 
           </div>
 
@@ -10628,14 +10708,9 @@ function calculatePolicyDates(options = {}) {
     ).trim();
 
 
-  let premiumEndDate =
-    '';
-
-  let expiryDate =
-    '';
-
-  let nextPaymentDate =
-    '';
+  let premiumEndDate = '';
+  let expiryDate = '';
+  let nextPaymentDate = '';
 
 
   // ==========================================
@@ -10689,32 +10764,35 @@ function calculatePolicyDates(options = {}) {
     coverageToAge > 0
   ) {
 
-    const birthParts =
-      birthDate
-        .split('-')
-        .map(Number);
+    // วันเกิด + อายุที่กำหนด
+    const birthdayAtTargetAge =
+      addPolicyYears(
+        birthDate,
+        coverageToAge
+      );
 
-    if (
-      birthParts.length === 3 &&
-      birthParts.every(
-        value =>
-          Number.isFinite(value)
-      )
-    ) {
+    if (birthdayAtTargetAge) {
 
-      const expiryYear =
-        birthParts[0] +
-        coverageToAge;
+      const date =
+        new Date(
+          birthdayAtTargetAge +
+          'T00:00:00'
+        );
 
-      // ตามกติกาที่ตกลงกัน:
-      // คุ้มครองถึงอายุ XX
-      // = 31/12 ของปีนั้น
+      // สิ้นสุดคุ้มครอง = วันก่อนวันเกิดครบอายุ
+      date.setDate(
+        date.getDate() - 1
+      );
 
       expiryDate =
         [
-          expiryYear,
-          '12',
-          '31'
+          date.getFullYear(),
+          String(
+            date.getMonth() + 1
+          ).padStart(2, '0'),
+          String(
+            date.getDate()
+          ).padStart(2, '0')
         ].join('-');
     }
 
