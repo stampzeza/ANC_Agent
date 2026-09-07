@@ -9026,6 +9026,507 @@ function saveRiderEditor() {
   renderCreatePolicyStep2();
 }
 
+function renderCreatePolicyStep3() {
+
+  const data =
+    selectedCustomer || {};
+
+  const customer =
+    data.customer || {};
+
+  const family =
+    Array.isArray(data.family)
+      ? data.family
+      : [];
+
+  // ==========================================
+  // ผู้เอาประกัน
+  // ==========================================
+
+  const familyMember =
+    family.find(member =>
+      String(
+        member.FamilyMemberID || ''
+      ).trim() ===
+      String(
+        createPolicyData.FamilyMemberID || ''
+      ).trim()
+    );
+
+  const ownerName =
+    familyMember
+      ? (
+          familyMember.DisplayName ||
+          (
+            (familyMember.FirstName || '') +
+            (
+              familyMember.FirstName &&
+              familyMember.LastName
+                ? ' '
+                : ''
+            ) +
+            (familyMember.LastName || '')
+          )
+        )
+      : (
+          customer.DisplayName ||
+          (
+            (customer.FirstName || '') +
+            (
+              customer.FirstName &&
+              customer.LastName
+                ? ' '
+                : ''
+            ) +
+            (customer.LastName || '')
+          ) ||
+          '-'
+        );
+
+
+  // ==========================================
+  // Policy Type
+  // ==========================================
+
+  const policyType =
+    String(
+      createPolicyData.PolicyType || 'LIFE'
+    )
+      .trim()
+      .toUpperCase();
+
+
+  // ==========================================
+  // Savings
+  // ==========================================
+
+  const savings =
+    createPolicyData.SavingsProgress;
+
+
+  // ==========================================
+  // Rider
+  // ==========================================
+
+  const riders =
+    Array.isArray(newPolicyRiders)
+      ? newPolicyRiders
+      : [];
+
+
+  // ==========================================
+  // Render
+  // ==========================================
+
+  document
+    .getElementById('app')
+    .innerHTML = `
+
+      <div class="app">
+
+        <!-- ================================== -->
+        <!-- TOP BAR -->
+        <!-- ================================== -->
+
+        <div class="topbar">
+
+          <div
+            class="agent-back"
+            onclick="
+              createPolicyStep = 2;
+              renderCreatePolicyStep2();
+            "
+          >
+            ← Rider
+          </div>
+
+          <div class="brand">
+            ANC Life Planning
+          </div>
+
+        </div>
+
+
+        <!-- ================================== -->
+        <!-- PAGE -->
+        <!-- ================================== -->
+
+        <div class="page">
+
+
+          <!-- ================================== -->
+          <!-- PROGRESS -->
+          <!-- ================================== -->
+
+          <div class="wizard-progress">
+
+            <span class="done">
+              1 กรมธรรม์
+            </span>
+
+            <span class="done">
+              2 Rider
+            </span>
+
+            <span class="active">
+              3 ตรวจสอบ
+            </span>
+
+          </div>
+
+
+          <!-- ================================== -->
+          <!-- TITLE -->
+          <!-- ================================== -->
+
+          <div class="page-title">
+            ตรวจสอบข้อมูล
+          </div>
+
+
+          <!-- ================================== -->
+          <!-- POLICY -->
+          <!-- ================================== -->
+
+          <div class="form-card">
+
+            <div class="review-section-title">
+              กรมธรรม์หลัก
+            </div>
+
+
+            ${renderReviewRow(
+              'ผู้เอาประกัน',
+              ownerName
+            )}
+
+
+            ${renderReviewRow(
+              'ประเภทกรมธรรม์',
+              policyType === 'SAVINGS'
+                ? 'SAVINGS — ประกันออมทรัพย์'
+                : 'LIFE — ประกันชีวิต'
+            )}
+
+
+            ${renderReviewRow(
+              'เลขกรมธรรม์',
+              createPolicyData.PolicyNo ||
+              '-'
+            )}
+
+
+            ${renderReviewRow(
+              'Plan ID',
+              createPolicyData.PlanID ||
+              '-'
+            )}
+
+
+            ${renderReviewRow(
+              'แผนหลัก',
+              createPolicyData.PlanName ||
+              '-'
+            )}
+
+
+            ${renderReviewRow(
+              'ทุนประกันชีวิตหลัก',
+              createPolicyData.LifeSumAssured
+                ? `${formatAgentNumber(
+                    createPolicyData.LifeSumAssured
+                  )} บาท`
+                : '-'
+            )}
+
+
+            ${renderReviewRow(
+              'เริ่มคุ้มครอง',
+              createPolicyData.EffectiveDate
+                ? formatDateDisplay(
+                    createPolicyData.EffectiveDate
+                  )
+                : '-'
+            )}
+
+
+            ${renderReviewRow(
+              'สิ้นสุด',
+              createPolicyData.ExpiryDate
+                ? formatDateDisplay(
+                    createPolicyData.ExpiryDate
+                  )
+                : '-'
+            )}
+
+
+            ${renderReviewRow(
+              'ชำระเบี้ย',
+              createPolicyData.PaymentMode ||
+              '-'
+            )}
+
+
+            ${renderReviewRow(
+              'เบี้ยต่อปี',
+              createPolicyData.AnnualPremium
+                ? `${formatAgentNumber(
+                    createPolicyData.AnnualPremium
+                  )} บาท`
+                : '-'
+            )}
+
+
+            ${renderReviewRow(
+              'ชำระครั้งต่อไป',
+              createPolicyData.NextPaymentDate
+                ? formatDateDisplay(
+                    createPolicyData.NextPaymentDate
+                  )
+                : '-'
+            )}
+
+          </div>
+
+
+          <!-- ================================== -->
+          <!-- SAVINGS -->
+          <!-- ================================== -->
+
+          ${
+            policyType === 'SAVINGS' &&
+            savings
+              ? `
+
+                <div class="form-card">
+
+                  <div class="review-section-title">
+                    💰 Savings Progress
+                  </div>
+
+
+                  ${renderReviewRow(
+                    'ระยะเวลาชำระเบี้ย',
+                    `${savings.PaymentTermYears || 0} ปี`
+                  )}
+
+
+                  ${renderReviewRow(
+                    'ระยะเวลาครบสัญญา',
+                    `${savings.MaturityTermYears || 0} ปี`
+                  )}
+
+
+                  ${renderReviewRow(
+                    'ความถี่ชำระ',
+                    savings.PaymentFrequency ||
+                    '-'
+                  )}
+
+
+                  ${renderReviewRow(
+                    'จ่ายเบี้ยถึง',
+                    savings.PremiumEndDate
+                      ? formatDateDisplay(
+                          savings.PremiumEndDate
+                        )
+                      : '-'
+                  )}
+
+
+                  ${renderReviewRow(
+                    'วันครบสัญญา',
+                    savings.MaturityDate
+                      ? formatDateDisplay(
+                          savings.MaturityDate
+                        )
+                      : '-'
+                  )}
+
+
+                  ${renderReviewRow(
+                    'เงินครบสัญญา',
+                    savings.MaturityAmount
+                      ? `${formatAgentNumber(
+                          savings.MaturityAmount
+                        )} บาท`
+                      : '-'
+                  )}
+
+
+                  ${renderReviewRow(
+                    'สถานะ',
+                    savings.Status ||
+                    'ACTIVE'
+                  )}
+
+                </div>
+
+              `
+              : ''
+          }
+
+
+          <!-- ================================== -->
+          <!-- RIDER -->
+          <!-- ================================== -->
+
+          <div class="form-card">
+
+            <div
+              class="
+                review-section-title
+                review-rider-title
+              "
+            >
+              Rider (${riders.length})
+            </div>
+
+
+            ${
+              riders.length
+                ? `
+
+                  <div class="review-rider-list">
+
+                    ${
+                      riders
+                        .map(
+                          rider => `
+
+                            <div class="review-rider-row">
+
+                              <div>
+
+                                <strong>
+                                  ${escapeHtml(
+                                    rider.RiderName ||
+                                    rider.RiderID ||
+                                    '-'
+                                  )}
+                                </strong>
+
+                                <small>
+                                  ${escapeHtml(
+                                    rider.RiderID ||
+                                    '-'
+                                  )}
+                                </small>
+
+                                ${
+                                  rider.RiderType
+                                    ? `
+                                      <small>
+                                        ${escapeHtml(
+                                          rider.RiderType
+                                        )}
+                                      </small>
+                                    `
+                                    : ''
+                                }
+
+                              </div>
+
+
+                              <div
+                                class="
+                                  review-rider-amount
+                                "
+                              >
+
+                                ${
+                                  Number(
+                                    rider.Coverage || 0
+                                  ) > 0
+                                    ? `${formatAgentNumber(
+                                        rider.Coverage
+                                      )}`
+                                    : '-'
+                                }
+
+                              </div>
+
+                            </div>
+
+                          `
+                        )
+                        .join('')
+                    }
+
+                  </div>
+
+                `
+                : `
+
+                  <div class="rider-empty">
+
+                    <div>
+                      📋
+                    </div>
+
+                    <div>
+                      ไม่มี Rider
+                    </div>
+
+                  </div>
+
+                `
+            }
+
+
+          </div>
+
+
+          <!-- ================================== -->
+          <!-- MESSAGE -->
+          <!-- ================================== -->
+
+          <div
+            id="createPolicyMessage"
+            class="form-message"
+          ></div>
+
+
+          <!-- ================================== -->
+          <!-- ACTION -->
+          <!-- ================================== -->
+
+          <div class="wizard-buttons">
+
+            <button
+              type="button"
+              class="wizard-secondary-button"
+              onclick="
+                createPolicyStep = 2;
+                renderCreatePolicyStep2();
+              "
+            >
+              ← แก้ไข
+            </button>
+
+
+            <button
+              type="button"
+              class="form-submit-button"
+              onclick="
+                submitCreatePolicy()
+              "
+            >
+              ยืนยันและบันทึก
+            </button>
+
+          </div>
+
+
+        </div>
+
+
+        ${renderBottomNav()}
+
+      </div>
+    `;
+}
+
 
 document.addEventListener(
   'DOMContentLoaded',
