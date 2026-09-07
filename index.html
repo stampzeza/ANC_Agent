@@ -9527,6 +9527,23 @@ function renderCreatePolicyStep3() {
     `;
 }
 
+function renderReviewRow(label, value) {
+
+  return `
+    <div class="review-row">
+
+      <span>
+        ${escapeHtml(label)}
+      </span>
+
+      <strong>
+        ${escapeHtml(value)}
+      </strong>
+
+    </div>
+  `;
+}
+
 
 document.addEventListener(
   'DOMContentLoaded',
