@@ -4062,6 +4062,13 @@ function renderAgentPolicyDetail() {
 
 
           ${renderAgentPolicyRow(
+            'ประเภทกรมธรรม์',
+            policy.PolicyType === 'SAVINGS'
+              ? '💰 ประกันออมทรัพย์'
+              : '🛡️ ประกันชีวิต'
+          )}
+          
+          ${renderAgentPolicyRow(
             'เริ่มคุ้มครอง',
             policy.EffectiveDate
               ? formatDateDisplay(
@@ -4069,8 +4076,34 @@ function renderAgentPolicyDetail() {
                 )
               : '-'
           )}
-
-
+          
+          ${policy.PremiumEndDate
+            ? renderAgentPolicyRow(
+                'จ่ายเบี้ยหมด',
+                formatDateDisplay(
+                  policy.PremiumEndDate
+                )
+              )
+            : ''
+          }
+          
+          ${policy.ExpiryDate
+            ? renderAgentPolicyRow(
+                policy.PolicyType === 'SAVINGS'
+                  ? 'ครบสัญญา'
+                  : 'สิ้นสุดความคุ้มครอง',
+                formatDateDisplay(
+                  policy.ExpiryDate
+                )
+              )
+            : ''
+          }
+          
+          ${renderAgentPolicyRow(
+            'ชำระเบี้ย',
+            policy.PaymentMode || '-'
+          )}
+          
           ${renderAgentPolicyRow(
             'จ่ายเบี้ยครั้งต่อไป',
             policy.NextPaymentDate
@@ -4079,8 +4112,7 @@ function renderAgentPolicyDetail() {
                 )
               : '-'
           )}
-
-
+          
           ${renderAgentPolicyRow(
             'เบี้ยต่อปี',
             `${formatAgentNumber(
