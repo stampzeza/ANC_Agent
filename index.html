@@ -5597,6 +5597,10 @@ function renderAgentFamilyDetail() {
   const data =
     selectedCustomer || {};
 
+  const customer =
+    data.customer ||
+    data.Customer ||
+    {};
 
   const family =
     data.family || [];
