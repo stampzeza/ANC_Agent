@@ -10212,21 +10212,26 @@ async function submitCreatePolicy() {
       !result ||
       !result.success
     ) {
-
+    
+      console.error(
+        'agentCreatePolicyWithRiders result:',
+        result
+      );
+    
       if (
         result &&
         result.duplicate
       ) {
-
+    
         messageBox.textContent =
           `เลขกรมธรรม์นี้มีอยู่แล้ว (${result.policyId})`;
-
+    
         return;
       }
-
-
+    
       throw new Error(
         result?.message ||
+        JSON.stringify(result) ||
         'ไม่สามารถบันทึกกรมธรรม์ได้'
       );
     }
