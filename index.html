@@ -5271,55 +5271,106 @@ function renderAgentSavings(
 ) {
 
   const savings =
-    policy.savings;
-
+    policy?.savings || null;
 
   if (!savings) {
     return '';
   }
 
 
+  // ==========================================
+  // ข้อมูลหลัก
+  // ==========================================
+
   const paymentTerm =
     Number(
-      savings.PaymentTermYears ||
-      0
+      savings.PaymentTermYears || 0
     );
-
 
   const maturityTerm =
     Number(
-      savings.MaturityTermYears ||
-      0
+      savings.MaturityTermYears || 0
     );
-
 
   const currentYear =
     Number(
-      savings.CurrentPaymentYear ||
-      0
+      savings.CurrentPaymentYear || 0
     );
 
 
-  const progress =
-    Number(
-      savings.ProgressPercent ||
+  // ==========================================
+  // Progress
+  // ==========================================
+
+  let progress = 0;
+
+  if (
+    Number.isFinite(
+      savings.ProgressPercent
+    )
+  ) {
+
+    progress =
+      Number(
+        savings.ProgressPercent
+      );
+
+  }
+
+  else if (
+    paymentTerm > 0 &&
+    currentYear > 0
+  ) {
+
+    progress =
       (
-        paymentTerm > 0
-          ? (
-              currentYear /
-              paymentTerm
-            ) * 100
-          : 0
+        currentYear /
+        paymentTerm
+      ) * 100;
+
+  }
+
+
+  progress =
+    Math.min(
+      100,
+      Math.max(
+        0,
+        progress
       )
     );
 
 
+  // ==========================================
+  // Status
+  // ==========================================
+
+  const status =
+    String(
+      savings.Status || 'ACTIVE'
+    )
+      .trim()
+      .toUpperCase();
+
+
+  const statusText =
+    status === 'ACTIVE'
+      ? '✅ กำลังออม'
+      : status === 'COMPLETED'
+        ? '✅ ครบสัญญา'
+        : status === 'CANCELLED'
+          ? 'ยกเลิก'
+          : status;
+
+
+  // ==========================================
+  // HTML
+  // ==========================================
+
   return `
 
     <div
-      class="
-        agent-detail-section
-      "
+      class="agent-detail-section"
     >
 
       <div
@@ -5327,59 +5378,73 @@ function renderAgentSavings(
           agent-detail-section-title
         "
       >
-
-        💰 สะสมทรัพย์
-
+        💰 Savings Progress
       </div>
 
 
       <div
-        class="
-          agent-savings-card
-        "
+        class="agent-savings-card"
       >
 
+
+        <!-- STATUS -->
+
         <div
-          class="
-            agent-savings-year
-          "
+          class="agent-savings-status"
         >
-
-          ปีที่
-          ${formatAgentNumber(
-            currentYear
+          ${escapeHtml(
+            statusText
           )}
-          /
-          ${formatAgentNumber(
-            paymentTerm
-          )}
-
         </div>
 
 
-        <div
-          class="
-            agent-savings-progress
-          "
-        >
+        <!-- PROGRESS -->
 
-          <div
-            class="
-              agent-savings-progress-bar
-            "
-            style="
-              width:${Math.min(
-                100,
-                Math.max(
-                  0,
-                  progress
-                )
-              )}%;
-            "
-          ></div>
+        ${
+          paymentTerm > 0
+            ? `
 
-        </div>
+              <div
+                class="
+                  agent-savings-year
+                "
+              >
+                ${
+                  currentYear > 0
+                    ? `ปีที่ ${formatAgentNumber(currentYear)} / `
+                    : ''
+                }
 
+                ${formatAgentNumber(
+                  paymentTerm
+                )}
+                ปี
+              </div>
+
+
+              <div
+                class="
+                  agent-savings-progress
+                "
+              >
+
+                <div
+                  class="
+                    agent-savings-progress-bar
+                  "
+                  style="
+                    width:${progress}%;
+                  "
+                ></div>
+
+              </div>
+
+            `
+            : ''
+        }
+
+
+        <!-- BADGES -->
 
         <div
           class="
@@ -5406,7 +5471,7 @@ function renderAgentSavings(
             maturityTerm > 0
               ? `
                 <span>
-                  สัญญา
+                  ครบสัญญา
                   ${formatAgentNumber(
                     maturityTerm
                   )}
@@ -5418,6 +5483,8 @@ function renderAgentSavings(
 
         </div>
 
+
+        <!-- PREMIUM END -->
 
         ${
           savings.PremiumEndDate
@@ -5433,6 +5500,8 @@ function renderAgentSavings(
         }
 
 
+        <!-- MATURITY -->
+
         ${
           savings.MaturityDate
             ? `
@@ -5447,11 +5516,15 @@ function renderAgentSavings(
         }
 
 
+        <!-- MATURITY AMOUNT -->
+
         ${
-          savings.MaturityAmount
+          Number(
+            savings.MaturityAmount || 0
+          ) > 0
             ? `
               ${renderAgentPolicyRow(
-                'เงินครบกำหนด',
+                'เงินครบสัญญา',
                 `${formatAgentNumber(
                   savings.MaturityAmount
                 )} บาท`
@@ -5460,12 +5533,64 @@ function renderAgentSavings(
             : ''
         }
 
+
+        <!-- PAYMENT FREQUENCY -->
+
+        ${
+          savings.PaymentFrequency
+            ? `
+              ${renderAgentPolicyRow(
+                'ความถี่ชำระเบี้ย',
+                translateAgentPaymentMode(
+                  savings.PaymentFrequency
+                )
+              )}
+            `
+            : ''
+        }
+
+
       </div>
 
     </div>
 
   `;
+}
 
+function translateAgentPaymentMode(
+  value
+) {
+
+  const mode =
+    String(
+      value || ''
+    )
+      .trim()
+      .toUpperCase();
+
+
+  const map = {
+
+    MONTHLY:
+      'รายเดือน',
+
+    QUARTER:
+      'ราย 3 เดือน',
+
+    HALF_YEAR:
+      'ราย 6 เดือน',
+
+    YEARLY:
+      'รายปี'
+
+  };
+
+
+  return (
+    map[mode] ||
+    value ||
+    '-'
+  );
 }
 
 function formatAgentNumber(
