@@ -3935,6 +3935,15 @@ function renderAgentPolicyDetail() {
 
         </div>
 
+        <div class="policy-detail-actions">
+          <button
+            class="agent-btn primary"
+            onclick="openEditPolicy('${policy.PolicyID}')"
+          >
+            ✏️ แก้ไขกรมธรรม์
+          </button>
+        </div>
+
 
         <div class="brand">
           ANC Life Planning
@@ -10897,6 +10906,104 @@ function calculatePolicyDates(options = {}) {
       nextPaymentDate
 
   };
+}
+
+function openEditPolicy(policyId) {
+  const id = String(policyId || '').trim();
+
+  if (!id) {
+    console.error('PolicyID is empty');
+    return;
+  }
+
+  const customerData = selectedCustomer || {};
+  const policies = Array.isArray(customerData.policies)
+    ? customerData.policies
+    : [];
+
+  const policy = policies.find(
+    item => String(item.PolicyID || '').trim() === id
+  );
+
+  if (!policy) {
+    console.error('Policy not found:', id);
+    alert('ไม่พบข้อมูลกรมธรรม์');
+    return;
+  }
+
+  selectedPolicyId = id;
+
+  createPolicyCustomerId = String(
+    policy.CustomerID ||
+    selectedCustomer?.customer?.CustomerID ||
+    ''
+  ).trim();
+
+  createPolicyStep = 1;
+
+  createPolicyData = {
+    PolicyID: policy.PolicyID || '',
+    CustomerID: policy.CustomerID || '',
+    FamilyMemberID: policy.FamilyMemberID || '',
+    PolicyNo: policy.PolicyNo || '',
+    PlanID: policy.PlanID || '',
+    PlanName: policy.PlanName || '',
+    PolicyType: policy.PolicyType || 'LIFE',
+    PolicyStatus: policy.PolicyStatus || 'ACTIVE',
+
+    EffectiveDate: policy.EffectiveDate
+      ? formatDateInput(policy.EffectiveDate)
+      : '',
+
+    PremiumEndDate: policy.PremiumEndDate
+      ? formatDateInput(policy.PremiumEndDate)
+      : '',
+
+    ExpiryDate: policy.ExpiryDate
+      ? formatDateInput(policy.ExpiryDate)
+      : '',
+
+    PaymentMode: policy.PaymentMode || 'YEARLY',
+
+    AnnualPremium:
+      policy.AnnualPremium !== undefined &&
+      policy.AnnualPremium !== null
+        ? policy.AnnualPremium
+        : '',
+
+    NextPaymentDate: policy.NextPaymentDate
+      ? formatDateInput(policy.NextPaymentDate)
+      : '',
+
+    LifeSumAssured: '',
+
+    customer: selectedCustomer?.customer || {},
+    family: Array.isArray(selectedCustomer?.family)
+      ? selectedCustomer.family
+      : [],
+
+    SavingsProgress: null
+  };
+
+  newPolicyRiders = [];
+
+  renderCreatePolicyForm();
+}
+
+function formatDateInput(value) {
+  if (!value) return '';
+
+  const date = new Date(value);
+
+  if (isNaN(date.getTime())) {
+    return String(value).substring(0, 10);
+  }
+
+  return [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, '0'),
+    String(date.getDate()).padStart(2, '0')
+  ].join('-');
 }
 
 
