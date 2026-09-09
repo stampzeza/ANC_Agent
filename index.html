@@ -7184,6 +7184,11 @@ function renderCreatePolicyStep1() {
   const data =
     createPolicyData || {};
 
+  const isEditMode =
+  Boolean(
+    String(data.PolicyID || '').trim()
+  );
+
   const customerData =
     selectedCustomer?.customer ||
     data.customer ||
@@ -7355,8 +7360,8 @@ function renderCreatePolicyStep1() {
           <!-- TITLE -->
           <!-- ================================== -->
 
-          <div class="page-title">
-            สร้างกรมธรรม์
+          <div class="section-title">
+            ${isEditMode ? '✏️ แก้ไขกรมธรรม์' : '🛡️ สร้างกรมธรรม์'}
           </div>
 
 
@@ -7996,12 +8001,13 @@ function renderCreatePolicyStep1() {
 
             <button
               type="button"
-              class="form-submit-button"
-              onclick="
-                goCreatePolicyStep2()
-              "
+              class="btn btn-primary"
+              onclick="goCreatePolicyStep2()"
             >
-              ถัดไป → เพิ่ม Rider
+              ${isEditMode
+                ? 'ถัดไป → แก้ไข Rider'
+                : 'ถัดไป → เพิ่ม Rider'
+              }
             </button>
 
           </div>
