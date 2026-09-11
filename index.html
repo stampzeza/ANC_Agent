@@ -7555,24 +7555,35 @@ function renderCreatePolicyStep1() {
               </div>
 
 
-              <!-- PREMIUM TERM -->
-              <label class="form-label">
-                ระยะเวลาจ่ายเบี้ย (ปี) *
-              </label>
-
-              <input
-                id="premiumTermYears"
-                class="form-input"
-                type="number"
-                min="1"
-                step="1"
-                inputmode="numeric"
-                value="${premiumTermYears || ''}"
-                placeholder="เช่น 20"
-                oninput="
-                  updateCreatePolicyCalculatedDates()
-                "
-              >
+              <!-- ===================================== -->
+              <!-- Premium Term Years -->
+              <!-- ===================================== -->
+              
+              <div class="form-group">
+                <label class="form-label">
+                  ระยะเวลาจ่ายเบี้ย (ปี) *
+                </label>
+              
+                <input
+                  id="premiumTermYears"
+                  class="form-input"
+                  type="number"
+                  min="1"
+                  step="1"
+                  inputmode="numeric"
+                  value="${escapeHtml(
+                    data.PremiumTermYears || ''
+                  )}"
+                  placeholder="เช่น 10, 15, 20 หรือ 21"
+                >
+              
+                <div
+                  class="muted"
+                  style="margin-top:6px"
+                >
+                  ระบบจะคำนวณวันจ่ายเบี้ยหมดให้อัตโนมัติ
+                </div>
+              </div>
 
 
               <!-- COVERAGE MODE -->
