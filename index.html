@@ -10928,7 +10928,8 @@ function openEditPolicy(policyId) {
     : [];
 
   const policy = policies.find(
-    item => String(item.PolicyID || '').trim() === id
+    item =>
+      String(item.PolicyID || '').trim() === id
   );
 
   if (!policy) {
@@ -10939,61 +10940,352 @@ function openEditPolicy(policyId) {
 
   selectedPolicyId = id;
 
-  createPolicyCustomerId = String(
-    policy.CustomerID ||
-    selectedCustomer?.customer?.CustomerID ||
-    ''
-  ).trim();
+  const customer =
+    selectedCustomer?.customer || {};
+
+  const family =
+    Array.isArray(selectedCustomer?.family)
+      ? selectedCustomer.family
+      : [];
+
+  const familyMemberId =
+    String(
+      policy.FamilyMemberID || ''
+    ).trim();
+
+  // =====================================================
+  // BirthDate ของผู้เอาประกัน
+  // =====================================================
+
+  let birthDate =
+    String(
+      customer.BirthDate || ''
+    ).trim();
+
+  if (familyMemberId) {
+    const member =
+      family.find(
+        item =>
+          String(
+            item.FamilyMemberID || ''
+          ).trim() === familyMemberId
+      );
+
+    if (member?.BirthDate) {
+      birthDate =
+        String(
+          member.BirthDate
+        ).trim();
+    }
+  }
+
+  // =====================================================
+  // วันที่
+  // =====================================================
+
+  const effectiveDate =
+    policy.EffectiveDate
+      ? formatDateInput(
+          policy.EffectiveDate
+        )
+      : '';
+
+  const premiumEndDate =
+    policy.PremiumEndDate
+      ? formatDateInput(
+          policy.PremiumEndDate
+        )
+      : '';
+
+  const expiryDate =
+    policy.ExpiryDate
+      ? formatDateInput(
+          policy.ExpiryDate
+        )
+      : '';
+
+  // =====================================================
+  // ระยะเวลาจ่ายเบี้ย
+  // EffectiveDate -> PremiumEndDate
+  // =====================================================
+
+  let premiumTermYears = '';
+
+  if (
+    effectiveDate &&
+    premiumEndDate
+  ) {
+    premiumTermYears =
+      calculatePolicyYearsBetween(
+        effectiveDate,
+        premiumEndDate
+      );
+  }
+
+  // =====================================================
+  // รูปแบบการคุ้มครอง
+  //
+  // ถ้ามี BirthDate และ ExpiryDate
+  // และ ExpiryDate ตรงกับวันก่อนวันเกิดของอายุเต็ม
+  // ให้ถือเป็น AGE
+  //
+  // ถ้าไม่ใช่ ให้ถือเป็น TERM
+  // =====================================================
+
+  let coverageMode = 'TERM';
+  let coverageToAge = '';
+  let coverageTermYears = '';
+
+  if (
+    birthDate &&
+    expiryDate
+  ) {
+    const ageResult =
+      detectCoverageToAge(
+        birthDate,
+        expiryDate
+      );
+
+    if (ageResult) {
+      coverageMode = 'AGE';
+      coverageToAge =
+        ageResult.age;
+    }
+  }
+
+  // =====================================================
+  // ถ้าไม่ใช่ AGE → คำนวณ TERM
+  // =====================================================
+
+  if (
+    coverageMode === 'TERM' &&
+    effectiveDate &&
+    expiryDate
+  ) {
+    coverageTermYears =
+      calculatePolicyYearsBetween(
+        effectiveDate,
+        expiryDate
+      );
+  }
+
+  // =====================================================
+  // State
+  // =====================================================
+
+  createPolicyCustomerId =
+    String(
+      policy.CustomerID ||
+      customer.CustomerID ||
+      ''
+    ).trim();
 
   createPolicyStep = 1;
 
   createPolicyData = {
-    PolicyID: policy.PolicyID || '',
-    CustomerID: policy.CustomerID || '',
-    FamilyMemberID: policy.FamilyMemberID || '',
-    PolicyNo: policy.PolicyNo || '',
-    PlanID: policy.PlanID || '',
-    PlanName: policy.PlanName || '',
-    PolicyType: policy.PolicyType || 'LIFE',
-    PolicyStatus: policy.PolicyStatus || 'ACTIVE',
+    PolicyID:
+      policy.PolicyID || '',
 
-    EffectiveDate: policy.EffectiveDate
-      ? formatDateInput(policy.EffectiveDate)
-      : '',
+    CustomerID:
+      policy.CustomerID || '',
 
-    PremiumEndDate: policy.PremiumEndDate
-      ? formatDateInput(policy.PremiumEndDate)
-      : '',
+    FamilyMemberID:
+      familyMemberId,
 
-    ExpiryDate: policy.ExpiryDate
-      ? formatDateInput(policy.ExpiryDate)
-      : '',
+    PolicyNo:
+      policy.PolicyNo || '',
 
-    PaymentMode: policy.PaymentMode || 'YEARLY',
+    PlanID:
+      policy.PlanID || '',
+
+    PlanName:
+      policy.PlanName || '',
+
+    PolicyType:
+      String(
+        policy.PolicyType || 'LIFE'
+      )
+        .trim()
+        .toUpperCase(),
+
+    PolicyStatus:
+      policy.PolicyStatus || 'ACTIVE',
+
+    EffectiveDate:
+      effectiveDate,
+
+    PremiumEndDate:
+      premiumEndDate,
+
+    ExpiryDate:
+      expiryDate,
+
+    PaymentMode:
+      policy.PaymentMode || 'YEARLY',
 
     AnnualPremium:
-      policy.AnnualPremium !== undefined &&
-      policy.AnnualPremium !== null
-        ? policy.AnnualPremium
+      policy.AnnualPremium ?? '',
+
+    NextPaymentDate:
+      policy.NextPaymentDate
+        ? formatDateInput(
+            policy.NextPaymentDate
+          )
         : '',
 
-    NextPaymentDate: policy.NextPaymentDate
-      ? formatDateInput(policy.NextPaymentDate)
-      : '',
+    // ==========================
+    // ข้อมูลสำหรับ Form
+    // ==========================
 
-    LifeSumAssured: '',
+    PremiumTermYears:
+      premiumTermYears,
 
-    customer: selectedCustomer?.customer || {},
-    family: Array.isArray(selectedCustomer?.family)
-      ? selectedCustomer.family
-      : [],
+    CoverageMode:
+      coverageMode,
 
-    SavingsProgress: null
+    CoverageToAge:
+      coverageToAge,
+
+    CoverageTermYears:
+      coverageTermYears,
+
+    // ==========================
+    // ข้อมูลอ้างอิง
+    // ==========================
+
+    BirthDate:
+      birthDate,
+
+    customer:
+      customer,
+
+    family:
+      family,
+
+    LifeSumAssured:
+      '',
+
+    SavingsProgress:
+      null
   };
 
   newPolicyRiders = [];
 
+  editingRiderIndex = -1;
+
   renderCreatePolicyForm();
+}
+
+function calculatePolicyYearsBetween(
+  startDate,
+  endDate
+) {
+  if (
+    !startDate ||
+    !endDate
+  ) {
+    return '';
+  }
+
+  const start =
+    new Date(
+      String(startDate) +
+      'T00:00:00'
+    );
+
+  const end =
+    new Date(
+      String(endDate) +
+      'T00:00:00'
+    );
+
+  if (
+    isNaN(start.getTime()) ||
+    isNaN(end.getTime())
+  ) {
+    return '';
+  }
+
+  let years =
+    end.getFullYear() -
+    start.getFullYear();
+
+  const anniversary =
+    new Date(
+      start.getFullYear() + years,
+      start.getMonth(),
+      start.getDate()
+    );
+
+  if (
+    anniversary > end
+  ) {
+    years--;
+  }
+
+  return Math.max(
+    0,
+    years
+  );
+}
+
+function detectCoverageToAge(
+  birthDate,
+  expiryDate
+) {
+  if (
+    !birthDate ||
+    !expiryDate
+  ) {
+    return null;
+  }
+
+  const birth =
+    new Date(
+      String(birthDate) +
+      'T00:00:00'
+    );
+
+  const expiry =
+    new Date(
+      String(expiryDate) +
+      'T00:00:00'
+    );
+
+  if (
+    isNaN(birth.getTime()) ||
+    isNaN(expiry.getTime())
+  ) {
+    return null;
+  }
+
+  const candidateAge =
+    expiry.getFullYear() -
+    birth.getFullYear() +
+    1;
+
+  const birthdayAtAge =
+    new Date(
+      birth.getFullYear() +
+        candidateAge,
+      birth.getMonth(),
+      birth.getDate()
+    );
+
+  birthdayAtAge.setDate(
+    birthdayAtAge.getDate() - 1
+  );
+
+  if (
+    birthdayAtAge.getTime() ===
+    expiry.getTime()
+  ) {
+    return {
+      age: candidateAge
+    };
+  }
+
+  return null;
 }
 
 function formatDateInput(value) {
