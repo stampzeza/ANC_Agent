@@ -8038,6 +8038,106 @@ function renderCreatePolicyStep1() {
   updateCreatePolicyCalculatedDates();
 }
 
+
+function calculatePolicyYearsBetween(startDate, endDate) {
+
+  if (!startDate || !endDate) {
+    return '';
+  }
+
+  const start = new Date(
+    String(startDate) + 'T00:00:00'
+  );
+
+  const end = new Date(
+    String(endDate) + 'T00:00:00'
+  );
+
+  if (
+    isNaN(start.getTime()) ||
+    isNaN(end.getTime())
+  ) {
+    return '';
+  }
+
+  // จำนวนปีเบื้องต้น
+  let years =
+    end.getFullYear() -
+    start.getFullYear();
+
+  if (years < 0) {
+    return '';
+  }
+
+  // =====================================================
+  // รูปแบบกรมธรรม์ของเรา:
+  //
+  // EffectiveDate
+  // + N ปี
+  // - 1 วัน
+  // = PremiumEndDate
+  //
+  // เช่น
+  // 08/09/2026
+  // + 21 ปี
+  // - 1 วัน
+  // = 07/09/2047
+  // =====================================================
+
+  const anniversary = new Date(
+    start.getFullYear() + years,
+    start.getMonth(),
+    start.getDate()
+  );
+
+  const expectedEnd = new Date(
+    anniversary
+  );
+
+  expectedEnd.setDate(
+    expectedEnd.getDate() - 1
+  );
+
+  // ตรงกับรูปแบบปกติพอดี
+  if (
+    expectedEnd.getTime() === end.getTime()
+  ) {
+    return years;
+  }
+
+  // =====================================================
+  // เผื่อกรณีปีที่คำนวณเบื้องต้นยังไม่ใช่
+  // =====================================================
+
+  const nextAnniversary = new Date(
+    start.getFullYear() + years + 1,
+    start.getMonth(),
+    start.getDate()
+  );
+
+  const nextExpectedEnd = new Date(
+    nextAnniversary
+  );
+
+  nextExpectedEnd.setDate(
+    nextExpectedEnd.getDate() - 1
+  );
+
+  if (
+    nextExpectedEnd.getTime() === end.getTime()
+  ) {
+    return years + 1;
+  }
+
+  // กรณีข้อมูลไม่ตรง convention
+  // ให้ใช้จำนวนปีเต็มแบบ fallback
+  if (end < expectedEnd) {
+    return Math.max(0, years - 1);
+  }
+
+  return years;
+}
+
 function updateCreatePolicyCoverageMode() {
 
   const mode =
@@ -11022,10 +11122,7 @@ function openEditPolicy(policyId) {
 
   let premiumTermYears = '';
 
-  if (
-    effectiveDate &&
-    premiumEndDate
-  ) {
+  if (effectiveDate && premiumEndDate) {
     premiumTermYears =
       calculatePolicyYearsBetween(
         effectiveDate,
