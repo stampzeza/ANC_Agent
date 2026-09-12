@@ -9910,19 +9910,11 @@ async function submitCreatePolicy() {
       'createPolicyMessage'
     );
 
-  if (!messageBox) {
-    return;
-  }
-
   messageBox.textContent =
     'กำลังบันทึก...';
 
 
   try {
-
-    // ==========================================
-    // LINE ID TOKEN
-    // ==========================================
 
     const idToken =
       liff.getIDToken();
@@ -9935,258 +9927,147 @@ async function submitCreatePolicy() {
 
 
     // ==========================================
-    // ตรวจสอบ Customer ID
+    // ตรวจว่าเป็น CREATE หรือ EDIT
     // ==========================================
 
-    const customerId =
+    const policyId =
       String(
-        createPolicyData.CustomerID ||
-        createPolicyCustomerId ||
-        ''
+        createPolicyData.PolicyID || ''
       ).trim();
 
-    if (!customerId) {
-      throw new Error(
-        'ไม่พบ Customer ID'
-      );
-    }
+    const isEdit =
+      !!policyId;
 
 
     // ==========================================
-    // Policy Type
-    // ==========================================
-
-    const policyType =
-      String(
-        createPolicyData.PolicyType ||
-        'LIFE'
-      )
-        .trim()
-        .toUpperCase();
-
-    if (
-      !['LIFE', 'SAVINGS'].includes(
-        policyType
-      )
-    ) {
-      throw new Error(
-        'ประเภทกรมธรรม์ไม่ถูกต้อง'
-      );
-    }
-
-
-    // ==========================================
-    // Riders
-    // ==========================================
-
-    const riders =
-      Array.isArray(newPolicyRiders)
-        ? newPolicyRiders.map(
-            rider => ({
-              RiderID:
-                String(
-                  rider.RiderID || ''
-                ).trim(),
-
-              RiderName:
-                String(
-                  rider.RiderName || ''
-                ).trim(),
-
-              RiderType:
-                String(
-                  rider.RiderType || ''
-                ).trim(),
-
-              Coverage:
-                Number(
-                  rider.Coverage || 0
-                ),
-
-              Premium:
-                Number(
-                  rider.Premium || 0
-                )
-            })
-          )
-        : [];
-
-
-    // ==========================================
-    // Savings Progress
-    // ==========================================
-
-    let savingsProgress = null;
-
-    if (
-      policyType === 'SAVINGS'
-    ) {
-
-      const savings =
-        createPolicyData.SavingsProgress;
-
-      if (!savings) {
-        throw new Error(
-          'ไม่พบข้อมูล Savings Progress'
-        );
-      }
-
-      savingsProgress = {
-        StartDate:
-          savings.StartDate || '',
-
-        PaymentTermYears:
-          Number(
-            savings.PaymentTermYears || 0
-          ),
-
-        MaturityTermYears:
-          Number(
-            savings.MaturityTermYears || 0
-          ),
-
-        PaymentFrequency:
-          savings.PaymentFrequency || '',
-
-        PremiumEndDate:
-          savings.PremiumEndDate || '',
-
-        MaturityDate:
-          savings.MaturityDate || '',
-
-        MaturityAmount:
-          Number(
-            savings.MaturityAmount || 0
-          ),
-
-        Status:
-          savings.Status || 'ACTIVE'
-      };
-    }
-
-
-    // ==========================================
-    // DATA ที่ส่ง Backend
+    // Payload
     // ==========================================
 
     const payload = {
 
       CustomerID:
-        customerId,
+        createPolicyData.CustomerID,
 
       FamilyMemberID:
-        createPolicyData.FamilyMemberID ||
-        '',
+        createPolicyData.FamilyMemberID,
 
       PolicyNo:
-        createPolicyData.PolicyNo ||
-        '',
+        createPolicyData.PolicyNo,
 
       PlanID:
-        createPolicyData.PlanID ||
-        '',
+        createPolicyData.PlanID,
 
       PlanName:
-        createPolicyData.PlanName ||
-        '',
+        createPolicyData.PlanName,
 
       PolicyType:
-        policyType,
-
-      LifeSumAssured:
-        Number(
-          createPolicyData.LifeSumAssured || 0
-        ),
+        createPolicyData.PolicyType,
 
       EffectiveDate:
-        createPolicyData.EffectiveDate ||
-        '',
+        createPolicyData.EffectiveDate,
 
       PremiumEndDate:
-        createPolicyData.PremiumEndDate ||
-        '',
+        createPolicyData.PremiumEndDate,
 
       ExpiryDate:
-        createPolicyData.ExpiryDate ||
-        '',
+        createPolicyData.ExpiryDate,
 
       PaymentMode:
-        createPolicyData.PaymentMode ||
-        'YEARLY',
+        createPolicyData.PaymentMode,
 
       AnnualPremium:
-        Number(
-          createPolicyData.AnnualPremium || 0
-        ),
+        createPolicyData.AnnualPremium,
 
       NextPaymentDate:
-        createPolicyData.NextPaymentDate ||
-        '',
+        createPolicyData.NextPaymentDate,
 
-      SavingsProgress:
-        savingsProgress,
+      LifeSumAssured:
+        createPolicyData.LifeSumAssured,
 
       Riders:
-        riders
+        newPolicyRiders
 
     };
 
 
-    console.log(
-      'CREATE POLICY PAYLOAD:',
-      payload
-    );
+    // ==========================================
+    // EDIT
+    // ==========================================
+
+    let result;
+
+    if (isEdit) {
+
+      result =
+        await postAPI({
+
+          action:
+            'agentUpdatePolicyWithRiders',
+
+          idToken:
+            idToken,
+
+          policyId:
+            policyId,
+
+          data:
+            payload
+
+        });
+
+    }
 
 
     // ==========================================
-    // CALL API
+    // CREATE
     // ==========================================
 
-    const result =
-      await postAPI({
+    else {
 
-        action:
-          'agentCreatePolicyWithRiders',
+      result =
+        await postAPI({
 
-        idToken:
-          idToken,
+          action:
+            'agentCreatePolicyWithRiders',
 
-        data:
-          payload
+          idToken:
+            idToken,
 
-      });
+          data:
+            payload
+
+        });
+
+    }
 
 
     // ==========================================
-    // RESULT
+    // ERROR
     // ==========================================
 
-    if (
-      !result ||
-      !result.success
-    ) {
-    
-      console.error(
-        'agentCreatePolicyWithRiders result:',
-        result
-      );
-    
+    if (!result.success) {
+
       if (
-        result &&
         result.duplicate
       ) {
-    
+
         messageBox.textContent =
           `เลขกรมธรรม์นี้มีอยู่แล้ว (${result.policyId})`;
-    
+
         return;
+
       }
-    
+
+
       throw new Error(
-        result?.message ||
-        JSON.stringify(result) ||
-        'ไม่สามารถบันทึกกรมธรรม์ได้'
+        result.message ||
+        (
+          isEdit
+            ? 'ไม่สามารถแก้ไขกรมธรรม์ได้'
+            : 'ไม่สามารถบันทึกกรมธรรม์ได้'
+        )
       );
+
     }
 
 
@@ -10194,36 +10075,38 @@ async function submitCreatePolicy() {
     // SUCCESS
     // ==========================================
 
-    const policyId =
-      result.policy?.PolicyID ||
-      result.policyId ||
-      '-';
-
-    const riderCount =
-      Number(
-        result.riderCount || 0
-      );
-
-
     messageBox.innerHTML = `
 
       <div class="form-success">
 
-        ✅ บันทึกกรมธรรม์เรียบร้อยแล้ว
+        ${isEdit
+          ? '✅ แก้ไขกรมธรรม์เรียบร้อยแล้ว'
+          : '✅ บันทึกกรมธรรม์เรียบร้อยแล้ว'
+        }
 
         <br>
 
         Policy ID:
+
         <strong>
-          ${escapeHtml(policyId)}
+          ${escapeHtml(
+            result.policy?.PolicyID ||
+            policyId ||
+            '-'
+          )}
         </strong>
 
         <br>
 
         Rider:
+
         <strong>
-          ${formatAgentNumber(riderCount)}
+          ${formatAgentNumber(
+            result.riderCount ??
+            newPolicyRiders.length
+          )}
         </strong>
+
         รายการ
 
       </div>
@@ -10232,7 +10115,7 @@ async function submitCreatePolicy() {
 
 
     // ==========================================
-    // กลับ Customer Detail
+    // Reload Customer
     // ==========================================
 
     setTimeout(
@@ -10247,19 +10130,20 @@ async function submitCreatePolicy() {
     );
 
 
-  } catch (error) {
+  }
+  catch (error) {
 
     console.error(
       'submitCreatePolicy error:',
       error
     );
 
-
     messageBox.textContent =
-      error?.message ||
-      'เกิดข้อผิดพลาด';
+      error.message ||
+      'เกิดข้อผิดพลาดในการบันทึกข้อมูล';
 
   }
+
 }
 
 function handlePolicyTypeChange() {
