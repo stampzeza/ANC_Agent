@@ -8393,140 +8393,188 @@ function escapeHtml(
 
 function goCreatePolicyStep2() {
 
-  const data = createPolicyData || {};
-
-  // =====================================
-  // ตรวจสอบข้อมูล Step 1
-  // =====================================
-
-  if (!String(data.PolicyNo || '').trim()) {
-    alert('กรุณากรอกเลขกรมธรรม์');
-    return;
-  }
-
-  if (!String(data.PlanID || '').trim()) {
-    alert('กรุณากรอก PlanID');
-    return;
-  }
-
-  if (!String(data.PlanName || '').trim()) {
-    alert('กรุณากรอกชื่อแผน');
-    return;
-  }
-
-
-  // =====================================
-  // อ่านค่าปัจจุบันจาก Form
-  // =====================================
+  // ==========================================
+  // อ่านข้อมูลปัจจุบันจาก Step 1
+  // ==========================================
 
   const policyNo =
-    document.getElementById('policyNo')?.value?.trim() || '';
-
-  const planId =
-    document.getElementById('planId')?.value?.trim() || '';
-
-  const planName =
-    document.getElementById('planName')?.value?.trim() || '';
+    String(
+      document.getElementById('policyNo')?.value || ''
+    ).trim();
 
   const policyType =
-    document.getElementById('policyType')?.value?.trim() || 'LIFE';
+    String(
+      document.getElementById('policyType')?.value || ''
+    )
+      .trim()
+      .toUpperCase();
+
+  const planId =
+    String(
+      document.getElementById('planId')?.value || ''
+    ).trim();
+
+  const planName =
+    String(
+      document.getElementById('planName')?.value || ''
+    ).trim();
+
+  const familyMemberId =
+    String(
+      document.getElementById('familyMemberId')?.value || ''
+    ).trim();
+
+  const lifeSumAssured =
+    Number(
+      document.getElementById('lifeSumAssured')?.value || 0
+    );
 
   const effectiveDate =
-    document.getElementById('effectiveDate')?.value?.trim() || '';
+    document.getElementById('effectiveDate')?.value || '';
 
   const paymentMode =
-    document.getElementById('paymentMode')?.value?.trim() || 'YEARLY';
+    String(
+      document.getElementById('paymentMode')?.value || 'YEARLY'
+    ).trim();
 
   const annualPremium =
-    document.getElementById('annualPremium')?.value || '';
+    Number(
+      String(
+        document.getElementById('annualPremium')?.value || 0
+      ).replace(/,/g, '')
+    );
+
+  const nextPaymentDate =
+    document.getElementById('nextPaymentDate')?.value || '';
 
 
-  // =====================================
-  // อัปเดตข้อมูล Step 1
-  // =====================================
+  // ==========================================
+  // Validate Main Policy
+  // ==========================================
 
-  createPolicyData.PolicyNo =
-    policyNo || data.PolicyNo || '';
-
-  createPolicyData.PlanID =
-    planId || data.PlanID || '';
-
-  createPolicyData.PlanName =
-    planName || data.PlanName || '';
-
-  createPolicyData.PolicyType =
-    String(
-      policyType || data.PolicyType || 'LIFE'
-    ).trim().toUpperCase();
-
-  createPolicyData.EffectiveDate =
-    effectiveDate || data.EffectiveDate || '';
-
-  createPolicyData.PaymentMode =
-    paymentMode || data.PaymentMode || 'YEARLY';
-
-  createPolicyData.AnnualPremium =
-    annualPremium !== ''
-      ? Number(
-          String(annualPremium).replace(/,/g, '')
-        )
-      : (
-          data.AnnualPremium ?? ''
-        );
-
-
-  // =====================================
-  // โหลด Rider เดิมเฉพาะตอน Edit
-  // =====================================
+  if (!policyNo) {
+    alert('กรุณาระบุเลขกรมธรรม์');
+    return;
+  }
 
   if (
-    data.PolicyID &&
-    Array.isArray(data.riders)
+    !['LIFE', 'SAVINGS'].includes(policyType)
   ) {
+    alert('กรุณาเลือกประเภทกรมธรรม์');
+    return;
+  }
 
-    newPolicyRiders =
-      data.riders.map(rider => ({
+  if (!planName) {
+    alert('กรุณาระบุชื่อแผน');
+    return;
+  }
 
-        PolicyRiderID:
-          rider.PolicyRiderID || '',
+  if (
+    !Number.isFinite(lifeSumAssured) ||
+    lifeSumAssured <= 0
+  ) {
+    alert('กรุณาระบุทุนประกันชีวิตหลัก');
+    return;
+  }
 
-        RiderID:
-          rider.RiderID || '',
-
-        RiderName:
-          rider.RiderName || '',
-
-        RiderType:
-          rider.RiderType || '',
-
-        Coverage:
-          Number(
-            rider.Coverage || 0
-          ),
-
-        Premium:
-          Number(
-            rider.Premium || 0
-          ),
-
-        waitingPeriods:
-          Array.isArray(rider.waitingPeriods)
-            ? rider.waitingPeriods
-            : []
-
-      }));
-
-  } else {
-
-    // Create ใหม่ → ไม่มี Rider เดิม
-    newPolicyRiders = [];
-
+  if (!effectiveDate) {
+    alert('กรุณาระบุวันเริ่มคุ้มครอง');
+    return;
   }
 
 
-  // =====================================
+  // ==========================================
+  // Update Step 1 Data
+  // ==========================================
+
+  createPolicyData.PolicyNo =
+    policyNo;
+
+  createPolicyData.PolicyType =
+    policyType;
+
+  createPolicyData.PlanID =
+    planId;
+
+  createPolicyData.PlanName =
+    planName;
+
+  createPolicyData.FamilyMemberID =
+    familyMemberId;
+
+  createPolicyData.LifeSumAssured =
+    lifeSumAssured;
+
+  createPolicyData.EffectiveDate =
+    effectiveDate;
+
+  createPolicyData.PaymentMode =
+    paymentMode;
+
+  createPolicyData.AnnualPremium =
+    Number.isFinite(annualPremium)
+      ? annualPremium
+      : 0;
+
+  createPolicyData.NextPaymentDate =
+    nextPaymentDate;
+
+
+  // ==========================================
+  // โหลด Rider เดิมตอน Edit
+  // ==========================================
+
+  const existingRiders =
+    Array.isArray(createPolicyData.riders)
+      ? createPolicyData.riders
+      : [];
+
+  newPolicyRiders =
+    existingRiders.map(rider => ({
+
+      PolicyRiderID:
+        rider.PolicyRiderID || '',
+
+      RiderID:
+        rider.RiderID || '',
+
+      RiderName:
+        rider.RiderName || '',
+
+      RiderType:
+        rider.RiderType || '',
+
+      Coverage:
+        Number(
+          rider.Coverage || 0
+        ),
+
+      Premium:
+        Number(
+          rider.Premium || 0
+        ),
+
+      waitingPeriods:
+        Array.isArray(rider.waitingPeriods)
+          ? rider.waitingPeriods
+          : []
+
+    }));
+
+
+  // ==========================================
+  // Create ใหม่
+  // ไม่มี Rider เดิม
+  // ==========================================
+
+  if (!createPolicyData.PolicyID) {
+    newPolicyRiders = [];
+  }
+
+
+  // ==========================================
   // เข้า Step 2
-  // =====================================
+  // ==========================================
 
   editingRiderIndex = -1;
 
@@ -10882,6 +10930,10 @@ function openEditPolicy(policyId) {
       Number(
         policy.LifeSumAssured || 0
       ),
+
+    riders: Array.isArray(policy.riders)
+      ? policy.riders
+      : [],
 
     SavingsProgress:
       null
