@@ -11055,7 +11055,8 @@ function openEditPolicy(policyId) {
   const expiryDate = policy.ExpiryDate
     ? formatDateInput(policy.ExpiryDate)
     : '';
-  
+
+  console.log(premiumEndDate);
   const premiumTermYears = calculatePolicyYearsBetween(
     effectiveDate,
     premiumEndDate
