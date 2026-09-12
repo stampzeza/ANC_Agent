@@ -9998,22 +9998,11 @@ async function submitCreatePolicy() {
 
     if (isEdit) {
 
-      result =
-        await postAPI({
-
-          action:
-            'agentUpdatePolicyWithRiders',
-
-          idToken:
-            idToken,
-
-          policyId:
-            policyId,
-
-          data:
-            payload
-
-        });
+      result = await postAPI({
+        action: 'agentUpdatePolicy',
+        idToken,
+        data: payload
+      });
 
     }
 
