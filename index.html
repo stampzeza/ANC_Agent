@@ -11178,7 +11178,7 @@ function openEditPolicy(policyId) {
             policy.NextPaymentDate
           )
         : '',
-
+    
     // ==========================
     // ข้อมูลสำหรับ Form
     // ==========================
@@ -11208,8 +11208,11 @@ function openEditPolicy(policyId) {
     family:
       family,
 
+    // ⭐ ทุนประกันชีวิตหลัก
     LifeSumAssured:
-      '',
+      Number(
+        policy.LifeSumAssured || 0
+      ),
 
     SavingsProgress:
       null
