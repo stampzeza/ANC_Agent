@@ -7184,6 +7184,8 @@ function renderCreatePolicyStep1() {
   const data =
     createPolicyData || {};
 
+  console.log(data);
+
   const isEditMode =
   Boolean(
     String(data.PolicyID || '').trim()
