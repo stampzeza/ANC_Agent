@@ -11056,11 +11056,17 @@ function openEditPolicy(policyId) {
     ? formatDateInput(policy.ExpiryDate)
     : '';
 
-  console.log(premiumEndDate);
+  console.log('EDIT POLICY RAW:', policy);
+  console.log('EffectiveDate RAW:', policy.EffectiveDate);
+  console.log('PremiumEndDate RAW:', policy.PremiumEndDate);
+  console.log('EffectiveDate FORMATTED:', effectiveDate);
+  console.log('PremiumEndDate FORMATTED:', premiumEndDate);
   const premiumTermYears = calculatePolicyYearsBetween(
     effectiveDate,
     premiumEndDate
   );
+
+  console.log('PremiumTermYears CALCULATED:', premiumTermYears);
 
   // =====================================================
   // รูปแบบการคุ้มครอง
