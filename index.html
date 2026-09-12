@@ -8040,102 +8040,49 @@ function renderCreatePolicyStep1() {
 
 
 function calculatePolicyYearsBetween(startDate, endDate) {
+  if (!startDate || !endDate) return '';
 
-  if (!startDate || !endDate) {
+  const start = new Date(String(startDate) + 'T00:00:00');
+  const end = new Date(String(endDate) + 'T00:00:00');
+
+  if (isNaN(start.getTime()) || isNaN(end.getTime())) {
     return '';
   }
 
-  const start = new Date(
-    String(startDate) + 'T00:00:00'
-  );
+  let years = end.getFullYear() - start.getFullYear();
 
-  const end = new Date(
-    String(endDate) + 'T00:00:00'
-  );
+  if (years < 0) return '';
 
-  if (
-    isNaN(start.getTime()) ||
-    isNaN(end.getTime())
-  ) {
-    return '';
-  }
-
-  // จำนวนปีเบื้องต้น
-  let years =
-    end.getFullYear() -
-    start.getFullYear();
-
-  if (years < 0) {
-    return '';
-  }
-
-  // =====================================================
-  // รูปแบบกรมธรรม์ของเรา:
-  //
-  // EffectiveDate
-  // + N ปี
-  // - 1 วัน
-  // = PremiumEndDate
-  //
-  // เช่น
-  // 08/09/2026
-  // + 21 ปี
-  // - 1 วัน
-  // = 07/09/2047
-  // =====================================================
-
+  // รูปแบบของระบบ:
+  // EffectiveDate + N ปี - 1 วัน = PremiumEndDate
   const anniversary = new Date(
     start.getFullYear() + years,
     start.getMonth(),
     start.getDate()
   );
 
-  const expectedEnd = new Date(
-    anniversary
-  );
+  const expectedEnd = new Date(anniversary);
+  expectedEnd.setDate(expectedEnd.getDate() - 1);
 
-  expectedEnd.setDate(
-    expectedEnd.getDate() - 1
-  );
-
-  // ตรงกับรูปแบบปกติพอดี
-  if (
-    expectedEnd.getTime() === end.getTime()
-  ) {
+  if (expectedEnd.getTime() === end.getTime()) {
     return years;
   }
 
-  // =====================================================
-  // เผื่อกรณีปีที่คำนวณเบื้องต้นยังไม่ใช่
-  // =====================================================
-
+  // เผื่อกรณีวันที่ไม่ตรงจากข้อมูลเดิม
   const nextAnniversary = new Date(
     start.getFullYear() + years + 1,
     start.getMonth(),
     start.getDate()
   );
 
-  const nextExpectedEnd = new Date(
-    nextAnniversary
-  );
+  const nextExpectedEnd = new Date(nextAnniversary);
+  nextExpectedEnd.setDate(nextExpectedEnd.getDate() - 1);
 
-  nextExpectedEnd.setDate(
-    nextExpectedEnd.getDate() - 1
-  );
-
-  if (
-    nextExpectedEnd.getTime() === end.getTime()
-  ) {
+  if (nextExpectedEnd.getTime() === end.getTime()) {
     return years + 1;
   }
 
-  // กรณีข้อมูลไม่ตรง convention
-  // ให้ใช้จำนวนปีเต็มแบบ fallback
-  if (end < expectedEnd) {
-    return Math.max(0, years - 1);
-  }
-
-  return years;
+  return '';
 }
 
 function updateCreatePolicyCoverageMode() {
@@ -11094,41 +11041,22 @@ function openEditPolicy(policyId) {
   // วันที่
   // =====================================================
 
-  const effectiveDate =
-    policy.EffectiveDate
-      ? formatDateInput(
-          policy.EffectiveDate
-        )
-      : '';
-
-  const premiumEndDate =
-    policy.PremiumEndDate
-      ? formatDateInput(
-          policy.PremiumEndDate
-        )
-      : '';
-
-  const expiryDate =
-    policy.ExpiryDate
-      ? formatDateInput(
-          policy.ExpiryDate
-        )
-      : '';
-
-  // =====================================================
-  // ระยะเวลาจ่ายเบี้ย
-  // EffectiveDate -> PremiumEndDate
-  // =====================================================
-
-  let premiumTermYears = '';
-
-  if (effectiveDate && premiumEndDate) {
-    premiumTermYears =
-      calculatePolicyYearsBetween(
-        effectiveDate,
-        premiumEndDate
-      );
-  }
+  const effectiveDate = policy.EffectiveDate
+    ? formatDateInput(policy.EffectiveDate)
+    : '';
+  
+  const premiumEndDate = policy.PremiumEndDate
+    ? formatDateInput(policy.PremiumEndDate)
+    : '';
+  
+  const expiryDate = policy.ExpiryDate
+    ? formatDateInput(policy.ExpiryDate)
+    : '';
+  
+  const premiumTermYears = calculatePolicyYearsBetween(
+    effectiveDate,
+    premiumEndDate
+  );
 
   // =====================================================
   // รูปแบบการคุ้มครอง
