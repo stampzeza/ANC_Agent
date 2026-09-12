@@ -8393,473 +8393,142 @@ function escapeHtml(
 
 function goCreatePolicyStep2() {
 
-  // ==========================================
-  // อ่านข้อมูลหลัก
-  // ==========================================
+  const data = createPolicyData || {};
+
+  // =====================================
+  // ตรวจสอบข้อมูล Step 1
+  // =====================================
+
+  if (!String(data.PolicyNo || '').trim()) {
+    alert('กรุณากรอกเลขกรมธรรม์');
+    return;
+  }
+
+  if (!String(data.PlanID || '').trim()) {
+    alert('กรุณากรอก PlanID');
+    return;
+  }
+
+  if (!String(data.PlanName || '').trim()) {
+    alert('กรุณากรอกชื่อแผน');
+    return;
+  }
+
+
+  // =====================================
+  // อ่านค่าปัจจุบันจาก Form
+  // =====================================
 
   const policyNo =
-    String(
-      document.getElementById('policyNo')?.value || ''
-    ).trim();
-
-  const policyType =
-    String(
-      document.getElementById('policyType')?.value || ''
-    )
-      .trim()
-      .toUpperCase();
+    document.getElementById('policyNo')?.value?.trim() || '';
 
   const planId =
-    String(
-      document.getElementById('planId')?.value || ''
-    ).trim();
+    document.getElementById('planId')?.value?.trim() || '';
 
   const planName =
-    String(
-      document.getElementById('planName')?.value || ''
-    ).trim();
+    document.getElementById('planName')?.value?.trim() || '';
 
-  const familyMemberId =
-    String(
-      document.getElementById('familyMemberId')?.value || ''
-    ).trim();
-
-  const lifeSumAssured =
-    Number(
-      document.getElementById('lifeSumAssured')?.value || 0
-    );
+  const policyType =
+    document.getElementById('policyType')?.value?.trim() || 'LIFE';
 
   const effectiveDate =
-    document.getElementById('effectiveDate')?.value || '';
+    document.getElementById('effectiveDate')?.value?.trim() || '';
 
   const paymentMode =
-    String(
-      document.getElementById('paymentMode')?.value || 'YEARLY'
-    ).trim();
+    document.getElementById('paymentMode')?.value?.trim() || 'YEARLY';
 
   const annualPremium =
-    Number(
-      document.getElementById('annualPremium')?.value || 0
-    );
+    document.getElementById('annualPremium')?.value || '';
 
 
-  // ==========================================
-  // Validate Main Policy
-  // ==========================================
+  // =====================================
+  // อัปเดตข้อมูล Step 1
+  // =====================================
 
-  if (!policyNo) {
-    alert('กรุณาระบุเลขกรมธรรม์');
-    return;
-  }
+  createPolicyData.PolicyNo =
+    policyNo || data.PolicyNo || '';
+
+  createPolicyData.PlanID =
+    planId || data.PlanID || '';
+
+  createPolicyData.PlanName =
+    planName || data.PlanName || '';
+
+  createPolicyData.PolicyType =
+    String(
+      policyType || data.PolicyType || 'LIFE'
+    ).trim().toUpperCase();
+
+  createPolicyData.EffectiveDate =
+    effectiveDate || data.EffectiveDate || '';
+
+  createPolicyData.PaymentMode =
+    paymentMode || data.PaymentMode || 'YEARLY';
+
+  createPolicyData.AnnualPremium =
+    annualPremium !== ''
+      ? Number(
+          String(annualPremium).replace(/,/g, '')
+        )
+      : (
+          data.AnnualPremium ?? ''
+        );
+
+
+  // =====================================
+  // โหลด Rider เดิมเฉพาะตอน Edit
+  // =====================================
 
   if (
-    !['LIFE', 'SAVINGS'].includes(policyType)
+    data.PolicyID &&
+    Array.isArray(data.riders)
   ) {
-    alert('กรุณาเลือกประเภทกรมธรรม์');
-    return;
-  }
 
-  if (!planName) {
-    alert('กรุณาระบุชื่อแผน');
-    return;
-  }
+    newPolicyRiders =
+      data.riders.map(rider => ({
 
-  if (
-    !Number.isFinite(lifeSumAssured) ||
-    lifeSumAssured <= 0
-  ) {
-    alert('กรุณาระบุทุนประกันชีวิตหลัก');
-    return;
-  }
+        PolicyRiderID:
+          rider.PolicyRiderID || '',
 
-  if (!effectiveDate) {
-    alert('กรุณาระบุวันเริ่มคุ้มครอง');
-    return;
-  }
+        RiderID:
+          rider.RiderID || '',
 
+        RiderName:
+          rider.RiderName || '',
 
-  // ==========================================
-  // เก็บข้อมูลเดิมไว้
-  // สำคัญสำหรับ Back จาก Step 2 -> Step 1
-  // ==========================================
+        RiderType:
+          rider.RiderType || '',
 
-  const oldData =
-    createPolicyData || {};
+        Coverage:
+          Number(
+            rider.Coverage || 0
+          ),
 
+        Premium:
+          Number(
+            rider.Premium || 0
+          ),
 
-  // ==========================================
-  // Default
-  // ==========================================
+        waitingPeriods:
+          Array.isArray(rider.waitingPeriods)
+            ? rider.waitingPeriods
+            : []
 
-  let expiryDate = '';
-  let premiumEndDate = '';
-  let nextPaymentDate = '';
-  let savingsProgress = null;
+      }));
 
+  } else {
 
-  // ==========================================
-  // LIFE
-  // ==========================================
-
-  if (policyType === 'LIFE') {
-
-    const premiumTermYears =
-      Number(
-        document.getElementById('premiumTermYears')?.value || 0
-      );
-
-    const coverageMode =
-      String(
-        document.getElementById('coverageMode')?.value || 'AGE'
-      )
-        .trim()
-        .toUpperCase();
-
-    const coverageToAge =
-      Number(
-        document.getElementById('coverageToAge')?.value || 0
-      );
-
-    const coverageTermYears =
-      Number(
-        document.getElementById('coverageTermYears')?.value || 0
-      );
-
-
-    // ========================================
-    // Validate LIFE
-    // ========================================
-
-    if (
-      !Number.isFinite(premiumTermYears) ||
-      premiumTermYears <= 0
-    ) {
-      alert('กรุณาระบุระยะเวลาชำระเบี้ย');
-      return;
-    }
-
-    if (
-      coverageMode === 'AGE' &&
-      (
-        !Number.isFinite(coverageToAge) ||
-        coverageToAge <= 0
-      )
-    ) {
-      alert('กรุณาระบุอายุสิ้นสุดความคุ้มครอง');
-      return;
-    }
-
-    if (
-      coverageMode === 'TERM' &&
-      (
-        !Number.isFinite(coverageTermYears) ||
-        coverageTermYears <= 0
-      )
-    ) {
-      alert('กรุณาระบุระยะเวลาความคุ้มครอง');
-      return;
-    }
-
-
-    // ========================================
-    // หา BirthDate เจ้าของกรมธรรม์
-    // ========================================
-
-    const birthDate =
-      getCreatePolicyOwnerBirthDate();
-
-
-    if (!birthDate) {
-      alert('ไม่พบวันเกิดของผู้เอาประกัน');
-      return;
-    }
-
-
-    // ========================================
-    // คำนวณวันที่
-    // ========================================
-
-    const calculatedDates =
-      calculatePolicyDates({
-
-        effectiveDate:
-          effectiveDate,
-
-        premiumTermYears:
-          premiumTermYears,
-
-        coverageMode:
-          coverageMode,
-
-        coverageToAge:
-          coverageToAge,
-
-        coverageTermYears:
-          coverageTermYears,
-
-        paymentMode:
-          paymentMode,
-
-        birthDate:
-          birthDate
-
-      });
-
-
-    premiumEndDate =
-      calculatedDates.PremiumEndDate;
-
-    expiryDate =
-      calculatedDates.ExpiryDate;
-
-    nextPaymentDate =
-      calculatedDates.NextPaymentDate;
-
-
-    if (!premiumEndDate) {
-      alert('ไม่สามารถคำนวณวันจ่ายเบี้ยหมดได้');
-      return;
-    }
-
-    if (!expiryDate) {
-      alert('ไม่สามารถคำนวณวันสิ้นสุดความคุ้มครองได้');
-      return;
-    }
+    // Create ใหม่ → ไม่มี Rider เดิม
+    newPolicyRiders = [];
 
   }
 
 
-  // ==========================================
-  // SAVINGS
-  // ==========================================
-
-  if (policyType === 'SAVINGS') {
-
-    const paymentTermYears =
-      Number(
-        document.getElementById('paymentTermYears')?.value || 0
-      );
-
-    const maturityTermYears =
-      Number(
-        document.getElementById('maturityTermYears')?.value || 0
-      );
-
-    const paymentFrequency =
-      String(
-        document.getElementById(
-          'savingsPaymentFrequency'
-        )?.value || ''
-      ).trim();
-
-    const maturityAmount =
-      Number(
-        document.getElementById('maturityAmount')?.value || 0
-      );
-
-
-    // ========================================
-    // Validate
-    // ========================================
-
-    if (
-      !Number.isFinite(paymentTermYears) ||
-      paymentTermYears <= 0
-    ) {
-      alert('กรุณาระบุระยะเวลาชำระเบี้ย');
-      return;
-    }
-
-    if (
-      !Number.isFinite(maturityTermYears) ||
-      maturityTermYears <= 0
-    ) {
-      alert('กรุณาระบุระยะเวลาครบสัญญา');
-      return;
-    }
-
-    if (
-      maturityTermYears <
-      paymentTermYears
-    ) {
-      alert(
-        'ระยะเวลาครบสัญญาต้องไม่น้อยกว่าระยะเวลาชำระเบี้ย'
-      );
-      return;
-    }
-
-    if (!paymentFrequency) {
-      alert('กรุณาเลือกความถี่การชำระ');
-      return;
-    }
-
-    if (
-      !Number.isFinite(maturityAmount) ||
-      maturityAmount <= 0
-    ) {
-      alert('กรุณาระบุเงินครบสัญญา');
-      return;
-    }
-
-
-    // ========================================
-    // คำนวณ Savings Date อัตโนมัติ
-    // ========================================
-
-    const savingsDates =
-      calculatePolicyDates({
-
-        effectiveDate:
-          effectiveDate,
-
-        premiumTermYears:
-          paymentTermYears,
-
-        coverageMode:
-          'TERM',
-
-        coverageTermYears:
-          maturityTermYears,
-
-        paymentMode:
-          paymentFrequency
-
-      });
-
-
-    premiumEndDate =
-      savingsDates.PremiumEndDate;
-
-    expiryDate =
-      savingsDates.ExpiryDate;
-
-    nextPaymentDate =
-      savingsDates.NextPaymentDate;
-
-
-    if (!premiumEndDate) {
-      alert('ไม่สามารถคำนวณวันจ่ายเบี้ยหมดได้');
-      return;
-    }
-
-    if (!expiryDate) {
-      alert('ไม่สามารถคำนวณวันครบสัญญาได้');
-      return;
-    }
-
-
-    // ========================================
-    // Savings Progress
-    // ========================================
-
-    savingsProgress = {
-
-      StartDate:
-        effectiveDate,
-
-      PaymentTermYears:
-        paymentTermYears,
-
-      MaturityTermYears:
-        maturityTermYears,
-
-      PaymentFrequency:
-        paymentFrequency,
-
-      PremiumEndDate:
-        premiumEndDate,
-
-      MaturityDate:
-        expiryDate,
-
-      MaturityAmount:
-        maturityAmount,
-
-      Status:
-        'ACTIVE'
-
-    };
-
-  }
-
-
-  // ==========================================
-  // เก็บ State
-  // ==========================================
-
-  createPolicyData = {
-
-    ...oldData,
-
-    CustomerID:
-      oldData.CustomerID ||
-      createPolicyCustomerId,
-
-    customer:
-      oldData.customer ||
-      oldData.Customer ||
-      null,
-
-    family:
-      Array.isArray(oldData.family)
-        ? oldData.family
-        : Array.isArray(oldData.Family)
-          ? oldData.Family
-          : [],
-
-    PolicyNo:
-      policyNo,
-
-    PlanID:
-      planId,
-
-    PlanName:
-      planName,
-
-    PolicyType:
-      policyType,
-
-    FamilyMemberID:
-      familyMemberId,
-
-    LifeSumAssured:
-      lifeSumAssured,
-
-    EffectiveDate:
-      effectiveDate,
-
-    ExpiryDate:
-      expiryDate,
-
-    PremiumEndDate:
-      premiumEndDate,
-
-    PaymentMode:
-      policyType === 'SAVINGS'
-        ? String(
-            document.getElementById(
-              'savingsPaymentFrequency'
-            )?.value || paymentMode
-          ).trim()
-        : paymentMode,
-
-    AnnualPremium:
-      Number.isFinite(annualPremium)
-        ? annualPremium
-        : 0,
-
-    NextPaymentDate:
-      nextPaymentDate,
-
-    SavingsProgress:
-      savingsProgress
-
-  };
-
-
-  // ==========================================
-  // ไป Step 2
-  // ==========================================
+  // =====================================
+  // เข้า Step 2
+  // =====================================
+
+  editingRiderIndex = -1;
 
   createPolicyStep = 2;
 
